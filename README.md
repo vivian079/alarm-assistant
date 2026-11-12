@@ -3,7 +3,7 @@
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
-Current stage: Day 2 MVP. One synchronous endpoint, the prompt only gets the alarm record (no SOP text yet).
+Current stage: MVP. One synchronous endpoint, the prompt only gets the alarm record (no SOP text yet).
 
 ## Run
 
