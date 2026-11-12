@@ -1,0 +1,68 @@
+[
+  {
+    "alarm_id": "AL-017",
+    "timestamp": "2026-11-03T14:20:00",
+    "tool_id": "ETCH-03",
+    "chamber": "B",
+    "alarm_code": "A-1023",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 58,
+    "wafer_count": 25,
+    "recent_history": "2026-11-01: A-1023 reported; pressure sensor replaced"
+  },
+  {
+    "alarm_id": "AL-032",
+    "timestamp": "2026-11-05T09:10:00",
+    "tool_id": "ETCH-05",
+    "chamber": "A",
+    "alarm_code": "A-1023",
+    "process_step": "OVER-ETCH",
+    "sensor_value": 53,
+    "wafer_count": 12,
+    "recent_history": "2026-11-02: A-1031 reported"
+  },
+  {
+    "alarm_id": "AL-040",
+    "timestamp": "2026-11-11T10:05:00",
+    "tool_id": "ETCH-03",
+    "chamber": "A",
+    "alarm_code": "A-1023",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 56,
+    "wafer_count": 25,
+    "recent_history": ""
+  },
+  {
+    "alarm_id": "AL-041",
+    "timestamp": "2026-11-11T10:30:00",
+    "tool_id": "ETCH-03",
+    "chamber": "B",
+    "alarm_code": "A-1023",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 57,
+    "wafer_count": 24,
+    "recent_history": "2026-11-11 10:05: A-1023 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-050",
+    "timestamp": "2026-11-10T16:45:00",
+    "tool_id": "ETCH-05",
+    "chamber": "B",
+    "alarm_code": "A-1031",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 64.2,
+    "wafer_count": 18,
+    "recent_history": "2026-11-05: A-1023 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-051",
+    "timestamp": "2026-11-10T16:45:00",
+    "tool_id": "ETCH-05",
+    "chamber": "B",
+    "alarm_code": "A-1031",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 64.2,
+    "wafer_count": 18,
+    "recent_history": "2026-11-05: A-1023 reported (chamber A)"
+  }
+]
