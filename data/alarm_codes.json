@@ -1,0 +1,20 @@
+[
+  {
+    "alarm_code": "A-1023",
+    "equipment_type": "etch",
+    "description": "Chamber pressure too high",
+    "parameter": "pressure",
+    "spec_lower": 20,
+    "spec_upper": 50,
+    "unit": "mTorr"
+  },
+  {
+    "alarm_code": "A-1031",
+    "equipment_type": "etch",
+    "description": "Chamber temperature out of range",
+    "parameter": "temperature",
+    "spec_lower": 40,
+    "spec_upper": 60,
+    "unit": "°C"
+  }
+]

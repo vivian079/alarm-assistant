@@ -3,7 +3,10 @@
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
-Current stage: MVP. One synchronous endpoint, the prompt only gets the alarm record (no SOP text yet).
+Current stage: structured output. One synchronous endpoint. The plan follows a Pydantic schema
+(`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
+with the error message, up to 2 times, then saves the plan as `generation_failed`.
+The prompt gets the alarm record and its spec limit from the alarm code table (no SOP text yet).
 
 ## Run
 
