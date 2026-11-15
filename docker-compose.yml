@@ -35,5 +35,19 @@ services:
     depends_on:
       - api
 
+  # Not started by `docker compose up`; run it with: docker compose run --rm eval
+  eval:
+    build: ./eval
+    profiles: ["eval"]
+    env_file: .env
+    environment:
+      API_URL: http://api:8000
+      DATA_DIR: /data
+    volumes:
+      - ./data:/data:ro
+      - ./eval:/eval
+    depends_on:
+      - api
+
 volumes:
   pgdata:

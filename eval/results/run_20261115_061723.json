@@ -1,0 +1,1518 @@
+{
+  "run_at": "2026-11-15T06:17:23",
+  "judge_model": "claude-sonnet-5-5",
+  "totals": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "correct": 0,
+    "generated": 125,
+    "covered": 0,
+    "expected": 64,
+    "not_covered_correct": 0,
+    "not_covered_total": 3,
+    "summary_fields_correct": 160,
+    "summary_fields_total": 160,
+    "failed": 0,
+    "judge_calls": 0,
+    "avg_latency_s": 9.3,
+    "by_case": {
+      "repeat": {
+        "correct": 0,
+        "generated": 22,
+        "covered": 0,
+        "expected": 12,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "step_specific": {
+        "correct": 0,
+        "generated": 38,
+        "covered": 0,
+        "expected": 17,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "normal": {
+        "correct": 0,
+        "generated": 44,
+        "covered": 0,
+        "expected": 23,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "same_event": {
+        "correct": 0,
+        "generated": 6,
+        "covered": 0,
+        "expected": 4,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "in_spec": {
+        "correct": 0,
+        "generated": 15,
+        "covered": 0,
+        "expected": 8,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    }
+  },
+  "rows": [
+    {
+      "alarm_id": "AL-017",
+      "case": "repeat",
+      "plan_id": 3,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.8,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Stop further processing in ETCH-03 Chamber B and place the chamber on hold. Quarantine the 25 affected wafers and flag them for MRB/quality review, since MAIN-ETCH ran at out-of-spec pressure.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the pressure trace and process log for the affected lot. Confirm whether the excursion was a sustained offset or a transient, and check throttle valve position, gas flows, and pump status over the same period.",
+            "sop_refs": []
+          },
+          {
+            "step": "Cross-check the chamber pressure reading against a reference gauge (or a second manometer) to determine whether the 58.0 mTorr reading is real or a sensor or calibration error on the newly replaced sensor.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the 2026-11-01 sensor replacement work. Check the connector, cabling, and fitting, and verify the sensor zero and calibration.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the APC/throttle valve, MFC flows, and dry pump/foreline for faults. Run a leak-up (rate-of-rise) test to rule out a chamber leak.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the root cause is corrected, run a verification (qualification or monitor wafers) and confirm that pressure holds within 20.0–50.0 mTorr before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Record the recurrence and findings in the equipment log, linking AL-017 to the 2026-11-01 event. Escalate if A-1023 recurs again, since the sensor replacement has already been tried.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "B",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "2026-11-01: pressure sensor replaced",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-01: A-1023 reported on this tool (same alarm code as now)",
+          "sensor_value": 58.0
+        },
+        "likely_causes": [
+          "Chamber pressure is 8 mTorr above the 50 mTorr upper limit during MAIN-ETCH. A-1023 recurred 2 days after the pressure sensor was replaced, so the sensor replacement did not fix the root cause.",
+          "Newly installed pressure sensor may have a calibration or zero-offset error, or a wiring or connector fault from the replacement.",
+          "Throttle valve or APC (pressure control) malfunction, such as a sticking valve, wrong position, or tuning drift.",
+          "Reduced pumping capacity from a dry pump or foreline problem, or a clogged or restricted exhaust line.",
+          "Process gas flow too high, or an MFC drift or fault.",
+          "Chamber leak, such as a degraded O-ring or seal after the recent maintenance, or a poorly seated component."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-032",
+      "case": "step_specific",
+      "plan_id": 4,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.5,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 8,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold ETCH-05 Chamber A from further production lots until the cause is understood and quarantine the 12 wafers processed under this alarm for review of OVER-ETCH results (e.g., etch depth/CD).",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the OVER-ETCH step trend for pressure, throttle valve position, gas flows, and pump data for the 12 affected wafers to see if pressure drifted gradually or stepped up.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the A-1031 alarm record from 2026-11-02 and any related maintenance logs to see whether it relates to this pressure excursion, since no repair is recorded.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the pressure gauge reading against a reference gauge or run a gauge zero/calibration check to rule out sensor drift.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the throttle valve/pressure controller response and the MFC flow readings against setpoints.",
+            "sop_refs": []
+          },
+          {
+            "step": "Run a chamber leak-up rate check and inspect the pump and foreline status.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run a test or monitor wafer and confirm OVER-ETCH pressure is within 20.0 to 50.0 mTorr before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Escalate to the equipment engineer or process owner if pressure remains above 50.0 mTorr after checks. No SOP IDs or step numbers were provided, so the applicable SOP needs to be identified.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-05",
+          "alarm_code": "A-1023",
+          "recent_fix": "No repair or corrective action recorded in the provided history",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 12,
+          "recent_alarm": "A-1031 reported on 2026-11-02 (during OVER-ETCH step alarm A-1023 now active on 2026-11-05)",
+          "sensor_value": 53.0
+        },
+        "likely_causes": [
+          "Chamber pressure is 3.0 mTorr above the 50.0 mTorr upper limit during OVER-ETCH, so a pressure control problem is likely (throttle valve or pressure controller drift or sticking)",
+          "Process gas flow (MFC) is above setpoint or has drifted, raising chamber pressure",
+          "Pressure gauge (e.g., capacitance manometer) has drifted or is reading incorrectly, so this may be a false alarm",
+          "Reduced pumping speed from a degraded or restricted turbo/backing pump or foreline",
+          "Possible vacuum leak or chamber seal issue; this is unconfirmed",
+          "Possible link to the A-1031 alarm on 2026-11-02; its meaning and fix are not in the data provided, so the relationship is unconfirmed"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-040",
+      "case": "normal",
+      "plan_id": 5,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.3,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold ETCH-03 Chamber A from processing new lots until the alarm is dispositioned. Quarantine the 25 wafers processed under this alarm for engineering review of etch results (CD, depth, uniformity).",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the MAIN-ETCH pressure trace for the affected run and compare it to the recipe setpoint. Check whether the excursion was a sustained offset, a drift, or a spike, and whether it affected all 25 wafers or only some.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the tool alarm and maintenance logs for ETCH-03 Chamber A. The provided recent_history was empty, so confirm whether there were any recent alarms or repairs, such as PM, valve or gauge replacement, or leak checks.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify pressure gauge accuracy against a reference gauge or a known-good gauge, and check the throttle valve position and response.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check MFC flow readings against recipe values, and run a chamber leak-up rate test and a pump/foreline pressure check.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the corrective action, run a qualification or monitor wafer. Confirm pressure stays within 20.0–50.0 mTorr before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Provide the applicable SOP IDs and step numbers for A-1023 pressure out-of-spec handling so this plan can be linked to the controlled procedures. None were provided, so none are referenced here.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "No recent repair history was provided for this tool (recent_history is empty).",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "No recent alarm history was provided for this tool (recent_history is empty).",
+          "sensor_value": 56.0
+        },
+        "likely_causes": [
+          "Chamber pressure of 56.0 mTorr is 6.0 mTorr above the 50.0 mTorr upper limit during MAIN-ETCH. No SOP or history data was provided, so the causes below are unconfirmed general hypotheses.",
+          "Throttle/pressure control valve is sticking, drifting, or out of calibration, so it cannot hold the pressure setpoint",
+          "Process gas flow is higher than recipe, for example from an MFC drift or offset",
+          "Pressure gauge (manometer) is drifting or faulty, so the reading is inaccurate",
+          "Reduced pumping speed from a foreline or dry pump performance issue, or a restriction in the exhaust",
+          "Chamber leak or air ingress, or a poor seal after recent maintenance",
+          "Process byproduct buildup in the chamber or exhaust causing a flow restriction"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-041",
+      "case": "same_event",
+      "plan_id": 6,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.7,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 6,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold chamber B and stop further lot processing in it until the cause is understood. Quarantine the 24 wafers processed under the alarm and flag them for engineering and quality disposition.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the chamber B pressure, throttle valve position, and gas flow trends for the MAIN-ETCH step. Check whether the pressure excursion was sustained or a spike, and when it started.",
+            "sop_refs": []
+          },
+          {
+            "step": "Compare with the chamber A A-1023 event at 10:05. Check whether the recipe, gas supply, foreline/dry pump, or other shared subsystems show a common cause, and find out what, if anything, was done for chamber A.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the chamber B pressure gauge reading against a reference gauge or the redundant gauge to rule out sensor drift or failure.",
+            "sop_refs": []
+          },
+          {
+            "step": "Run a leak-up/leak rate check and a pump-down performance check on chamber B. Inspect the pressure control valve and the pumping path for restriction.",
+            "sop_refs": []
+          },
+          {
+            "step": "Do not return chamber B to production until pressure returns to within 20.0-50.0 mTorr and a qualification or monitor wafer run passes. Escalate to the equipment owner if the cause is not found, and check chamber A status as well.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "B",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "No repair or corrective action is recorded in the provided history",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 24,
+          "recent_alarm": "2026-11-11 10:05: A-1023 reported on ETCH-03 chamber A (same alarm code, about 25 minutes before this alarm in chamber B)",
+          "sensor_value": 57.0
+        },
+        "likely_causes": [
+          "Chamber pressure is 7 mTorr above the 50 mTorr upper limit during MAIN-ETCH. This may be a pressure control problem such as a throttle/pressure control valve or a pressure gauge/manometer fault or drift.",
+          "The same A-1023 alarm occurred on chamber A 25 minutes earlier. A shared tool-level cause is possible, such as a common gas supply or process gas flow problem, a shared dry pump/foreline or exhaust issue, or a recipe or setpoint problem.",
+          "Chamber B may have a vacuum leak, pumping restriction, or gas flow excursion that raises pressure.",
+          "Chamber B may have a pressure sensor calibration or drift error. This cannot be separated from a real pressure excursion with the data provided."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-050",
+      "case": "normal",
+      "plan_id": 7,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 11.4,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 8,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place ETCH-05 chamber B on hold so no new lots start until the cause of the over-temperature is understood. Chamber A is not implicated by this alarm.",
+            "sop_refs": []
+          },
+          {
+            "step": "Identify and quarantine the 18 wafers processed or in process under this alarm. Pull the run data for the alarm window to see how long the temperature was above 60.0 °C and during which steps.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the temperature trend for chamber B over recent runs to check whether the reading rose gradually (drift or degradation) or jumped suddenly (a fault).",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the sensor against an independent measurement to rule out a false reading, including the sensor connection, wiring and calibration.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the chamber B thermal control hardware, including heater, chiller or coolant flow and temperature, and the controller. Check facility chilled water supply to the tool.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check what happened with the 2026-11-05 A-1023 alarm on chamber A, including whether it was resolved and how. Determine whether it shares a common cause with this alarm.",
+            "sop_refs": []
+          },
+          {
+            "step": "After correcting the cause, requalify chamber B and confirm the reading is back within 40.0–60.0 °C before releasing it. Have engineering decide the disposition of the 18 affected wafers.",
+            "sop_refs": []
+          },
+          {
+            "step": "Link the applicable SOP to this alarm. No SOP was provided with the alarm data, so no SOP IDs or step numbers are cited, and these steps are general engineering practice.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "ETCH-05",
+          "alarm_code": "A-1031",
+          "recent_fix": "No repair or fix is recorded in the provided history for A-1023, so the recent fix is unknown.",
+          "spec_lower": 40.0,
+          "spec_upper": 60.0,
+          "wafer_count": 18,
+          "recent_alarm": "2026-11-05: A-1023 reported on chamber A (a different chamber on the same tool, not chamber B)",
+          "sensor_value": 64.2
+        },
+        "likely_causes": [
+          "Temperature control fault in chamber B, such as heater or chiller/coolant loop underperformance, low coolant flow, or a control loop or setpoint problem. The reading is 4.2 °C above the 60.0 °C upper limit during MAIN-ETCH.",
+          "Sensor fault, such as thermocouple or RTD drift, a bad connection, or a calibration error, giving a false high reading.",
+          "Excess heat load or poor heat transfer in the chamber, for example from a changed process recipe or RF power, or degraded thermal contact (such as backside helium cooling or chuck condition).",
+          "A shared-resource or tool-level issue affecting both chambers, such as facility chilled water or a common controller. This is possible because chamber A alarmed on A-1023 on 2026-11-05, but no link is confirmed and the alarm codes differ."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-061",
+      "case": "not_covered",
+      "plan_id": 8,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 10.0,
+      "expected_steps": 0,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": false,
+      "plan": {
+        "actions": [
+          {
+            "step": "Confirm the alarm is real. Compare the A-1023 reading of 55.0 mTorr with the upper limit of 50.0 mTorr (5.0 mTorr over) in the tool log, and check whether it is a sustained excursion or a transient spike.",
+            "sop_refs": []
+          },
+          {
+            "step": "No product wafers are in the chamber (wafer_count = 0), so there is no wafer disposition. Hold the chamber from processing production lots until the issue is resolved and verified.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the CHAMBER-CLEAN recipe pressure setpoint and gas flow setpoints against the released recipe version to rule out a recipe or parameter error.",
+            "sop_refs": []
+          },
+          {
+            "step": "Cross-check the chamber pressure gauge against a reference or secondary gauge to rule out sensor drift or offset.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the throttle valve/APC position and response, and check the MFC flow readbacks against their setpoints during the clean.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect pump status and foreline pressure for degraded pumping or exhaust restriction. Run a leak-up (rate-of-rise) test to check for vacuum leaks.",
+            "sop_refs": []
+          },
+          {
+            "step": "After any correction, re-run the chamber clean or a verification run and confirm pressure stays within 20.0–50.0 mTorr before releasing the chamber. Record findings in the equipment log.",
+            "sop_refs": []
+          },
+          {
+            "step": "If the cause cannot be found or the excursion recurs, escalate to the equipment engineering owner. Because no SOP was provided with this alarm, ask for the applicable A-1023 SOP, and add the SOP ID and step numbers to this plan once identified.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-07",
+          "alarm_code": "A-1023",
+          "recent_fix": "No recent repair history was provided for this tool (recent_history is empty).",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 0,
+          "recent_alarm": "No recent alarm history was provided for this tool (recent_history is empty).",
+          "sensor_value": 55.0
+        },
+        "likely_causes": [
+          "Throttle valve or APC (pressure control) malfunction, or the valve is not opening enough, causing high chamber pressure during CHAMBER-CLEAN",
+          "Clean gas flow higher than setpoint, for example an MFC drift or fault",
+          "Pump degradation or foreline/exhaust restriction that reduces pumping speed",
+          "Pressure gauge (capacitance manometer) drift or offset giving a false high reading",
+          "Chamber vacuum leak or a gas line leak that raises baseline pressure",
+          "Clean recipe pressure or flow setpoints changed or loaded incorrectly",
+          "Residue or particle buildup in the exhaust path or throttle valve from previous processing"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-062",
+      "case": "in_spec",
+      "plan_id": 9,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.8,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 6,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the status of the 22 wafers affected (in-process or completed on MAIN-ETCH in chamber B). Hold them per the lot disposition rules until the alarm is understood.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the chamber B temperature trend for the MAIN-ETCH step and compare it with the setpoint. Look for oscillation, ramp-rate or deviation behavior that could explain A-1031 while the value is in spec.",
+            "sop_refs": []
+          },
+          {
+            "step": "Look up the definition and trigger condition of A-1031 in the tool alarm manual or the controller alarm configuration to confirm what the alarm actually monitors.",
+            "sop_refs": []
+          },
+          {
+            "step": "Cross-check the chamber B temperature reading against an independent reference or redundant sensor to rule out sensor drift or a wiring fault.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the A-1023 event on chamber A (08:15) to see whether it shares a cause, such as a common chiller, facilities or controller fault. Record what was done to resolve it, since no fix is documented.",
+            "sop_refs": []
+          },
+          {
+            "step": "If the sensor and controller checks do not explain the alarm, or the alarm repeats, keep chamber B out of production and escalate to the equipment owner. Run a qualification or monitor wafer before releasing the chamber.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "ETCH-07",
+          "alarm_code": "A-1031",
+          "recent_fix": "No repair or corrective action is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 60.0,
+          "wafer_count": 22,
+          "recent_alarm": "A-1023 reported on chamber A at 2026-11-12 08:15 (same tool, different chamber)",
+          "sensor_value": 52.0
+        },
+        "likely_causes": [
+          "The reading of 52.0 °C is inside the 40.0-60.0 °C spec, so the alarm may be tripped by something other than the absolute limit, such as a rate-of-change, stability or deviation-from-setpoint check. The meaning of A-1031 is not given in the provided data.",
+          "Temperature sensor drift, a loose connection or a faulty sensor could be producing a misleading reading.",
+          "Temperature control instability (for example in the chuck or wall heater/chiller loop) may be causing excursions between samples.",
+          "A shared tool-level issue (facilities, chiller, controller or software) may link this alarm to the earlier A-1023 on chamber A. This is unconfirmed, because the cause and fix of A-1023 are not documented."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 10,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.8,
+      "expected_steps": 3,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 3
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place ETCH-03 chamber A on hold and stop further lots until the cause is understood. The 25 wafers processed under this alarm should be held.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the chamber A process log for the affected lot. Check OVER-ETCH step time, endpoint trace, and etch rate trend against recent runs.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the recipe and parameter setpoints for the OVER-ETCH step against the released recipe version.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect endpoint detection hardware (optical window, signal level) and the chamber condition, including time since last clean and seasoning.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the 2026-11-11 A-1023 alarm records and maintenance history for chambers A and B. Find out what was done, if anything, and whether the two alarm events are linked.",
+            "sop_refs": []
+          },
+          {
+            "step": "Arrange metrology or inspection of the held wafers (CD, remaining film thickness) to assess over-etch impact and decide on disposition.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run a qualification or monitor wafer and confirm OVER-ETCH time is within 40.0–90.0 s before releasing the chamber. Identify the applicable SOP for these steps, since none was provided with this alarm.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair or fix is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 reported on 2026-11-11 10:05 (chamber A) and 2026-11-11 10:30 (chamber B)",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "OVER-ETCH time of 104.0 s is 14.0 s above the 90.0 s upper limit. Possible endpoint detection problem, such as a late or missed endpoint signal or optical window contamination.",
+          "Etch rate may have drifted low, so the step ran longer to reach target. Possible causes are chamber condition drift, seasoning state, or a gas or power delivery issue.",
+          "Recipe or parameter mismatch in the OVER-ETCH step, such as a wrong time setpoint or recipe version.",
+          "Related to the earlier A-1023 alarms on chambers A and B two days ago. The cause of those alarms and any repair are not documented, so a common underlying issue cannot be ruled out.",
+          "Sensor or timer reading error. This is less likely, but it should be confirmed against the process log."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-064",
+      "case": "normal",
+      "plan_id": 11,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.2,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 9,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold DEP-01 Chamber A from processing new lots and confirm the status of the 25 wafers affected by the alarm.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the chamber pressure, throttle valve position, and gas flow trends for the alarm window to check whether the 7.2 Torr excursion was a step, a drift, or a spike.",
+            "sop_refs": []
+          },
+          {
+            "step": "Cross-check the process gauge against a reference gauge or a second manometer to rule out sensor drift.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check throttle valve operation and response, including commanded versus actual position, and inspect it for deposition buildup.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify MFC setpoints against actual flows and check for drift or over-delivery.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check pump status and foreline pressure for restrictions, and run a leak-up rate test on the chamber.",
+            "sop_refs": []
+          },
+          {
+            "step": "Send the 25 wafers for metrology or quality review (thickness, uniformity, film properties) and disposition them according to the result.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the corrective action, run a qualification or monitor wafer and confirm pressure stays within 2.0 to 6.0 Torr before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Look up the applicable SOP for D-2011 and add its ID and step numbers to this plan, since no SOP content was provided.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "Torr",
+          "chamber": "A",
+          "tool_id": "DEP-01",
+          "alarm_code": "D-2011",
+          "recent_fix": "No recent repair history was provided for DEP-01 (recent_history is empty).",
+          "spec_lower": 2.0,
+          "spec_upper": 6.0,
+          "wafer_count": 25,
+          "recent_alarm": "No recent alarm history was provided for DEP-01 (recent_history is empty).",
+          "sensor_value": 7.2
+        },
+        "likely_causes": [
+          "Throttle/pressure control valve sticking, drifting, or failing to open enough, so chamber pressure reads high",
+          "Pressure gauge (manometer) drift or calibration error giving a false high reading",
+          "Process gas flow (MFC) over-delivering or drifting high",
+          "Reduced pumping speed from a degraded vacuum pump, a foreline restriction, or a clogged exhaust",
+          "Chamber or gas line leak, or an incomplete pump-down before the process step",
+          "Deposition byproduct buildup in the exhaust path or throttle valve restricting conductance"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-065",
+      "case": "step_specific",
+      "plan_id": 12,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 10.6,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 9,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place chamber B on hold and stop new lots from starting there until the cause of the low PURGE pressure (1.4 Torr vs 2.0-6.0 Torr spec) is understood.",
+            "sop_refs": []
+          },
+          {
+            "step": "Identify the 25 wafers processed or in process in chamber B at the time of the alarm. Quarantine them and have process/quality review them before release.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review chamber B PURGE trend data (pressure, purge MFC flow, throttle valve position) to check whether the low pressure is a sudden step or a gradual drift.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the purge gas supply pressure at the facility and gas panel, and confirm the regulator and isolation valves are in the correct state.",
+            "sop_refs": []
+          },
+          {
+            "step": "Compare actual purge MFC flow with its setpoint and check for MFC faults. Verify or recalibrate the MFC if it is out of tolerance.",
+            "sop_refs": []
+          },
+          {
+            "step": "Cross-check the chamber B pressure gauge against a reference gauge or the chamber A gauge to rule out sensor drift.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect throttle valve position and control behavior, and the foreline and pump status, for over-pumping.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the chamber A D-2027 alarm for any shared cause on DEP-04 (common gas or vacuum infrastructure), and confirm what repair was done, since none is recorded in the provided history.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the corrective action, run a PURGE verification or qualification wafer and confirm pressure is within 2.0-6.0 Torr before returning chamber B to production. Locate the applicable SOP for this alarm code, since none was provided.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "Torr",
+          "chamber": "B",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2011",
+          "recent_fix": "No repair or fix is recorded in the provided history",
+          "spec_lower": 2.0,
+          "spec_upper": 6.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-12 14:30: D-2027 reported on chamber A (a different chamber from this alarm)",
+          "sensor_value": 1.4
+        },
+        "likely_causes": [
+          "Purge gas supply pressure or flow is low (upstream gas panel, regulator, or valve issue)",
+          "Purge MFC is under-delivering, drifting, or faulted",
+          "Throttle or pressure control valve is over-open or mis-positioned, so the chamber pumps down too far",
+          "Chamber B pressure gauge is drifting or has a calibration offset, so the reading is false",
+          "Foreline or pump is over-pumping, or the exhaust path has changed",
+          "Possible shared-cause link to the chamber A D-2027 alarm (e.g., common gas or vacuum infrastructure), which is unconfirmed"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-066",
+      "case": "repeat",
+      "plan_id": 13,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.1,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 8,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place chamber A of DEP-02 on hold and stop further processing, because the reading of 418.0 °C is 8 °C above the 410.0 °C upper limit.",
+            "sop_refs": []
+          },
+          {
+            "step": "Identify and quarantine the 25 wafers processed while the alarm was active. Have process engineering/quality review them for disposition (e.g. film thickness, uniformity, stress) before release.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the 2026-11-09 repair record and check that the replacement thermocouple is the correct type, installed correctly, and wired properly.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the temperature reading against an independent reference (e.g. calibrated reference thermocouple or temperature-measuring wafer) to determine whether the reading is a sensor error or a true overtemperature.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the heater controller, power output, SCR and wiring for drift or fault. Inspect the heater element if the overtemperature is real.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the recipe setpoint and controller offset or calibration parameters in chamber A against the golden configuration.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run a temperature stability and uniformity check and a qualification run, confirming the reading stays within 390.0–410.0 °C before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Escalate to the equipment owner or vendor if the alarm repeats, since this would be a second D-2014 occurrence on chamber A within days, and record the findings in the maintenance log.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "A",
+          "tool_id": "DEP-02",
+          "alarm_code": "D-2014",
+          "recent_fix": "Heater thermocouple replaced",
+          "spec_lower": 390.0,
+          "spec_upper": 410.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-09: D-2014 reported (chamber A)",
+          "sensor_value": 418.0
+        },
+        "likely_causes": [
+          "Repeat of the 2026-11-09 D-2014 alarm just days after the heater thermocouple was replaced, which points to an unresolved root cause or a problem with the replacement",
+          "Replacement thermocouple installed incorrectly (poor seating or contact, wrong position) or not calibrated, giving a reading offset or a bad control loop",
+          "Heater controller, power supply or SCR drift or fault causing the temperature to overshoot",
+          "Heater element degradation or non-uniform heating",
+          "Temperature setpoint or recipe offset error after the maintenance",
+          "Wafer-to-chuck thermal contact change (e.g. backside gas or chuck condition) affecting the reading"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-067",
+      "case": "not_covered",
+      "plan_id": 14,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 10.2,
+      "expected_steps": 0,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": false,
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold the 25 affected wafers and stop further processing in DEP-02 chamber C until the excursion is understood. Check the process data for this lot to see whether the temperature excursion occurred during deposition.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the chamber C temperature trend and heater power/duty-cycle logs around 2026-11-13 16:10. Determine whether the 86.0 °C reading is a real overshoot, a sustained drift or a sensor spike.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the chamber C thermocouple and sensor with an independent reference measurement. Check its wiring, connector seating and calibration.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the chamber C heater, temperature controller output and cooling or chiller flow for faults.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the chamber A repair from 2026-11-09 and the recurring D-2014 alarm on 2026-11-12. Confirm the installation and calibration of the replaced thermocouple, and check for a shared controller or part-lot cause across chambers.",
+            "sop_refs": []
+          },
+          {
+            "step": "After correcting the fault, run a temperature verification or qualification on chamber C, such as a monitor wafer or temperature-stability check. Confirm the temperature is within 60.0–80.0 °C before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Disposition the held wafers with process/quality engineering based on the measured excursion. Escalate to the equipment owner or vendor if D-2044 or D-2014 recurs, since no SOP was supplied for this alarm.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "C",
+          "tool_id": "DEP-02",
+          "alarm_code": "D-2044",
+          "recent_fix": "Heater thermocouple replaced on chamber A on 2026-11-09. The D-2014 alarm recurred on 2026-11-12, so the fix may not have resolved it.",
+          "spec_lower": 60.0,
+          "spec_upper": 80.0,
+          "wafer_count": 25,
+          "recent_alarm": "D-2014 on chamber A on 2026-11-09, and again on chamber A on 2026-11-12 11:00 (recurred after the repair).",
+          "sensor_value": 86.0
+        },
+        "likely_causes": [
+          "Chamber C temperature is 6 °C above the upper spec limit (86.0 vs 80.0 °C). A heater control problem such as overshoot, a drifting controller or a failing heater element is possible.",
+          "The chamber C temperature sensor or thermocouple may be faulty, miscalibrated or loose, so the reading could be wrong rather than the actual temperature.",
+          "The cooling or temperature-regulation path for chamber C may be degraded, for example low coolant flow or a chiller or heat-exchanger problem.",
+          "A tool-level common cause may be at work, such as a shared temperature controller, power supply, or communication/calibration problem. The repeated D-2014 alarms on chamber A after the thermocouple replacement point this way.",
+          "The thermocouple replaced on chamber A may have been incorrectly installed, calibrated or a defective part. The same part type or lot could also be affecting chamber C."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-068",
+      "case": "normal",
+      "plan_id": 15,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.1,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 6,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold the 25 affected wafers (one lot) and stop further processing in DEP-04 Chamber A until the cause is understood.",
+            "sop_refs": []
+          },
+          {
+            "step": "Re-measure the thickness on a subset of the affected wafers, and on a monitor wafer if available, to confirm the 108.0 nm reading and rule out a metrology error.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the chamber A process trace data for this run (gas flows, pressure, temperature, power, deposition time) against the recipe setpoints to find any deviation.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check DEP-04 maintenance and chamber clean/seasoning records, and compare with the other chamber on this tool or with sister tools to see whether the drift is chamber-specific.",
+            "sop_refs": []
+          },
+          {
+            "step": "Run a qualification or monitor wafer to confirm that the deposition rate is back within spec before releasing the chamber to production. If it is still out of spec, escalate to the process engineer for rate recalibration or corrective maintenance.",
+            "sop_refs": []
+          },
+          {
+            "step": "Have the process or quality engineer disposition the held wafers, such as release, rework or scrap, based on the confirmed thickness data.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "nm",
+          "chamber": "A",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2027",
+          "recent_fix": "No recent repair history was provided for this tool (recent_history is empty).",
+          "spec_lower": 95.0,
+          "spec_upper": 105.0,
+          "wafer_count": 25,
+          "recent_alarm": "No recent alarm history was provided for this tool (recent_history is empty).",
+          "sensor_value": 108.0
+        },
+        "likely_causes": [
+          "Deposition rate drift, so film thickness is above the upper spec of 105 nm (reading 108.0 nm, 3.0 nm over). This could come from a process gas flow, pressure, temperature or power/RF deviation.",
+          "Chamber condition drift, such as a recent clean or PM, seasoning state, or buildup on chamber walls or showerhead.",
+          "Process time or recipe parameter error, or a wrong recipe version loaded.",
+          "Metrology or measurement error, such as tool offset, calibration drift or a bad measurement site.",
+          "Consumable or hardware wear, such as showerhead, heater or a mass flow controller (MFC) out of calibration."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-069",
+      "case": "step_specific",
+      "plan_id": 16,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 10.1,
+      "expected_steps": 3,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 3
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place chamber B on hold and stop processing new lots. Quarantine the 25 wafers processed under this alarm until their impact is assessed.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the 25 wafers' PRE-CLEAN run data: RF forward and reflected power trace, duration of the excursion, and whether the whole run or only part of it was out of spec. Decide on disposition (release, re-inspect, or rework).",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the chamber B history for the D-2011 alarm on 2026-11-13. Find out whether it was repaired or just cleared, and whether it relates to the RF or power system.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the RF generator setpoint, readback, and match network positions against the recipe. Confirm no recipe or parameter change was made.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the power sensor or readback calibration with a reference meter to rule out a measurement error.",
+            "sop_refs": []
+          },
+          {
+            "step": "If power is confirmed high, escalate to the RF subsystem owner for generator and match network inspection and correction. Re-verify with a monitor or qualification run before releasing the chamber.",
+            "sop_refs": []
+          },
+          {
+            "step": "Look at the D-2027 alarm on chamber A to see whether the DEP-04 alarms share a common cause, such as facilities or a tool-level RF supply.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "W",
+          "chamber": "B",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2023",
+          "recent_fix": "No repair or corrective action is recorded in the provided history, so the fix is unknown.",
+          "spec_lower": 950.0,
+          "spec_upper": 1050.0,
+          "wafer_count": 25,
+          "recent_alarm": "D-2011 on chamber B (2026-11-13 15:05); before that, D-2027 on chamber A (2026-11-12 14:30)",
+          "sensor_value": 1080.0
+        },
+        "likely_causes": [
+          "PRE-CLEAN RF power drifted high, 30 W (about 2.9%) above the 1050 W upper limit, from RF generator or match network drift or miscalibration.",
+          "The earlier D-2011 alarm on chamber B on 2026-11-13 was not shown to be resolved, so the underlying issue may be recurring.",
+          "Chamber condition change (residue buildup or a recent clean or conditioning state) altering plasma impedance and the delivered or reflected power reading.",
+          "Power sensor or readback calibration drift or a faulty sensor, giving a false high reading.",
+          "Recipe or setpoint offset, or a recent parameter change for the PRE-CLEAN step."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-070",
+      "case": "in_spec",
+      "plan_id": 17,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.2,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 9,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place chamber C on hold and stop new lots until the alarm is understood. Quarantine the 25 wafers processed under this alarm and review their process data and metrology before release.",
+            "sop_refs": []
+          },
+          {
+            "step": "Look up the D-2019 definition in the tool alarm manual. Confirm what it monitors (absolute flow, deviation from setpoint, or stability) and why it fired with a reading of 205.0 sccm, which is within spec.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the chamber C flow trace for the DEPOSITION step. Compare the actual flow to the recipe setpoint and check for drift, oscillation or spikes around 2026-11-14 09:30.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the alarm limits and recipe setpoint configured on the tool against the spec of 180.0-220.0 sccm.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the gas supply pressure and regulator status for the chamber C line. Cross-check the MFC reading against a reference flow verification.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the MFC and flow sensor wiring and signal for faults. Recalibrate or replace them if the verification fails.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the 2026-11-12 D-2011 alarm on chamber A and find out what was done about it. Check whether any shared gas panel or software issue could link it to this alarm.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the corrective action, run a qualification or monitor wafer. Confirm stable in-spec flow and no alarm recurrence before returning chamber C to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Record the findings and the fix in the equipment log. Escalate to the vendor or process engineering if the alarm recurs or no root cause is found.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "sccm",
+          "chamber": "C",
+          "tool_id": "DEP-01",
+          "alarm_code": "D-2019",
+          "recent_fix": "No repair or fix is recorded in the provided history",
+          "spec_lower": 180.0,
+          "spec_upper": 220.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-12 10:20: D-2011 reported on DEP-01 chamber A",
+          "sensor_value": 205.0
+        },
+        "likely_causes": [
+          "The 205.0 sccm reading is inside the 180.0-220.0 sccm spec, so the alarm may be a false trigger, a threshold or setpoint mismatch, or a different D-2019 condition such as deviation from setpoint, instability or drift.",
+          "Mass flow controller (MFC) drift, calibration offset or unstable flow on the chamber C gas line.",
+          "Sensor or signal fault, such as a flow transducer or cabling problem, or a data-reporting error.",
+          "Upstream gas supply or regulator pressure fluctuation.",
+          "Recipe setpoint or alarm limit configuration mismatch for the DEPOSITION step.",
+          "The earlier D-2011 alarm on chamber A is probably unrelated because it was a different chamber and code. A shared tool-level cause such as the gas panel or software cannot be ruled out."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-071",
+      "case": "normal",
+      "plan_id": 18,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.4,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold further lots on CMP-02 Chamber A and quarantine the 25 wafers processed under this alarm until their impact is assessed.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the POLISH step flow trend for the affected wafers to see whether the flow dropped suddenly or drifted down over time.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the slurry supply (level, pressure, valve positions) and the delivery line, filter, and nozzle for blockage or leaks.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the flow sensor reading against an independent measurement to rule out sensor drift or failure.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the slurry pump operation and calibration, and repair or replace it if it is degraded.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run a qualification or monitor wafer and confirm flow is within 180.0-220.0 mL/min before releasing the chamber.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the equipment history system for earlier alarms or repairs on CMP-02, since none were provided, and log this event.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mL/min",
+          "chamber": "A",
+          "tool_id": "CMP-02",
+          "alarm_code": "C-3012",
+          "recent_fix": "No recent repair history provided for this tool",
+          "spec_lower": 180.0,
+          "spec_upper": 220.0,
+          "wafer_count": 25,
+          "recent_alarm": "No recent alarm history provided for this tool",
+          "sensor_value": 150.0
+        },
+        "likely_causes": [
+          "Slurry or fluid flow is below the lower spec limit (150.0 vs 180.0 mL/min), which suggests a supply restriction",
+          "Clogged or partially blocked slurry delivery line, filter, or nozzle",
+          "Slurry pump degradation, or a pump setting or calibration issue",
+          "Low slurry supply, or an upstream supply problem such as a drained or empty container, or a closed valve",
+          "Flow sensor drift or fault giving a false low reading, which would need checking against an independent measurement"
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-072",
+      "case": "step_specific",
+      "plan_id": 19,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.8,
+      "expected_steps": 3,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 3
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place CMP-02 chamber B on hold and stop processing new lots until the cause is understood. Quarantine the 25 wafers processed under this alarm for review of removal rate, uniformity and defects.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the conditioning current trend for chamber B over recent runs to see whether 13.5 A is a one-off spike, a gradual rise or a step change.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the conditioning disk and pad for wear, glazing and debris. Check the conditioner arm for smooth sweep and free rotation. Replace consumables if they are out of life.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the conditioner down-force, sweep and rotation settings against the recipe, and confirm slurry and DI water flow during conditioning.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the current sensor reading against a reference measurement or calibration check to rule out sensor drift.",
+            "sop_refs": []
+          },
+          {
+            "step": "Pull the C-3012 alarm record for chamber A and any repair history. Compare it with this alarm to decide whether a tool-level common cause exists.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run a conditioning qualification or monitor wafer. Confirm the sensor reading is within 0.0-12.0 A before releasing the chamber to production. Escalate to the process engineer and vendor if the reading stays out of spec.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "A",
+          "chamber": "B",
+          "tool_id": "CMP-02",
+          "alarm_code": "C-3021",
+          "recent_fix": "No repair or fix record was provided in the alarm data, so the recent fix is unknown.",
+          "spec_lower": 0.0,
+          "spec_upper": 12.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-13 09:00: C-3012 reported on chamber A (same tool, different chamber)",
+          "sensor_value": 13.5
+        },
+        "likely_causes": [
+          "Worn or loaded diamond conditioning disk, causing higher drag on the conditioner motor during PAD-CONDITIONING",
+          "Glazed, worn or uneven polishing pad, increasing the load on the conditioner",
+          "Conditioner down-force or sweep setting out of tune, or the conditioner arm or motor mechanically binding",
+          "Insufficient slurry or DI water flow during conditioning, increasing friction",
+          "Current sensor drift or a calibration problem; the reading is 1.5 A (12.5%) above the 12.0 A upper limit",
+          "Shared cause with the C-3012 alarm on chamber A on 2026-11-13 (common utility, software or recipe issue). No link is confirmed from the data given."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-073",
+      "case": "repeat",
+      "plan_id": 20,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.7,
+      "expected_steps": 4,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 4
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Hold CMP-06 chamber A from further processing and quarantine the 25 wafers processed under the alarm. Have process/quality engineering assess them for removal rate, uniformity, and defects before release.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review CMP-06 chamber A pressure trend and logs from 2026-11-08 to now. Check whether the overpressure began right after the membrane replacement and whether it is steady or intermittent.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the pressure reading against an independent calibrated gauge to determine whether the 4.6 psi is a real overpressure or a sensor/transducer error.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the polish head membrane installation from the 2026-11-08 replacement (seating, seal, part condition) and check for leaks in the head air lines and fittings.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the head pressure regulator or valve response and calibration, and repair or replace it if it is out of tolerance.",
+            "sop_refs": []
+          },
+          {
+            "step": "After corrective action, run qualification or monitor wafers to confirm pressure is within 2.0-4.0 psi and polish performance is acceptable before releasing the chamber to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "If the alarm recurs or the root cause is not found, escalate to the CMP equipment owner or vendor support and document the recurrence of C-3005 after the membrane replacement. No SOP was provided, so confirm the applicable SOP IDs and step numbers before executing.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "psi",
+          "chamber": "A",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3005",
+          "recent_fix": "Polish head membrane replaced on 2026-11-08",
+          "spec_lower": 2.0,
+          "spec_upper": 4.0,
+          "wafer_count": 25,
+          "recent_alarm": "C-3005 reported on 2026-11-08 (chamber A), the same alarm code as now",
+          "sensor_value": 4.6
+        },
+        "likely_causes": [
+          "Polish head pressure is 0.6 psi above the 4.0 psi upper limit. C-3005 recurred 5 days after the membrane replacement, so the earlier repair may not have fixed the root cause.",
+          "The replaced membrane may be improperly seated or installed, or defective, which would give abnormal pressure behavior.",
+          "The head pressure regulator or proportional valve may be drifting or failing, causing overpressure.",
+          "The pressure transducer or sensor may be out of calibration or faulty, giving a false high reading.",
+          "An air line restriction, blockage, or leak in the head pneumatic path could be causing pressure control instability."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-074",
+      "case": "not_covered",
+      "plan_id": 21,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 10.2,
+      "expected_steps": 0,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": false,
+      "plan": {
+        "actions": [
+          {
+            "step": "Stop further wafer processing in chamber B. Quarantine the 25 wafers processed or in process during the alarm, and hold them for disposition by process engineering and quality review.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the chamber B rinse temperature trend and log data around 2026-11-13 17:40 to see whether the excursion was a sudden spike, a gradual rise, or a sensor glitch.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the rinse temperature reading against a calibrated reference thermometer or independent probe to confirm whether the sensor or the actual water temperature is out of spec.",
+            "sop_refs": []
+          },
+          {
+            "step": "Inspect the chamber B rinse DI water heater/chiller, mixing valve, and flow path for faults, and check the DI water supply temperature and flow at the facility connection.",
+            "sop_refs": []
+          },
+          {
+            "step": "Compare the chamber A and chamber B rinse temperatures and the tool-level utility readings to determine whether the problem is isolated to chamber B or shared across the tool.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the repeated C-3005 alarms on chamber A, which recurred after the 2026-11-08 polish head membrane replacement, with the maintenance owner. Confirm whether that issue is related or needs its own follow-up.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the corrective repair or recalibration, run a rinse temperature verification and qualification (monitor or test wafers) to confirm the temperature stays within 30.0–50.0 °C before returning chamber B to production.",
+            "sop_refs": []
+          },
+          {
+            "step": "Escalate to the equipment engineering lead if the temperature cannot be brought back into spec or the alarm recurs, and record the findings and actions in the maintenance log.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3016",
+          "recent_fix": "Polish head membrane replaced on 2026-11-08 (chamber A)",
+          "spec_lower": 30.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "C-3005 reported on chamber A on 2026-11-08 and again on 2026-11-13 13:15 (repeat alarm after the repair)",
+          "sensor_value": 55.0
+        },
+        "likely_causes": [
+          "Rinse DI water temperature controller, heater, or chiller fault in chamber B, causing the 55.0 °C reading (5 °C over the 50.0 °C upper limit)",
+          "Rinse temperature sensor drift or failure, so the reading may be false",
+          "Facility DI water supply or heat exchanger running warm, which could also affect other chambers",
+          "Rinse water flow too low or a mixing/control valve fault, causing heat to build up",
+          "Residual heat from the preceding polish step carrying into the rinse",
+          "Link to the earlier chamber A C-3005 alarms is unconfirmed. Those were in a different chamber and the code differs, but a shared tool-level cause (utilities, controller) cannot be ruled out."
+        ]
+      }
+    },
+    {
+      "alarm_id": "AL-075",
+      "case": "normal",
+      "plan_id": 22,
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 9.4,
+      "expected_steps": 3,
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 7,
+        "correct": 0,
+        "covered": 0,
+        "expected": 3
+      },
+      "plan": {
+        "actions": [
+          {
+            "step": "Place CMP-06 chamber A on hold and stop processing new lots. Quarantine and review the 25 wafers run under the low rinse flow for rinse-related defects, and disposition them per the fab's wafer excursion process.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the facility DI water supply pressure and flow to CMP-06 and confirm the rinse supply valve is fully open.",
+            "sop_refs": []
+          },
+          {
+            "step": "Check the rinse line, nozzle and inline filter for clogging, kinks, leaks or air, and clean or replace any restricted part.",
+            "sop_refs": []
+          },
+          {
+            "step": "Verify the flow sensor reading against an independent flow measurement (for example a calibrated meter or timed volume collection) to rule out sensor drift or fault.",
+            "sop_refs": []
+          },
+          {
+            "step": "Review the chamber A C-3005 history, including the 2026-11-13 recurrence after the membrane replacement, and check whether a shared cause (fluid, pneumatic or head) exists. Also review the C-3016 alarm on chamber B.",
+            "sop_refs": []
+          },
+          {
+            "step": "After the repair, run the rinse recipe and confirm flow is within 1.5-2.5 L/min. Run qualification or monitor wafers and release the tool only if they pass.",
+            "sop_refs": []
+          },
+          {
+            "step": "If flow stays out of spec or the alarm recurs, escalate to the equipment/module owner and facilities, and record the findings in the tool log.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "L/min",
+          "chamber": "A",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3028",
+          "recent_fix": "Polish head membrane replaced on 2026-11-08 after the first C-3005 (chamber A). C-3005 recurred on 2026-11-13, so that repair did not hold. No repair is recorded for C-3016.",
+          "spec_lower": 1.5,
+          "spec_upper": 2.5,
+          "wafer_count": 25,
+          "recent_alarm": "C-3005 on chamber A on 2026-11-08 and again on 2026-11-13 13:15; C-3016 on chamber B on 2026-11-13 17:40",
+          "sensor_value": 1.1
+        },
+        "likely_causes": [
+          "Rinse DI water flow restricted by a clogged rinse nozzle, line or inline filter",
+          "Partially closed or failing rinse supply valve",
+          "Low facility DI water supply pressure or flow",
+          "Flow meter or sensor drift or fault giving a false low reading",
+          "Flow controller or regulator fault",
+          "Leak or air in the rinse line",
+          "Related to the recurring C-3005 on chamber A (the 2026-11-08 membrane replacement did not clear it), possibly a shared fluid or pneumatic problem. This is unconfirmed."
+        ]
+      }
+    }
+  ],
+  "judge_log": []
+}

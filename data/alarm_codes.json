@@ -16,5 +16,257 @@
     "spec_lower": 40,
     "spec_upper": 60,
     "unit": "°C"
+  },
+  {
+    "alarm_code": "A-1035",
+    "equipment_type": "etch",
+    "description": "RF reflected power too high",
+    "parameter": "rf_reflected_power",
+    "spec_lower": 0,
+    "spec_upper": 30,
+    "unit": "W"
+  },
+  {
+    "alarm_code": "A-1042",
+    "equipment_type": "etch",
+    "description": "Process gas flow out of range",
+    "parameter": "gas_flow",
+    "spec_lower": 45,
+    "spec_upper": 55,
+    "unit": "sccm"
+  },
+  {
+    "alarm_code": "A-1048",
+    "equipment_type": "etch",
+    "description": "Helium backside pressure out of range",
+    "parameter": "he_backside_pressure",
+    "spec_lower": 8,
+    "spec_upper": 12,
+    "unit": "Torr"
+  },
+  {
+    "alarm_code": "A-1052",
+    "equipment_type": "etch",
+    "description": "Etch endpoint not detected in time",
+    "parameter": "etch_time",
+    "spec_lower": 40,
+    "spec_upper": 90,
+    "unit": "s"
+  },
+  {
+    "alarm_code": "A-1057",
+    "equipment_type": "etch",
+    "description": "Chiller coolant flow out of range",
+    "parameter": "coolant_flow",
+    "spec_lower": 4,
+    "spec_upper": 8,
+    "unit": "L/min"
+  },
+  {
+    "alarm_code": "A-1060",
+    "equipment_type": "etch",
+    "description": "Chamber leak rate too high",
+    "parameter": "leak_rate",
+    "spec_lower": 0,
+    "spec_upper": 2,
+    "unit": "mTorr/min"
+  },
+  {
+    "alarm_code": "A-1066",
+    "equipment_type": "etch",
+    "description": "Chuck voltage out of range",
+    "parameter": "chuck_voltage",
+    "spec_lower": 1800,
+    "spec_upper": 2200,
+    "unit": "V"
+  },
+  {
+    "alarm_code": "A-1071",
+    "equipment_type": "etch",
+    "description": "Particle count too high",
+    "parameter": "particle_count",
+    "spec_lower": 0,
+    "spec_upper": 50,
+    "unit": "count"
+  },
+  {
+    "alarm_code": "D-2011",
+    "equipment_type": "deposition",
+    "description": "Chamber pressure out of range",
+    "parameter": "pressure",
+    "spec_lower": 2,
+    "spec_upper": 6,
+    "unit": "Torr"
+  },
+  {
+    "alarm_code": "D-2014",
+    "equipment_type": "deposition",
+    "description": "Heater temperature out of range",
+    "parameter": "heater_temperature",
+    "spec_lower": 390,
+    "spec_upper": 410,
+    "unit": "°C"
+  },
+  {
+    "alarm_code": "D-2019",
+    "equipment_type": "deposition",
+    "description": "Precursor flow out of range",
+    "parameter": "precursor_flow",
+    "spec_lower": 180,
+    "spec_upper": 220,
+    "unit": "sccm"
+  },
+  {
+    "alarm_code": "D-2023",
+    "equipment_type": "deposition",
+    "description": "RF forward power out of range",
+    "parameter": "rf_power",
+    "spec_lower": 950,
+    "spec_upper": 1050,
+    "unit": "W"
+  },
+  {
+    "alarm_code": "D-2027",
+    "equipment_type": "deposition",
+    "description": "Film thickness out of range",
+    "parameter": "film_thickness",
+    "spec_lower": 95,
+    "spec_upper": 105,
+    "unit": "nm"
+  },
+  {
+    "alarm_code": "D-2031",
+    "equipment_type": "deposition",
+    "description": "Purge gas flow out of range",
+    "parameter": "purge_flow",
+    "spec_lower": 900,
+    "spec_upper": 1100,
+    "unit": "sccm"
+  },
+  {
+    "alarm_code": "D-2036",
+    "equipment_type": "deposition",
+    "description": "Showerhead temperature out of range",
+    "parameter": "showerhead_temperature",
+    "spec_lower": 150,
+    "spec_upper": 200,
+    "unit": "°C"
+  },
+  {
+    "alarm_code": "D-2040",
+    "equipment_type": "deposition",
+    "description": "Exhaust pressure out of range",
+    "parameter": "exhaust_pressure",
+    "spec_lower": 0.5,
+    "spec_upper": 1.5,
+    "unit": "Torr"
+  },
+  {
+    "alarm_code": "D-2044",
+    "equipment_type": "deposition",
+    "description": "Chamber wall temperature out of range",
+    "parameter": "wall_temperature",
+    "spec_lower": 60,
+    "spec_upper": 80,
+    "unit": "°C"
+  },
+  {
+    "alarm_code": "D-2048",
+    "equipment_type": "deposition",
+    "description": "Film thickness uniformity out of range",
+    "parameter": "thickness_uniformity",
+    "spec_lower": 0,
+    "spec_upper": 3,
+    "unit": "%"
+  },
+  {
+    "alarm_code": "C-3005",
+    "equipment_type": "cmp",
+    "description": "Polish head down force out of range",
+    "parameter": "down_force",
+    "spec_lower": 2,
+    "spec_upper": 4,
+    "unit": "psi"
+  },
+  {
+    "alarm_code": "C-3009",
+    "equipment_type": "cmp",
+    "description": "Platen speed out of range",
+    "parameter": "platen_speed",
+    "spec_lower": 85,
+    "spec_upper": 95,
+    "unit": "rpm"
+  },
+  {
+    "alarm_code": "C-3012",
+    "equipment_type": "cmp",
+    "description": "Slurry flow out of range",
+    "parameter": "slurry_flow",
+    "spec_lower": 180,
+    "spec_upper": 220,
+    "unit": "mL/min"
+  },
+  {
+    "alarm_code": "C-3016",
+    "equipment_type": "cmp",
+    "description": "Pad temperature out of range",
+    "parameter": "pad_temperature",
+    "spec_lower": 30,
+    "spec_upper": 50,
+    "unit": "°C"
+  },
+  {
+    "alarm_code": "C-3021",
+    "equipment_type": "cmp",
+    "description": "Motor current too high",
+    "parameter": "motor_current",
+    "spec_lower": 0,
+    "spec_upper": 12,
+    "unit": "A"
+  },
+  {
+    "alarm_code": "C-3025",
+    "equipment_type": "cmp",
+    "description": "Removal rate out of range",
+    "parameter": "removal_rate",
+    "spec_lower": 280,
+    "spec_upper": 320,
+    "unit": "nm/min"
+  },
+  {
+    "alarm_code": "C-3028",
+    "equipment_type": "cmp",
+    "description": "DI water flow out of range",
+    "parameter": "di_water_flow",
+    "spec_lower": 1.5,
+    "spec_upper": 2.5,
+    "unit": "L/min"
+  },
+  {
+    "alarm_code": "C-3033",
+    "equipment_type": "cmp",
+    "description": "Conditioner down force out of range",
+    "parameter": "conditioner_force",
+    "spec_lower": 5,
+    "spec_upper": 9,
+    "unit": "lbf"
+  },
+  {
+    "alarm_code": "C-3037",
+    "equipment_type": "cmp",
+    "description": "Remaining film thickness out of range",
+    "parameter": "remaining_thickness",
+    "spec_lower": 490,
+    "spec_upper": 510,
+    "unit": "nm"
+  },
+  {
+    "alarm_code": "C-3041",
+    "equipment_type": "cmp",
+    "description": "Polish endpoint not reached in time",
+    "parameter": "polish_time",
+    "spec_lower": 50,
+    "spec_upper": 120,
+    "unit": "s"
   }
 ]

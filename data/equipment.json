@@ -1,0 +1,34 @@
+[
+  {
+    "tool_id": "ETCH-03",
+    "equipment_type": "etch"
+  },
+  {
+    "tool_id": "ETCH-05",
+    "equipment_type": "etch"
+  },
+  {
+    "tool_id": "ETCH-07",
+    "equipment_type": "etch"
+  },
+  {
+    "tool_id": "DEP-01",
+    "equipment_type": "deposition"
+  },
+  {
+    "tool_id": "DEP-02",
+    "equipment_type": "deposition"
+  },
+  {
+    "tool_id": "DEP-04",
+    "equipment_type": "deposition"
+  },
+  {
+    "tool_id": "CMP-02",
+    "equipment_type": "cmp"
+  },
+  {
+    "tool_id": "CMP-06",
+    "equipment_type": "cmp"
+  }
+]

@@ -64,5 +64,170 @@
     "sensor_value": 64.2,
     "wafer_count": 18,
     "recent_history": "2026-11-05: A-1023 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-061",
+    "timestamp": "2026-11-12T08:15:00",
+    "tool_id": "ETCH-07",
+    "chamber": "A",
+    "alarm_code": "A-1023",
+    "process_step": "CHAMBER-CLEAN",
+    "sensor_value": 55,
+    "wafer_count": 0,
+    "recent_history": ""
+  },
+  {
+    "alarm_id": "AL-062",
+    "timestamp": "2026-11-12T13:40:00",
+    "tool_id": "ETCH-07",
+    "chamber": "B",
+    "alarm_code": "A-1031",
+    "process_step": "MAIN-ETCH",
+    "sensor_value": 52,
+    "wafer_count": 22,
+    "recent_history": "2026-11-12 08:15: A-1023 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-063",
+    "timestamp": "2026-11-13T07:55:00",
+    "tool_id": "ETCH-03",
+    "chamber": "A",
+    "alarm_code": "A-1052",
+    "process_step": "OVER-ETCH",
+    "sensor_value": 104,
+    "wafer_count": 25,
+    "recent_history": "2026-11-11 10:05: A-1023 reported (chamber A); 2026-11-11 10:30: A-1023 reported (chamber B)"
+  },
+  {
+    "alarm_id": "AL-064",
+    "timestamp": "2026-11-12T10:20:00",
+    "tool_id": "DEP-01",
+    "chamber": "A",
+    "alarm_code": "D-2011",
+    "process_step": "DEPOSITION",
+    "sensor_value": 7.2,
+    "wafer_count": 25,
+    "recent_history": ""
+  },
+  {
+    "alarm_id": "AL-065",
+    "timestamp": "2026-11-13T15:05:00",
+    "tool_id": "DEP-04",
+    "chamber": "B",
+    "alarm_code": "D-2011",
+    "process_step": "PURGE",
+    "sensor_value": 1.4,
+    "wafer_count": 25,
+    "recent_history": "2026-11-12 14:30: D-2027 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-066",
+    "timestamp": "2026-11-12T11:00:00",
+    "tool_id": "DEP-02",
+    "chamber": "A",
+    "alarm_code": "D-2014",
+    "process_step": "DEPOSITION",
+    "sensor_value": 418,
+    "wafer_count": 25,
+    "recent_history": "2026-11-09: D-2014 reported (chamber A); heater thermocouple replaced"
+  },
+  {
+    "alarm_id": "AL-067",
+    "timestamp": "2026-11-13T16:10:00",
+    "tool_id": "DEP-02",
+    "chamber": "C",
+    "alarm_code": "D-2044",
+    "process_step": "DEPOSITION",
+    "sensor_value": 86,
+    "wafer_count": 25,
+    "recent_history": "2026-11-09: D-2014 reported (chamber A); heater thermocouple replaced; 2026-11-12 11:00: D-2014 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-068",
+    "timestamp": "2026-11-12T14:30:00",
+    "tool_id": "DEP-04",
+    "chamber": "A",
+    "alarm_code": "D-2027",
+    "process_step": "DEPOSITION",
+    "sensor_value": 108,
+    "wafer_count": 25,
+    "recent_history": ""
+  },
+  {
+    "alarm_id": "AL-069",
+    "timestamp": "2026-11-14T08:45:00",
+    "tool_id": "DEP-04",
+    "chamber": "B",
+    "alarm_code": "D-2023",
+    "process_step": "PRE-CLEAN",
+    "sensor_value": 1080,
+    "wafer_count": 25,
+    "recent_history": "2026-11-12 14:30: D-2027 reported (chamber A); 2026-11-13 15:05: D-2011 reported (chamber B)"
+  },
+  {
+    "alarm_id": "AL-070",
+    "timestamp": "2026-11-14T09:30:00",
+    "tool_id": "DEP-01",
+    "chamber": "C",
+    "alarm_code": "D-2019",
+    "process_step": "DEPOSITION",
+    "sensor_value": 205,
+    "wafer_count": 25,
+    "recent_history": "2026-11-12 10:20: D-2011 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-071",
+    "timestamp": "2026-11-13T09:00:00",
+    "tool_id": "CMP-02",
+    "chamber": "A",
+    "alarm_code": "C-3012",
+    "process_step": "POLISH",
+    "sensor_value": 150,
+    "wafer_count": 25,
+    "recent_history": ""
+  },
+  {
+    "alarm_id": "AL-072",
+    "timestamp": "2026-11-14T11:20:00",
+    "tool_id": "CMP-02",
+    "chamber": "B",
+    "alarm_code": "C-3021",
+    "process_step": "PAD-CONDITIONING",
+    "sensor_value": 13.5,
+    "wafer_count": 25,
+    "recent_history": "2026-11-13 09:00: C-3012 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-073",
+    "timestamp": "2026-11-13T13:15:00",
+    "tool_id": "CMP-06",
+    "chamber": "A",
+    "alarm_code": "C-3005",
+    "process_step": "POLISH",
+    "sensor_value": 4.6,
+    "wafer_count": 25,
+    "recent_history": "2026-11-08: C-3005 reported (chamber A); polish head membrane replaced"
+  },
+  {
+    "alarm_id": "AL-074",
+    "timestamp": "2026-11-13T17:40:00",
+    "tool_id": "CMP-06",
+    "chamber": "B",
+    "alarm_code": "C-3016",
+    "process_step": "RINSE",
+    "sensor_value": 55,
+    "wafer_count": 25,
+    "recent_history": "2026-11-08: C-3005 reported (chamber A); polish head membrane replaced; 2026-11-13 13:15: C-3005 reported (chamber A)"
+  },
+  {
+    "alarm_id": "AL-075",
+    "timestamp": "2026-11-14T10:05:00",
+    "tool_id": "CMP-06",
+    "chamber": "A",
+    "alarm_code": "C-3028",
+    "process_step": "RINSE",
+    "sensor_value": 1.1,
+    "wafer_count": 25,
+    "recent_history": "2026-11-08: C-3005 reported (chamber A); polish head membrane replaced; 2026-11-13 13:15: C-3005 reported (chamber A); 2026-11-13 17:40: C-3016 reported (chamber B)"
   }
 ]

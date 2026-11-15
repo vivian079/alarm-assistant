@@ -1,0 +1,1156 @@
+[
+  {
+    "sop_id": "SOP-010",
+    "title": "RF reflected power high during etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1035"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the RF matching network for a tuning fault."
+      },
+      {
+        "step": 2,
+        "text": "Check the RF cable connections."
+      },
+      {
+        "step": 3,
+        "text": "Check that the chamber pressure is within spec."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-011",
+    "title": "Process gas flow out of range during etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1042"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the flow reading with the mass flow controller setpoint."
+      },
+      {
+        "step": 2,
+        "text": "Check the gas supply pressure."
+      },
+      {
+        "step": 3,
+        "text": "Check that the gas line valves are open."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-012",
+    "title": "Chamber pressure high during main etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1023"
+    ],
+    "process_steps": [
+      "MAIN-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup pressure sensor."
+      },
+      {
+        "step": 2,
+        "text": "Check the gas inlet flow."
+      },
+      {
+        "step": 3,
+        "text": "Check the vacuum pump."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-013",
+    "title": "Chamber pressure high during over etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1023"
+    ],
+    "process_steps": [
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup pressure sensor."
+      },
+      {
+        "step": 2,
+        "text": "Check that the throttle valve is fully open."
+      },
+      {
+        "step": 3,
+        "text": "Check the over-etch gas flow setting in the recipe."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-014",
+    "title": "Helium backside pressure out of range",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1048"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the wafer is seated flat on the chuck."
+      },
+      {
+        "step": 2,
+        "text": "Check the helium supply pressure."
+      },
+      {
+        "step": 3,
+        "text": "Check the chuck clamping voltage."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-015",
+    "title": "Endpoint not detected during main etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1052"
+    ],
+    "process_steps": [
+      "MAIN-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the endpoint detector window for coating."
+      },
+      {
+        "step": 2,
+        "text": "Compare the etch time with the last 10 wafers of the same recipe."
+      },
+      {
+        "step": 3,
+        "text": "Hold the current wafer and send it for thickness measurement."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-016",
+    "title": "Endpoint not detected during over etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1052"
+    ],
+    "process_steps": [
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the over-etch time setting in the recipe."
+      },
+      {
+        "step": 2,
+        "text": "Hold the current wafer and send it for inspection."
+      },
+      {
+        "step": 3,
+        "text": "Stop the tool and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-017",
+    "title": "Chiller coolant flow out of range",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1057"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH",
+      "CHAMBER-CLEAN"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the coolant level in the chiller."
+      },
+      {
+        "step": 2,
+        "text": "Check the coolant lines for leaks or kinks."
+      },
+      {
+        "step": 3,
+        "text": "Check the chiller pump status."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-018",
+    "title": "Leak rate high after chamber clean",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1060"
+    ],
+    "process_steps": [
+      "CHAMBER-CLEAN"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Repeat the leak check once."
+      },
+      {
+        "step": 2,
+        "text": "Check the chamber lid O-ring for damage."
+      },
+      {
+        "step": 3,
+        "text": "Check the view port and door seals."
+      },
+      {
+        "step": 4,
+        "text": "If the leak rate is still high, keep the tool down and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-019",
+    "title": "Chuck voltage out of range",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1066"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the chuck power supply display."
+      },
+      {
+        "step": 2,
+        "text": "Check the chuck power cable connection."
+      },
+      {
+        "step": 3,
+        "text": "Run the chuck self-test."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-020",
+    "title": "Chamber temperature out of range during etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1031"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup temperature sensor."
+      },
+      {
+        "step": 2,
+        "text": "Check the chiller setpoint and coolant flow."
+      },
+      {
+        "step": 3,
+        "text": "Check the heater power output."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-021",
+    "title": "Particle count high during etch",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1071"
+    ],
+    "process_steps": [
+      "MAIN-ETCH",
+      "OVER-ETCH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Hold the current lot and send one wafer for particle inspection."
+      },
+      {
+        "step": 2,
+        "text": "Check the chamber clean history for an overdue clean."
+      },
+      {
+        "step": 3,
+        "text": "Check the gas filter replacement date."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-022",
+    "title": "Particle count high after chamber clean",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1071"
+    ],
+    "process_steps": [
+      "CHAMBER-CLEAN"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Repeat the chamber clean once."
+      },
+      {
+        "step": 2,
+        "text": "Run three test wafers and check the particle count."
+      },
+      {
+        "step": 3,
+        "text": "If the count is still high, keep the tool down and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-023",
+    "title": "RF reflected power high during chamber clean",
+    "equipment_type": "etch",
+    "alarm_codes": [
+      "A-1035"
+    ],
+    "process_steps": [
+      "CHAMBER-CLEAN"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the RF power setting in the clean recipe."
+      },
+      {
+        "step": 2,
+        "text": "Check the RF matching network for a tuning fault."
+      },
+      {
+        "step": 3,
+        "text": "If the reflected power is still high, keep the tool down and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-030",
+    "title": "Chamber pressure out of range during deposition",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2011"
+    ],
+    "process_steps": [
+      "DEPOSITION"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup pressure gauge."
+      },
+      {
+        "step": 2,
+        "text": "Check the throttle valve position."
+      },
+      {
+        "step": 3,
+        "text": "Check the precursor and carrier gas flows."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-031",
+    "title": "Chamber pressure out of range during purge",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2011"
+    ],
+    "process_steps": [
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup pressure gauge."
+      },
+      {
+        "step": 2,
+        "text": "Check the purge gas flow."
+      },
+      {
+        "step": 3,
+        "text": "Check the exhaust line for blockage."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-032",
+    "title": "Heater temperature out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2014"
+    ],
+    "process_steps": [
+      "PRE-CLEAN",
+      "DEPOSITION",
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup thermocouple."
+      },
+      {
+        "step": 2,
+        "text": "Check the heater power output."
+      },
+      {
+        "step": 3,
+        "text": "Check the heater cable connection."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-033",
+    "title": "Precursor flow out of range during deposition",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2019"
+    ],
+    "process_steps": [
+      "DEPOSITION"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the flow reading with the mass flow controller setpoint."
+      },
+      {
+        "step": 2,
+        "text": "Check the precursor bottle level."
+      },
+      {
+        "step": 3,
+        "text": "Check the precursor line heater temperature."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-034",
+    "title": "RF power out of range during deposition",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2023"
+    ],
+    "process_steps": [
+      "DEPOSITION"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the RF generator display for a fault."
+      },
+      {
+        "step": 2,
+        "text": "Check the RF matching network for a tuning fault."
+      },
+      {
+        "step": 3,
+        "text": "Hold the current wafer and send it for film thickness measurement."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-035",
+    "title": "RF power out of range during pre-clean",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2023"
+    ],
+    "process_steps": [
+      "PRE-CLEAN"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the RF power setting in the pre-clean recipe."
+      },
+      {
+        "step": 2,
+        "text": "Check the RF cable connections."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-036",
+    "title": "Film thickness out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2027"
+    ],
+    "process_steps": [
+      "DEPOSITION"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Measure the film thickness on one more wafer from the same lot."
+      },
+      {
+        "step": 2,
+        "text": "Compare the deposition time with the recipe setting."
+      },
+      {
+        "step": 3,
+        "text": "Check that the heater temperature is within spec."
+      },
+      {
+        "step": 4,
+        "text": "Hold the lot and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-037",
+    "title": "Purge gas flow out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2031"
+    ],
+    "process_steps": [
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the flow reading with the mass flow controller setpoint."
+      },
+      {
+        "step": 2,
+        "text": "Check the purge gas supply pressure."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-038",
+    "title": "Showerhead temperature out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2036"
+    ],
+    "process_steps": [
+      "DEPOSITION",
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup thermocouple."
+      },
+      {
+        "step": 2,
+        "text": "Check the showerhead cooling water flow."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-039",
+    "title": "Exhaust pressure out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2040"
+    ],
+    "process_steps": [
+      "PRE-CLEAN",
+      "DEPOSITION",
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the exhaust pump status."
+      },
+      {
+        "step": 2,
+        "text": "Check the exhaust line for blockage."
+      },
+      {
+        "step": 3,
+        "text": "Check the facility exhaust pressure."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-040",
+    "title": "Film thickness uniformity out of range",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2048"
+    ],
+    "process_steps": [
+      "DEPOSITION"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Measure the thickness at 9 points on one more wafer."
+      },
+      {
+        "step": 2,
+        "text": "Check the showerhead for clogged holes."
+      },
+      {
+        "step": 3,
+        "text": "Check that the wafer is centered on the heater."
+      },
+      {
+        "step": 4,
+        "text": "Hold the lot and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-041",
+    "title": "Precursor flow out of range during purge",
+    "equipment_type": "deposition",
+    "alarm_codes": [
+      "D-2019"
+    ],
+    "process_steps": [
+      "PURGE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the precursor valve closed at the end of deposition."
+      },
+      {
+        "step": 2,
+        "text": "Compare the flow reading with the mass flow controller setpoint."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-050",
+    "title": "Polish head down force out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3005"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup pressure sensor on the polish head."
+      },
+      {
+        "step": 2,
+        "text": "Check the polish head membrane for damage."
+      },
+      {
+        "step": 3,
+        "text": "Check the head air supply pressure."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-051",
+    "title": "Platen speed out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3009"
+    ],
+    "process_steps": [
+      "POLISH",
+      "PAD-CONDITIONING"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the motor controller display."
+      },
+      {
+        "step": 2,
+        "text": "Check the platen drive belt."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-052",
+    "title": "Slurry flow out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3012"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the slurry supply tank level."
+      },
+      {
+        "step": 2,
+        "text": "Check the slurry line for blockage."
+      },
+      {
+        "step": 3,
+        "text": "Check the slurry pump status."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-053",
+    "title": "Pad temperature out of range during polish",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3016"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the backup temperature sensor."
+      },
+      {
+        "step": 2,
+        "text": "Check that the slurry flow is within spec."
+      },
+      {
+        "step": 3,
+        "text": "Check that the polish down force is within spec."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-054",
+    "title": "Motor current high during polish",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3021"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the platen speed is within spec."
+      },
+      {
+        "step": 2,
+        "text": "Check that the polish down force is within spec."
+      },
+      {
+        "step": 3,
+        "text": "Check the pad for wear."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-055",
+    "title": "Motor current high during pad conditioning",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3021"
+    ],
+    "process_steps": [
+      "PAD-CONDITIONING"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the conditioner disk for wear."
+      },
+      {
+        "step": 2,
+        "text": "Check the conditioner arm for blocked movement."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-056",
+    "title": "Removal rate out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3025"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Measure the removal rate on one test wafer."
+      },
+      {
+        "step": 2,
+        "text": "Check the slurry lot and expiry date."
+      },
+      {
+        "step": 3,
+        "text": "Check the pad usage hours."
+      },
+      {
+        "step": 4,
+        "text": "Hold the lot and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-057",
+    "title": "DI water flow out of range during rinse",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3028"
+    ],
+    "process_steps": [
+      "RINSE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the DI water supply valve is open."
+      },
+      {
+        "step": 2,
+        "text": "Check the rinse nozzle for blockage."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-058",
+    "title": "Conditioner down force out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3033"
+    ],
+    "process_steps": [
+      "PAD-CONDITIONING"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the conditioner arm load cell."
+      },
+      {
+        "step": 2,
+        "text": "Check the conditioner air supply pressure."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-059",
+    "title": "Remaining film thickness out of range",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3037"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Measure the thickness on one more wafer from the same lot."
+      },
+      {
+        "step": 2,
+        "text": "Compare the polish time with the recipe setting."
+      },
+      {
+        "step": 3,
+        "text": "Hold the lot and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-060",
+    "title": "Polish endpoint not reached",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3041"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check the endpoint sensor window for slurry buildup."
+      },
+      {
+        "step": 2,
+        "text": "Compare the polish time with the last 10 wafers of the same recipe."
+      },
+      {
+        "step": 3,
+        "text": "Hold the current wafer and send it for thickness measurement."
+      },
+      {
+        "step": 4,
+        "text": "If all of the above are normal, stop the tool and notify process engineering."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-061",
+    "title": "DI water flow out of range during polish",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3028"
+    ],
+    "process_steps": [
+      "POLISH"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the DI water supply valve is open."
+      },
+      {
+        "step": 2,
+        "text": "Check the pad rinse arm position."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-062",
+    "title": "Pad temperature out of range during pad conditioning",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3016"
+    ],
+    "process_steps": [
+      "PAD-CONDITIONING"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Check that the conditioner down force is within spec."
+      },
+      {
+        "step": 2,
+        "text": "Check the DI water flow to the pad."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  },
+  {
+    "sop_id": "SOP-063",
+    "title": "Platen speed out of range during rinse",
+    "equipment_type": "cmp",
+    "alarm_codes": [
+      "C-3009"
+    ],
+    "process_steps": [
+      "RINSE"
+    ],
+    "notes": "Repeat alarm: if the same tool reported the same alarm code in the last 7 days, do the steps below and also notify the equipment engineer to escalate.",
+    "steps": [
+      {
+        "step": 1,
+        "text": "Compare the reading with the motor controller display."
+      },
+      {
+        "step": 2,
+        "text": "Check the rinse speed setting in the recipe."
+      },
+      {
+        "step": 3,
+        "text": "If all of the above are normal, stop the tool and notify maintenance."
+      }
+    ]
+  }
+]
