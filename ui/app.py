@@ -32,7 +32,7 @@ if plan and plan["alarm_id"] == alarm_id:
     st.subheader("Handling plan")
     st.caption(
         f"plan_id {plan['plan_id']} · status {plan['status']} · "
-        f"attempts {plan['attempts']} · {plan['created_at']}"
+        f"attempts {plan['attempts']} · prompt {plan.get('prompt_version')} · {plan['created_at']}"
     )
 
     if plan["status"] == "generation_failed":

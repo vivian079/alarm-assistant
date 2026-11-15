@@ -1,0 +1,4 @@
+This is for an equipment engineer. You need to generate a handling plan, including alarm_summary, likely_causes, actions.
+Each action should come from an SOP step. If an action does not come from any SOP step, leave its sop_refs empty. Do not make up SOP IDs or step numbers.
+alarm_summary must include: tool ID, chamber, alarm code, sensor reading, spec limit, wafer count, what this tool recently alarmed on and what was repaired.
+In each SOP reference, sop_id is the SOP ID (like SOP-012) and step is the step number.

@@ -5,12 +5,16 @@ Usage (from the repo root, with the API running):
 Re-score the plans of an earlier run without generating new ones (to test a change to the scoring or the judge):
     docker compose run --rm eval python run_eval.py --rescore results/run_<time>.json
 
-For each alarm in golden_set.json:
+For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
 2. alarm_summary vs the data tables         -> compare.score_summary
 3. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
    or, when expected_sop_refs is []         -> compare.score_not_covered
-Then print the totals and save everything to results/run_<time>.json.
+Then print the totals and save everything to results/run_<time>_<prompt version>_<judge version>.json.
+
+Every results file records the four things that change the scores:
+  prompt_version, model   from the API's response (the API made the plan, so it knows what it used)
+  judge_prompt_version, judge_model, golden_set_version   from this script's own .env (it uses them itself)
 """
 
 import argparse
@@ -29,6 +33,7 @@ API_URL = os.environ.get("API_URL", "http://localhost:8000")
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
 EVAL_DIR = Path(__file__).parent
 REQUEST_TIMEOUT = 3 * 180  # same as the page: one request can make up to 3 Claude calls
+GOLDEN_SET_VERSION = os.environ["GOLDEN_SET_VERSION"]
 
 
 def load(path: Path):
@@ -47,6 +52,9 @@ def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
         "alarm_id": alarm_id,
         "case": g["case"],
         "plan_id": saved["plan_id"],
+        "request_id": saved["request_id"],          # finds this plan's calls in llm_calls
+        "prompt_version": saved["prompt_version"],  # what the API used, not what .env says now
+        "model": saved["model"],
         "status": saved["status"],
         "attempts": saved["attempts"],
         "latency_s": round(time.time() - start, 1),
@@ -111,6 +119,8 @@ def summarize(rows: list[dict]) -> dict:
         "summary_fields_correct": sum_ok, "summary_fields_total": sum_total,
         "failed": sum(r["status"] == "generation_failed" for r in rows),
         "judge_calls": len(judge.LOG),
+        "judge_input_tokens": sum(e.get("input_tokens") or 0 for e in judge.LOG),
+        "judge_output_tokens": sum(e.get("output_tokens") or 0 for e in judge.LOG),
         "avg_latency_s": round(sum(r["latency_s"] for r in rows) / len(rows), 1),
         "by_case": case_scores,
     }
@@ -121,7 +131,27 @@ def fmt(x) -> str:
     return "n/a" if x is None else f"{x:.2f}"
 
 
-def print_report(rows: list[dict], t: dict) -> None:
+def run_versions(rows: list[dict]) -> dict:
+    """The four things that change the scores, for the whole run."""
+    # From the API's responses. Should be one value; more than one means the API was restarted
+    # with another version in the middle of the run, and the scores mix two prompts.
+    # "unknown": a re-score of a results file written before versions were recorded.
+    prompts = sorted({r.get("prompt_version") or "unknown" for r in rows})
+    models = sorted({r.get("model") or "unknown" for r in rows})
+    return {
+        "prompt_version": "+".join(prompts),
+        "model": "+".join(models),
+        "judge_prompt_version": judge.PROMPT_VERSION,
+        "judge_model": judge.MODEL,
+        "golden_set_version": GOLDEN_SET_VERSION,
+    }
+
+
+def print_report(rows: list[dict], t: dict, v: dict) -> None:
+    print()
+    print("  ".join(f"{k} {val}" for k, val in v.items()))
+    if "+" in v["prompt_version"]:
+        print("WARNING: plans in this run came from more than one prompt version")
     print()
     for r in rows:
         line = f"{r['alarm_id']}  {r['case']:<14}"
@@ -143,17 +173,20 @@ def print_report(rows: list[dict], t: dict) -> None:
     print(f"SOP not covered: {t['not_covered_correct']}/{t['not_covered_total']} handled right")
     print(f"alarm_summary fields: {t['summary_fields_correct']}/{t['summary_fields_total']} right")
     print(f"Failed generations: {t['failed']}   Judge calls: {t['judge_calls']}   Avg latency: {t['avg_latency_s']} s")
+    print(f"Judge tokens: input {t['judge_input_tokens']}  output {t['judge_output_tokens']}")
     print()
     for name, c in t["by_case"].items():
         print(f"  {name:<14} P {fmt(c['precision'])}  R {fmt(c['recall'])}  F1 {fmt(c['f1'])}")
 
 
-def save(rows: list[dict], totals: dict, rescored_from: str | None = None) -> Path:
+def save(rows: list[dict], totals: dict, versions: dict, rescored_from: str | None = None) -> Path:
     out_dir = EVAL_DIR / "results"
     out_dir.mkdir(exist_ok=True)
-    path = out_dir / f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    # The versions are in the file name too, so the list of files shows what each run was.
+    name = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{versions['prompt_version']}_{versions['judge_prompt_version']}"
+    path = out_dir / f"{name}.json"
     path.write_text(json.dumps(
-        {"run_at": datetime.now().isoformat(timespec="seconds"), "judge_model": judge.MODEL,
+        {"run_at": datetime.now().isoformat(timespec="seconds"), "versions": versions,
          "rescored_from": rescored_from, "totals": totals, "rows": rows, "judge_log": judge.LOG},
         indent=2, ensure_ascii=False,
     ))
@@ -165,7 +198,7 @@ def main() -> None:
     parser.add_argument("--rescore", help="results file of an earlier run: score its plans again, no new plans")
     args = parser.parse_args()
 
-    golden = load(EVAL_DIR / "golden_set.json")
+    golden = load(EVAL_DIR / "golden_sets" / f"{GOLDEN_SET_VERSION}.json")
     records = {r["alarm_id"]: r for r in load(DATA_DIR / "alarm_records.json")}
     codes = {c["alarm_code"]: c for c in load(DATA_DIR / "alarm_codes.json")}
     sops = {s["sop_id"]: s for s in load(DATA_DIR / "sops.json")}
@@ -179,15 +212,18 @@ def main() -> None:
         print(f"[{i}/{len(golden)}] {g['alarm_id']} ({g['case']})", flush=True)
         if args.rescore:
             old = old_rows[g["alarm_id"]]
-            row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "status", "attempts",
-                                       "latency_s", "expected_steps", "error", "plan") if k in old}
+            # The plan is reused, so its prompt_version and model come along with it.
+            row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "request_id", "prompt_version", "model",
+                                       "status", "attempts", "latency_s", "expected_steps", "error", "plan")
+                   if k in old}
             rows.append(row if row["status"] == "generation_failed" else score(row, g, records, codes, sops))
         else:
             rows.append(run_one(g, records, codes, sops))
 
     totals = summarize(rows)
-    print_report(rows, totals)
-    print(f"\nSaved to {save(rows, totals, args.rescore)}")
+    versions = run_versions(rows)
+    print_report(rows, totals, versions)
+    print(f"\nSaved to {save(rows, totals, versions, args.rescore)}")
 
 
 if __name__ == "__main__":

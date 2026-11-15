@@ -1,10 +1,12 @@
 import json
 import os
+import time
+from pathlib import Path
 
 import anthropic
 from pydantic import ValidationError
 
-from prompts import SOP_LIBRARY_INTRO, SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
+import db
 from schemas import HandlingPlan
 
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
@@ -14,12 +16,27 @@ MAX_RETRIES = 2  # first try + 2 retries = at most 3 API calls
 
 SOP_FILE = os.environ.get("SOP_FILE", "/data/sops.json")
 
+# Which prompt version to use. Set in .env; read once when the API starts,
+# so after changing .env the API has to be restarted.
+PROMPT_VERSION = os.environ["PROMPT_VERSION"]
+PROMPT_DIR = Path(__file__).parent / "prompts"
+
+
+def load_prompt(version: str) -> tuple[str, str]:
+    """prompts/<version>/system.txt and user.txt. Each file ends with one newline, which is not part of the prompt."""
+    folder = PROMPT_DIR / version
+    if not folder.is_dir():
+        raise RuntimeError(f"PROMPT_VERSION={version}: there is no folder {folder}")
+    system = (folder / "system.txt").read_text().removesuffix("\n")
+    user = (folder / "user.txt").read_text().removesuffix("\n")
+    return system, user
+
 
 def load_sop_library() -> str:
     """All SOPs as text, one block per SOP. The whole library goes into every request (no retrieval yet)."""
     with open(SOP_FILE) as f:
         sops = json.load(f)
-    blocks = [SOP_LIBRARY_INTRO]
+    blocks = []
     for sop in sops:
         lines = [
             f"{sop['sop_id']} | {sop['title']} | equipment: {sop['equipment_type']} | "
@@ -30,8 +47,12 @@ def load_sop_library() -> str:
     return "\n\n".join(blocks)
 
 
-# Same for every alarm: the instructions plus the whole SOP library.
-SYSTEM = SYSTEM_PROMPT + "\n\n" + load_sop_library()
+SYSTEM_TEMPLATE, USER_PROMPT_TEMPLATE = load_prompt(PROMPT_VERSION)
+
+# Same for every alarm. A version whose system.txt has {sop_library} gets the whole SOP library there;
+# a version without it (handling_plan_v1) sends no SOPs.
+# replace, not format: SOP text could contain { }.
+SYSTEM = SYSTEM_TEMPLATE.replace("{sop_library}", load_sop_library())
 
 # Reads ANTHROPIC_API_KEY from the environment.
 client = anthropic.Anthropic()
@@ -52,10 +73,12 @@ class PlanGenerationError(Exception):
         self.attempts = attempts
 
 
-def generate_plan(alarm: dict) -> tuple[HandlingPlan, int]:
+def generate_plan(alarm: dict, request_id: str) -> tuple[HandlingPlan, int]:
     """Fill the alarm into the prompt, call Claude with the schema, return (plan, attempts).
 
     Synchronous: each call waits until Claude returns the whole answer.
+    Every API call is written to the llm_calls table (one row per call, failed ones too),
+    with request_id so the rows can be found from the handling plan.
     Raises PlanGenerationError if every try fails.
     """
     messages = [{"role": "user", "content": USER_PROMPT_TEMPLATE.format(**alarm)}]
@@ -63,33 +86,64 @@ def generate_plan(alarm: dict) -> tuple[HandlingPlan, int]:
     error = ""
 
     for attempt in range(1, MAX_RETRIES + 2):
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=max_tokens,
-            system=SYSTEM,
-            messages=messages,
-            output_config={"format": OUTPUT_FORMAT},
-        )
+        call = {
+            "request_id": request_id,
+            "alarm_id": alarm["alarm_id"],
+            "attempt": attempt,
+            "prompt_version": PROMPT_VERSION,
+            "model": MODEL,
+            "system_prompt": SYSTEM,
+            "messages": messages,
+            "max_tokens": max_tokens,
+        }
+        start = time.monotonic()
+        try:
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=max_tokens,
+                system=SYSTEM,
+                messages=messages,
+                output_config={"format": OUTPUT_FORMAT},
+            )
+        except anthropic.APIError as e:
+            # No answer came back (network, rate limit, server error after the SDK's own retries).
+            # Still one call, so it gets a row.
+            call["latency_ms"] = int((time.monotonic() - start) * 1000)
+            call["error"] = f"API error: {e}"
+            db.log_llm_call(call)
+            raise PlanGenerationError(call["error"], attempt)
+
+        call["latency_ms"] = int((time.monotonic() - start) * 1000)
+        call["stop_reason"] = response.stop_reason
+        call["input_tokens"] = response.usage.input_tokens
+        call["output_tokens"] = response.usage.output_tokens
+        # The answer can contain a thinking block before the text block,
+        # so keep only the text blocks.
+        text = "".join(block.text for block in response.content if block.type == "text")
+        call["response_text"] = text
 
         if response.stop_reason == "refusal":
             # The same input would be refused again, so don't retry.
-            raise PlanGenerationError("Claude refused to answer", attempt)
+            call["error"] = "Claude refused to answer"
+            db.log_llm_call(call)
+            raise PlanGenerationError(call["error"], attempt)
 
         if response.stop_reason == "max_tokens":
             # Cut off: the JSON is incomplete. Retry the same request with more room.
             # Don't ask for a shorter answer: a shorter plan can drop SOP steps.
             error = f"output was cut off at max_tokens={max_tokens}"
+            call["error"] = error
+            db.log_llm_call(call)
             max_tokens = MAX_TOKENS_AFTER_CUTOFF
             continue
 
-        # The answer can contain a thinking block before the text block,
-        # so keep only the text blocks.
-        text = "".join(block.text for block in response.content if block.type == "text")
         try:
-            return HandlingPlan.model_validate_json(text), attempt
+            plan = HandlingPlan.model_validate_json(text)
         except ValidationError as e:
             # Retry with the error message: show Claude its output and what was wrong with it.
             error = str(e)
+            call["error"] = error
+            db.log_llm_call(call)
             messages = messages + [
                 {"role": "assistant", "content": text},
                 {
@@ -98,5 +152,9 @@ def generate_plan(alarm: dict) -> tuple[HandlingPlan, int]:
                     "Return the complete handling plan again with this fixed.",
                 },
             ]
+            continue
+
+        db.log_llm_call(call)  # passed: error stays empty
+        return plan, attempt
 
     raise PlanGenerationError(error, MAX_RETRIES + 1)

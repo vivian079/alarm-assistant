@@ -1,3 +1,4 @@
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -41,11 +42,17 @@ def create_plan(alarm_id: str):
         "unit": code["unit"],
     }
 
+    # One id for this generation: the plan row and every llm_calls row it made share it.
+    request_id = uuid.uuid4().hex
+
     try:
-        plan, attempts = llm.generate_plan(prompt_input)    # 3. call Claude with the schema, retry on failure
+        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 3. call Claude with the schema, retry on failure
     except llm.PlanGenerationError as e:
-        return db.save_failed_plan(alarm_id, str(e), e.attempts)   # 4a. every try failed: status = generation_failed
-    return db.save_plan(alarm_id, plan.model_dump(), attempts)     # 4b. save (status = pending_review), return
+        return db.save_failed_plan(
+            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL)   # 4a. every try failed: status = generation_failed
+    # 4b. save (status = pending_review), return. The returned row has prompt_version and model,
+    # so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
+    return db.save_plan(alarm_id, plan.model_dump(), attempts, request_id, llm.PROMPT_VERSION, llm.MODEL)
 
 
 @app.post("/plans/{plan_id}/approve")

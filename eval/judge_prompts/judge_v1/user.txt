@@ -1,0 +1,5 @@
+Action:
+{action}
+
+Cited SOP text:
+{sop_steps}

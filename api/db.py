@@ -60,6 +60,33 @@ def init_db():
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS plan_json JSONB")
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS error TEXT")
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS attempts INTEGER")
+        # Which prompt and model made this plan, and the key to its rows in llm_calls.
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS request_id TEXT")
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS prompt_version TEXT")
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS model TEXT")
+
+        # Audit log: one row per Claude API call, failed calls included.
+        # Only INSERT into this table, never UPDATE or DELETE: it has to show what was really sent and received.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS llm_calls (
+                call_id         SERIAL PRIMARY KEY,
+                called_at       TIMESTAMP NOT NULL DEFAULT now(),
+                request_id      TEXT NOT NULL,   -- same value as handling_plans.request_id
+                alarm_id        TEXT NOT NULL REFERENCES alarm_records(alarm_id),
+                attempt         INTEGER NOT NULL, -- 1, 2, 3 within one plan generation
+                prompt_version  TEXT NOT NULL,
+                model           TEXT NOT NULL,
+                system_prompt   TEXT NOT NULL,   -- the full text sent, SOP library included
+                messages        JSONB NOT NULL,  -- the full messages sent (a retry includes the earlier output and error)
+                max_tokens      INTEGER NOT NULL,
+                response_text   TEXT,            -- the raw output; empty if the call itself failed
+                stop_reason     TEXT,            -- end_turn / max_tokens / refusal
+                input_tokens    INTEGER,
+                output_tokens   INTEGER,
+                latency_ms      INTEGER,
+                error           TEXT             -- why this call did not give a plan; empty if it did
+            )
+        """)
 
         with open(ALARM_DATA_FILE) as f:
             records = json.load(f)
@@ -113,28 +140,53 @@ def get_alarm_code(alarm_code: str) -> dict | None:
         ).fetchone()
 
 
-def save_plan(alarm_id: str, plan_json: dict, attempts: int) -> dict:
+def save_plan(alarm_id: str, plan_json: dict, attempts: int,
+              request_id: str, prompt_version: str, model: str) -> dict:
     """A plan that passed validation. status starts as pending_review."""
     with get_conn() as conn:
         return conn.execute(
             """
-            INSERT INTO handling_plans (alarm_id, plan_json, attempts)
-            VALUES (%s, %s, %s) RETURNING *
+            INSERT INTO handling_plans (alarm_id, plan_json, attempts, request_id, prompt_version, model)
+            VALUES (%s, %s, %s, %s, %s, %s) RETURNING *
             """,
-            (alarm_id, Jsonb(plan_json), attempts),
+            (alarm_id, Jsonb(plan_json), attempts, request_id, prompt_version, model),
         ).fetchone()
 
 
-def save_failed_plan(alarm_id: str, error: str, attempts: int) -> dict:
+def save_failed_plan(alarm_id: str, error: str, attempts: int,
+                     request_id: str, prompt_version: str, model: str) -> dict:
     """Every try failed: keep a row so the engineer sees it and handles the alarm manually."""
     with get_conn() as conn:
         return conn.execute(
             """
-            INSERT INTO handling_plans (alarm_id, error, attempts, status)
-            VALUES (%s, %s, %s, 'generation_failed') RETURNING *
+            INSERT INTO handling_plans (alarm_id, error, attempts, status, request_id, prompt_version, model)
+            VALUES (%s, %s, %s, 'generation_failed', %s, %s, %s) RETURNING *
             """,
-            (alarm_id, error, attempts),
+            (alarm_id, error, attempts, request_id, prompt_version, model),
         ).fetchone()
+
+
+def log_llm_call(call: dict) -> None:
+    """One row in llm_calls. Keys that are missing (e.g. response_text when the call failed) are stored as NULL."""
+    row = {
+        "response_text": None, "stop_reason": None, "input_tokens": None,
+        "output_tokens": None, "latency_ms": None, "error": None,
+        **call,
+        "messages": Jsonb(call["messages"]),
+    }
+    with get_conn() as conn:
+        conn.execute(
+            """
+            INSERT INTO llm_calls
+                (request_id, alarm_id, attempt, prompt_version, model, system_prompt, messages,
+                 max_tokens, response_text, stop_reason, input_tokens, output_tokens, latency_ms, error)
+            VALUES
+                (%(request_id)s, %(alarm_id)s, %(attempt)s, %(prompt_version)s, %(model)s, %(system_prompt)s,
+                 %(messages)s, %(max_tokens)s, %(response_text)s, %(stop_reason)s, %(input_tokens)s,
+                 %(output_tokens)s, %(latency_ms)s, %(error)s)
+            """,
+            row,
+        )
 
 
 def approve_plan(plan_id: int) -> dict | None:
