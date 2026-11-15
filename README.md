@@ -6,7 +6,8 @@ All data in `data/` is synthetic.
 Current stage: structured output + evaluation. One synchronous endpoint. The plan follows a Pydantic schema
 (`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
 with the error message, up to 2 times, then saves the plan as `generation_failed`.
-The prompt gets the alarm record and its spec limit from the alarm code table (no SOP text yet).
+The prompt gets the alarm record, its spec limit from the alarm code table, and the whole SOP library
+(all 40 SOPs in the system prompt; no retrieval yet).
 
 ## Data (`data/`, synthetic)
 

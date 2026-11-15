@@ -1,15 +1,37 @@
+import json
 import os
 
 import anthropic
 from pydantic import ValidationError
 
-from prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
+from prompts import SOP_LIBRARY_INTRO, SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
 from schemas import HandlingPlan
 
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
 MAX_TOKENS = 8000
 MAX_TOKENS_AFTER_CUTOFF = 16000
 MAX_RETRIES = 2  # first try + 2 retries = at most 3 API calls
+
+SOP_FILE = os.environ.get("SOP_FILE", "/data/sops.json")
+
+
+def load_sop_library() -> str:
+    """All SOPs as text, one block per SOP. The whole library goes into every request (no retrieval yet)."""
+    with open(SOP_FILE) as f:
+        sops = json.load(f)
+    blocks = [SOP_LIBRARY_INTRO]
+    for sop in sops:
+        lines = [
+            f"{sop['sop_id']} | {sop['title']} | equipment: {sop['equipment_type']} | "
+            f"alarm codes: {', '.join(sop['alarm_codes'])} | process steps: {', '.join(sop['process_steps'])}"
+        ]
+        lines += [f"  step {s['step']}: {s['text']}" for s in sop["steps"]]
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)
+
+
+# Same for every alarm: the instructions plus the whole SOP library.
+SYSTEM = SYSTEM_PROMPT + "\n\n" + load_sop_library()
 
 # Reads ANTHROPIC_API_KEY from the environment.
 client = anthropic.Anthropic()
@@ -44,7 +66,7 @@ def generate_plan(alarm: dict) -> tuple[HandlingPlan, int]:
         response = client.messages.create(
             model=MODEL,
             max_tokens=max_tokens,
-            system=SYSTEM_PROMPT,
+            system=SYSTEM,
             messages=messages,
             output_config={"format": OUTPUT_FORMAT},
         )
