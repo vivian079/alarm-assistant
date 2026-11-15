@@ -58,9 +58,9 @@ def score_actions(actions: list[dict], expected_refs: list[dict], sops: dict, ju
             continue
         if any(ref not in expected for ref in refs):
             continue
-        # One judge call per action, with the text of every step it cites,
-        # so an action that does two SOP steps at once is judged against both.
-        cited_text = "\n".join(f"{sop_id} step {step}: {step_text(sops, sop_id, step)}" for sop_id, step in refs)
+        # One judge call per action. The judge gets every step of each cited SOP, with the cited steps marked,
+        # because a step can refer to other steps ("If all of the above are normal, ...").
+        cited_text = sop_context(sops, refs)
         if not judge(action["step"], cited_text):
             continue
         correct += 1
@@ -69,11 +69,17 @@ def score_actions(actions: list[dict], expected_refs: list[dict], sops: dict, ju
     return {"generated": len(actions), "correct": correct, "covered": len(covered), "expected": len(expected)}
 
 
-def step_text(sops: dict, sop_id: str, step: int) -> str:
-    for s in sops[sop_id]["steps"]:
-        if s["step"] == step:
-            return s["text"]
-    raise KeyError(f"{sop_id} has no step {step}")
+def sop_context(sops: dict, refs: list[tuple[str, int]]) -> str:
+    """Full text of each cited SOP, cited steps marked with <- CITED."""
+    blocks = []
+    for sop_id in dict.fromkeys(sop_id for sop_id, _ in refs):  # each SOP once, in order
+        sop = sops[sop_id]
+        lines = [f"{sop_id}: {sop['title']}"]
+        for st in sop["steps"]:
+            mark = "   <- CITED" if (sop_id, st["step"]) in refs else ""
+            lines.append(f"  step {st['step']}: {st['text']}{mark}")
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)
 
 
 def score_not_covered(actions: list[dict]) -> bool:

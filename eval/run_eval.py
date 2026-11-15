@@ -2,6 +2,8 @@
 
 Usage (from the repo root, with the API running):
     docker compose run --rm eval
+Re-score the plans of an earlier run without generating new ones (to test a change to the scoring or the judge):
+    docker compose run --rm eval python run_eval.py --rescore results/run_<time>.json
 
 For each alarm in golden_set.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
@@ -11,6 +13,7 @@ For each alarm in golden_set.json:
 Then print the totals and save everything to results/run_<time>.json.
 """
 
+import argparse
 import json
 import os
 import time
@@ -33,6 +36,7 @@ def load(path: Path):
 
 
 def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
+    """Generate a new plan through the API, then score it."""
     alarm_id = g["alarm_id"]
     start = time.time()
     resp = requests.post(f"{API_URL}/alarms/{alarm_id}/plan", timeout=REQUEST_TIMEOUT)
@@ -51,15 +55,19 @@ def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
     if saved["status"] == "generation_failed":
         row["error"] = saved["error"]
         return row
+    row["plan"] = saved["plan_json"]
+    return score(row, g, records, codes, sops)
 
-    plan = saved["plan_json"]
-    record = records[alarm_id]
+
+def score(row: dict, g: dict, records: dict, codes: dict, sops: dict) -> dict:
+    """Score a row that already has its plan."""
+    plan = row["plan"]
+    record = records[g["alarm_id"]]
     row["summary"] = compare.score_summary(plan["alarm_summary"], record, codes[record["alarm_code"]])
     if g["expected_sop_refs"]:
         row["actions"] = compare.score_actions(plan["actions"], g["expected_sop_refs"], sops, judge.judge_action)
     else:
         row["not_covered_correct"] = compare.score_not_covered(plan["actions"])
-    row["plan"] = plan
     return row
 
 
@@ -140,32 +148,46 @@ def print_report(rows: list[dict], t: dict) -> None:
         print(f"  {name:<14} P {fmt(c['precision'])}  R {fmt(c['recall'])}  F1 {fmt(c['f1'])}")
 
 
-def save(rows: list[dict], totals: dict) -> Path:
+def save(rows: list[dict], totals: dict, rescored_from: str | None = None) -> Path:
     out_dir = EVAL_DIR / "results"
     out_dir.mkdir(exist_ok=True)
     path = out_dir / f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     path.write_text(json.dumps(
         {"run_at": datetime.now().isoformat(timespec="seconds"), "judge_model": judge.MODEL,
-         "totals": totals, "rows": rows, "judge_log": judge.LOG},
+         "rescored_from": rescored_from, "totals": totals, "rows": rows, "judge_log": judge.LOG},
         indent=2, ensure_ascii=False,
     ))
     return path
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rescore", help="results file of an earlier run: score its plans again, no new plans")
+    args = parser.parse_args()
+
     golden = load(EVAL_DIR / "golden_set.json")
     records = {r["alarm_id"]: r for r in load(DATA_DIR / "alarm_records.json")}
     codes = {c["alarm_code"]: c for c in load(DATA_DIR / "alarm_codes.json")}
     sops = {s["sop_id"]: s for s in load(DATA_DIR / "sops.json")}
 
+    old_rows = {}
+    if args.rescore:
+        old_rows = {r["alarm_id"]: r for r in load(Path(args.rescore))["rows"]}
+
     rows = []
     for i, g in enumerate(golden, 1):
         print(f"[{i}/{len(golden)}] {g['alarm_id']} ({g['case']})", flush=True)
-        rows.append(run_one(g, records, codes, sops))
+        if args.rescore:
+            old = old_rows[g["alarm_id"]]
+            row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "status", "attempts",
+                                       "latency_s", "expected_steps", "error", "plan") if k in old}
+            rows.append(row if row["status"] == "generation_failed" else score(row, g, records, codes, sops))
+        else:
+            rows.append(run_one(g, records, codes, sops))
 
     totals = summarize(rows)
     print_report(rows, totals)
-    print(f"\nSaved to {save(rows, totals)}")
+    print(f"\nSaved to {save(rows, totals, args.rescore)}")
 
 
 if __name__ == "__main__":
