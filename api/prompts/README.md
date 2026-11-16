@@ -12,3 +12,7 @@ Rules:
 |---|---|
 | handling_plan_v1 | first structured-output prompt; no SOPs in the prompt (baseline) |
 | handling_plan_v2 | adds the whole SOP library (40 SOPs) to the system prompt |
+| handling_plan_v3 | same as v2, plus: the repeat-alarm escalation is added by the system, so it is not written as an action |
+
+Note on handling_plan_v3: the code that adds the escalation flag (design doc rule R1) is not written yet.
+Until it is, a plan made with v3 shows no escalation at all, so v3 is for evaluation only.
