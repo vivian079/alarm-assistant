@@ -4,6 +4,8 @@ Usage (from the repo root, with the API running):
     docker compose run --rm eval
 Re-score the plans of an earlier run without generating new ones (to test a change to the scoring or the judge):
     docker compose run --rm eval python run_eval.py --rescore results/run_<time>.json
+Run only some alarms, several times each (to see how much one alarm's result changes from run to run):
+    docker compose run --rm eval python run_eval.py --only AL-063 --repeat 5
 
 For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
@@ -153,8 +155,10 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
     if "+" in v["prompt_version"]:
         print("WARNING: plans in this run came from more than one prompt version")
     print()
+    repeated = any(r.get("run", 1) > 1 for r in rows)
     for r in rows:
-        line = f"{r['alarm_id']}  {r['case']:<14}"
+        run = f" #{r['run']}" if repeated else ""
+        line = f"{r['alarm_id']}{run}  {r['case']:<14}"
         if r["status"] == "generation_failed":
             print(line + "  GENERATION FAILED")
             continue
@@ -179,11 +183,28 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
         print(f"  {name:<14} P {fmt(c['precision'])}  R {fmt(c['recall'])}  F1 {fmt(c['f1'])}")
 
 
-def save(rows: list[dict], totals: dict, versions: dict, rescored_from: str | None = None) -> Path:
+def print_repeats(rows: list[dict]) -> None:
+    """For an alarm run more than once: its covered count in each run, side by side."""
+    by_alarm: dict[str, list[str]] = {}
+    for r in rows:
+        if r["status"] == "generation_failed":
+            by_alarm.setdefault(r["alarm_id"], []).append("failed")
+        elif "actions" in r:
+            by_alarm.setdefault(r["alarm_id"], []).append(f"{r['actions']['covered']}/{r['actions']['expected']}")
+        else:
+            by_alarm.setdefault(r["alarm_id"], []).append("no steps" if r["not_covered_correct"] else "has steps")
+    print()
+    for alarm_id, results in by_alarm.items():
+        if len(results) > 1:
+            print(f"{alarm_id} covered in each run: {', '.join(results)}")
+
+
+def save(rows: list[dict], totals: dict, versions: dict, rescored_from: str | None = None, tag: str = "") -> Path:
     out_dir = EVAL_DIR / "results"
     out_dir.mkdir(exist_ok=True)
     # The versions are in the file name too, so the list of files shows what each run was.
-    name = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{versions['prompt_version']}_{versions['judge_prompt_version']}"
+    # tag marks a partial run (e.g. "_AL-063x5"), so it is not mistaken for a full golden set run.
+    name = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{versions['prompt_version']}_{versions['judge_prompt_version']}{tag}"
     path = out_dir / f"{name}.json"
     path.write_text(json.dumps(
         {"run_at": datetime.now().isoformat(timespec="seconds"), "versions": versions,
@@ -196,34 +217,59 @@ def save(rows: list[dict], totals: dict, versions: dict, rescored_from: str | No
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--rescore", help="results file of an earlier run: score its plans again, no new plans")
+    parser.add_argument("--only", nargs="+", metavar="ALARM_ID", help="run only these golden alarms")
+    parser.add_argument("--repeat", type=int, default=1, help="generate a plan for each alarm this many times")
     args = parser.parse_args()
+    if args.rescore and args.repeat > 1:
+        parser.error("--repeat makes new plans; --rescore reuses old ones. Use one of them.")
 
     golden = load(EVAL_DIR / "golden_sets" / f"{GOLDEN_SET_VERSION}.json")
+    golden_by_id = {g["alarm_id"]: g for g in golden}
+    if args.only:
+        unknown = [a for a in args.only if a not in golden_by_id]
+        if unknown:
+            parser.error(f"not in {GOLDEN_SET_VERSION}: {', '.join(unknown)}")
     records = {r["alarm_id"]: r for r in load(DATA_DIR / "alarm_records.json")}
     codes = {c["alarm_code"]: c for c in load(DATA_DIR / "alarm_codes.json")}
     sops = {s["sop_id"]: s for s in load(DATA_DIR / "sops.json")}
 
-    old_rows = {}
+    # What to do: a list of (golden alarm, old row to re-score or None to make a new plan, run number).
     if args.rescore:
-        old_rows = {r["alarm_id"]: r for r in load(Path(args.rescore))["rows"]}
+        # Go through the old file's rows, so a partial or repeated run is re-scored as it was.
+        old_rows = load(Path(args.rescore))["rows"]
+        todo = [(golden_by_id[r["alarm_id"]], r, r.get("run", 1)) for r in old_rows
+                if not args.only or r["alarm_id"] in args.only]
+    else:
+        selected = [g for g in golden if not args.only or g["alarm_id"] in args.only]
+        todo = [(g, None, k) for g in selected for k in range(1, args.repeat + 1)]
 
     rows = []
-    for i, g in enumerate(golden, 1):
-        print(f"[{i}/{len(golden)}] {g['alarm_id']} ({g['case']})", flush=True)
-        if args.rescore:
-            old = old_rows[g["alarm_id"]]
+    for i, (g, old, run) in enumerate(todo, 1):
+        print(f"[{i}/{len(todo)}] {g['alarm_id']} ({g['case']})" + (f" run {run}" if args.repeat > 1 else ""), flush=True)
+        if old is not None:
             # The plan is reused, so its prompt_version and model come along with it.
             row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "request_id", "prompt_version", "model",
                                        "status", "attempts", "latency_s", "expected_steps", "error", "plan")
                    if k in old}
+            row["run"] = run
             rows.append(row if row["status"] == "generation_failed" else score(row, g, records, codes, sops))
         else:
-            rows.append(run_one(g, records, codes, sops))
+            row = run_one(g, records, codes, sops)
+            row["run"] = run
+            rows.append(row)
 
     totals = summarize(rows)
     versions = run_versions(rows)
     print_report(rows, totals, versions)
-    print(f"\nSaved to {save(rows, totals, versions, args.rescore)}")
+    print_repeats(rows)
+    tag = ""
+    if args.only:
+        tag = "_" + "-".join(args.only) + (f"x{args.repeat}" if args.repeat > 1 else "")
+    elif args.rescore:
+        ids = [r["alarm_id"] for r in rows]
+        if len(set(ids)) < len(golden) or len(ids) != len(set(ids)):
+            tag = "_partial"  # re-score of a run that was not one full pass over the golden set
+    print(f"\nSaved to {save(rows, totals, versions, args.rescore, tag)}")
 
 
 if __name__ == "__main__":

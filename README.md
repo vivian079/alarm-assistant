@@ -69,3 +69,9 @@ Run the evaluation (with the services up):
 ```
 docker compose run --rm eval
 ```
+
+Run one alarm several times, to see how much its result changes from run to run (each run makes a new plan):
+
+```
+docker compose run --rm eval python run_eval.py --only AL-063 --repeat 5
+```
