@@ -1,0 +1,548 @@
+{
+  "run_at": "2026-11-16T20:54:16",
+  "versions": {
+    "prompt_version": "handling_plan_v3",
+    "model": "claude-sonnet-5-5",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "golden_set_version": "golden_v1"
+  },
+  "rescored_from": null,
+  "totals": {
+    "precision": 0.8235294117647058,
+    "recall": 0.9333333333333333,
+    "f1": 0.8749999999999999,
+    "correct": 14,
+    "generated": 17,
+    "covered": 14,
+    "expected": 15,
+    "not_covered_correct": 0,
+    "not_covered_total": 0,
+    "summary_fields_correct": 40,
+    "summary_fields_total": 40,
+    "failed": 0,
+    "judge_calls": 15,
+    "judge_input_tokens": 9487,
+    "judge_output_tokens": 878,
+    "avg_latency_s": 6.9,
+    "by_case": {
+      "step_specific": {
+        "correct": 14,
+        "generated": 17,
+        "covered": 14,
+        "expected": 15,
+        "precision": 0.8235294117647058,
+        "recall": 0.9333333333333333,
+        "f1": 0.8749999999999999
+      }
+    }
+  },
+  "rows": [
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 89,
+      "request_id": "c00e28da4a9540d783bc151699191b9d",
+      "prompt_version": "handling_plan_v3",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 8.4,
+      "expected_steps": 3,
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe against the approved recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Hold the current wafer and send it for inspection.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Review how the 2026-11-11 A-1023 alarms on chambers A and B were closed out, since no repair is recorded, and check whether the pressure issue is related to this alarm.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair or fix is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 (chamber pressure high) reported on 2026-11-11 at 10:05 on chamber A and at 10:30 on chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "Over-etch time setting in the recipe is wrong or was changed, so the over-etch time of 104 s exceeds the 90 s upper limit",
+          "Endpoint was not detected during over-etch, so the step ran past its expected time",
+          "The A-1023 chamber pressure alarm on chamber A two days ago may not have been fully resolved. Abnormal pressure could change the etch behavior and delay endpoint (not confirmed, no fix is on record)"
+        ]
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 2,
+        "covered": 2,
+        "expected": 3
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 90,
+      "request_id": "d66e8b25c72f41d1aec7a85b9abb7672",
+      "prompt_version": "handling_plan_v3",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.5,
+      "expected_steps": 3,
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Hold the current wafer and send it for inspection.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 (chamber pressure high) reported on 2026-11-11 at 10:05 in chamber A and at 10:30 in chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "The over-etch time setting in the recipe is wrong or was changed, so the over-etch ran 104 s against an upper limit of 90 s.",
+          "The endpoint signal was not detected during over-etch, so the step ran to its time limit.",
+          "The recent A-1023 chamber pressure alarms may point to a chamber condition problem that affected the etch and endpoint detection. This link is not confirmed."
+        ]
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 2
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 91,
+      "request_id": "a749d996d8a940c8b9365d0a8cb5b4ed",
+      "prompt_version": "handling_plan_v3",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.3,
+      "expected_steps": 3,
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe against the 40-90 s spec.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Hold the current wafer and send it for inspection.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 (chamber pressure high) reported on 2026-11-11 at 10:05 in chamber A and at 10:30 in chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "Over-etch time setting in the recipe is wrong or was changed, so the over-etch time of 104 s exceeds the 90 s upper limit",
+          "Endpoint was not detected during over-etch, so the step ran longer than spec",
+          "Possible link to the A-1023 pressure alarms two days ago, since a pressure shift could change etch behavior. This is unconfirmed, and no repair record is available"
+        ]
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 3
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 92,
+      "request_id": "3431a7f5005546ba8058dcb573f5e4d5",
+      "prompt_version": "handling_plan_v3",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 7.3,
+      "expected_steps": 3,
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Hold the current wafer and send it for inspection.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Review the 2026-11-11 A-1023 events on ETCH-03 and confirm whether any repair was done, to see if they relate to this alarm.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 (chamber pressure high) reported on 2026-11-11 10:05 in chamber A and on 2026-11-11 10:30 in chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "Over-etch time setting in the recipe is wrong or was changed, so the over-etch ran 104 s against an upper limit of 90 s",
+          "Endpoint was not detected during over-etch, so the step ran to its time limit",
+          "Possible link to the A-1023 chamber pressure events on 2026-11-11, which have no recorded repair. This is not confirmed."
+        ]
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 4
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 93,
+      "request_id": "878c7bd0fa1b466eb71f75186c175c30",
+      "prompt_version": "handling_plan_v3",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.1,
+      "expected_steps": 3,
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Hold the current wafer and send it for inspection.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair is recorded in the provided history for the recent A-1023 alarms",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 (chamber pressure high) reported on 2026-11-11 at 10:05 on chamber A and at 10:30 on chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "Over-etch time setting in the recipe is wrong or was changed, so the time exceeds the 90 s upper limit",
+          "Endpoint was not detected during over-etch, so the step ran to its time limit (104.0 s vs 90.0 s upper spec)",
+          "Endpoint detection problem, such as a coated detector window. This is possible but not confirmed by the data",
+          "Residual effect of the A-1023 chamber pressure alarms on 2026-11-11. This is a possible link only, with no repair on record"
+        ]
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 5
+    }
+  ],
+  "judge_log": [
+    {
+      "action": "Check the over-etch time setting in the recipe against the approved recipe.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 639,
+      "output_tokens": 86,
+      "reason": "The cited step says to check the over-etch time setting in the recipe. The action also compares it against the approved recipe, which is an extra comparison operation not stated in the cited step, since the step does not mention any approved recipe or reference.",
+      "judgement": false,
+      "latency_ms": 1922
+    },
+    {
+      "action": "Hold the current wafer and send it for inspection.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.   <- CITED\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 54,
+      "reason": "The action to hold the current wafer and send it for inspection matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2775
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 55,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2440
+    },
+    {
+      "action": "Check the over-etch time setting in the recipe.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 57,
+      "reason": "The action checks the over-etch time setting in the recipe, which is exactly what cited step 1 says, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1713
+    },
+    {
+      "action": "Hold the current wafer and send it for inspection.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.   <- CITED\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 57,
+      "reason": "The action holds the current wafer and sends it for inspection, which is exactly what cited step 2 says, with no additional or missing operations.",
+      "judgement": true,
+      "latency_ms": 2262
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 54,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 1788
+    },
+    {
+      "action": "Check the over-etch time setting in the recipe against the 40-90 s spec.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 642,
+      "output_tokens": 78,
+      "reason": "The action checks the over-etch time setting in the recipe, which is exactly what step 1 says. The 40-90 s spec is a reference value that does not add a new operation, so the action matches the cited step.",
+      "judgement": true,
+      "latency_ms": 2017
+    },
+    {
+      "action": "Hold the current wafer and send it for inspection.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.   <- CITED\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 53,
+      "reason": "The action to hold the current wafer and send it for inspection matches cited step 2 exactly, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 5112
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 55,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1778
+    },
+    {
+      "action": "Check the over-etch time setting in the recipe.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 57,
+      "reason": "The action checks the over-etch time setting in the recipe, which is exactly what cited step 1 says, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1756
+    },
+    {
+      "action": "Hold the current wafer and send it for inspection.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.   <- CITED\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 53,
+      "reason": "The action to hold the current wafer and send it for inspection matches cited step 2 exactly, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 2091
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 55,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 5019
+    },
+    {
+      "action": "Check the over-etch time setting in the recipe.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 56,
+      "reason": "The action checks the over-etch time setting in the recipe, which is exactly what cited step 1 says, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 1844
+    },
+    {
+      "action": "Hold the current wafer and send it for inspection.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.   <- CITED\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 53,
+      "reason": "The action to hold the current wafer and send it for inspection matches cited step 2 exactly, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 2732
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 55,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2864
+    }
+  ]
+}
