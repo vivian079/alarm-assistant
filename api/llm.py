@@ -1,4 +1,3 @@
-import json
 import os
 import time
 from pathlib import Path
@@ -7,14 +6,13 @@ import anthropic
 from pydantic import ValidationError
 
 import db
+import retrieval
 from schemas import HandlingPlan
 
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
 MAX_TOKENS = 8000
 MAX_TOKENS_AFTER_CUTOFF = 16000
 MAX_RETRIES = 2  # first try + 2 retries = at most 3 API calls
-
-SOP_FILE = os.environ.get("SOP_FILE", "/data/sops.json")
 
 # Which prompt version to use. Set in .env; read once when the API starts,
 # so after changing .env the API has to be restarted.
@@ -32,27 +30,19 @@ def load_prompt(version: str) -> tuple[str, str]:
     return system, user
 
 
-def load_sop_library() -> str:
-    """All SOPs as text, one block per SOP. The whole library goes into every request (no retrieval yet)."""
-    with open(SOP_FILE) as f:
-        sops = json.load(f)
-    blocks = []
-    for sop in sops:
-        lines = [
-            f"{sop['sop_id']} | {sop['title']} | equipment: {sop['equipment_type']} | "
-            f"alarm codes: {', '.join(sop['alarm_codes'])} | process steps: {', '.join(sop['process_steps'])}"
-        ]
-        lines += [f"  step {s['step']}: {s['text']}" for s in sop["steps"]]
-        blocks.append("\n".join(lines))
-    return "\n\n".join(blocks)
-
-
 SYSTEM_TEMPLATE, USER_PROMPT_TEMPLATE = load_prompt(PROMPT_VERSION)
 
-# Same for every alarm. A version whose system.txt has {sop_library} gets the whole SOP library there;
-# a version without it (handling_plan_v1) sends no SOPs.
+# Where the SOPs go depends on the prompt version:
+#   {sop_library} in system.txt     -> all SOPs, the same for every alarm (handling_plan_v2, v3)
+#   {retrieved_sops} in user.txt    -> retrieval (handling_plan_v4 on): only the SOPs exact match finds
+#                                      for this alarm; if it finds none, rule S1 and no Claude call
+#   neither                         -> no SOPs (handling_plan_v1)
+USES_RETRIEVAL = "{retrieved_sops}" in USER_PROMPT_TEMPLATE
+if USES_RETRIEVAL and "{sop_library}" in SYSTEM_TEMPLATE:
+    raise RuntimeError(f"PROMPT_VERSION={PROMPT_VERSION} has both {{sop_library}} and {{retrieved_sops}}")
+
 # replace, not format: SOP text could contain { }.
-SYSTEM = SYSTEM_TEMPLATE.replace("{sop_library}", load_sop_library())
+SYSTEM = SYSTEM_TEMPLATE.replace("{sop_library}", retrieval.format_sops(retrieval.SOPS))
 
 # Reads ANTHROPIC_API_KEY from the environment.
 client = anthropic.Anthropic()

@@ -5,11 +5,14 @@ from fastapi import FastAPI, HTTPException
 
 import db
 import llm
+import retrieval
+from schemas import AlarmSummary, HandlingPlan
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db.init_db()
+    retrieval.index_sops()  # embed new or changed SOPs into sop_embeddings
     yield
 
 
@@ -20,6 +23,19 @@ app = FastAPI(title="Alarm Handling Assistant", lifespan=lifespan)
 def list_alarms():
     """For the page's dropdown."""
     return db.list_alarms()
+
+
+def not_covered_plan(prompt_input: dict) -> HandlingPlan:
+    """The plan for rule S1, made by code: the summary comes straight from the data tables, no causes, no actions.
+    recent_history is one free-text field, so code doesn't split it into recent_alarm and recent_fix.
+    """
+    summary = AlarmSummary(
+        **{k: prompt_input[k] for k in
+           ("tool_id", "chamber", "alarm_code", "sensor_value", "spec_lower", "spec_upper", "unit", "wafer_count")},
+        recent_alarm=prompt_input["recent_history"] or "none in the last 7 days",
+        recent_fix="",
+    )
+    return HandlingPlan(alarm_summary=summary, likely_causes=[], actions=[])
 
 
 @app.post("/alarms/{alarm_id}/plan")
@@ -45,14 +61,29 @@ def create_plan(alarm_id: str):
     # One id for this generation: the plan row and every llm_calls row it made share it.
     request_id = uuid.uuid4().hex
 
+    retrieved_sop_ids = None
+    if llm.USES_RETRIEVAL:
+        # 3. Find the SOPs by exact match on alarm code + process step.
+        sops = retrieval.find_sops(alarm["alarm_code"], code["equipment_type"], alarm["process_step"])
+        if not sops:
+            # 3a. Rule S1: no SOP covers this case. Code decides it, so Claude is not called and there are no steps.
+            # The SOPs closest in meaning are listed for the engineer to check; they are not sent to Claude.
+            suggestions = retrieval.suggest_sops(code["description"], code["equipment_type"])
+            return db.save_not_covered_plan(
+                alarm_id, not_covered_plan(prompt_input).model_dump(), request_id, suggestions)
+        # 3b. Only these SOPs go into the prompt.
+        prompt_input["retrieved_sops"] = retrieval.format_sops(sops)
+        retrieved_sop_ids = [s["sop_id"] for s in sops]
+
     try:
-        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 3. call Claude with the schema, retry on failure
+        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 4. call Claude with the schema, retry on failure
     except llm.PlanGenerationError as e:
-        return db.save_failed_plan(
-            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL)   # 4a. every try failed: status = generation_failed
-    # 4b. save (status = pending_review), return. The returned row has prompt_version and model,
+        return db.save_failed_plan(                                    # 5a. every try failed: status = generation_failed
+            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids)
+    # 5b. save (status = pending_review), return. The returned row has prompt_version, model and retrieved_sop_ids,
     # so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
-    return db.save_plan(alarm_id, plan.model_dump(), attempts, request_id, llm.PROMPT_VERSION, llm.MODEL)
+    return db.save_plan(alarm_id, plan.model_dump(), attempts, request_id,
+                        llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids)
 
 
 @app.post("/plans/{plan_id}/approve")

@@ -30,9 +30,12 @@ if st.button("Generate handling plan"):
 plan = st.session_state.get("plan")
 if plan and plan["alarm_id"] == alarm_id:
     st.subheader("Handling plan")
+    sop_ids = plan.get("retrieved_sop_ids")
     st.caption(
         f"plan_id {plan['plan_id']} · status {plan['status']} · "
-        f"attempts {plan['attempts']} · prompt {plan.get('prompt_version')} · {plan['created_at']}"
+        f"attempts {plan['attempts']} · prompt {plan.get('prompt_version')} · "
+        + (f"SOPs in prompt {', '.join(sop_ids) or 'none'} · " if sop_ids is not None else "")
+        + f"{plan['created_at']}"
     )
 
     if plan["status"] == "generation_failed":
@@ -43,8 +46,22 @@ if plan and plan["alarm_id"] == alarm_id:
     else:
         p = plan["plan_json"]
 
+        if plan["status"] == "sop_not_covered":
+            # Rule S1, decided by code: no Claude call, no steps.
+            st.warning(
+                "No SOP covers this alarm code at this process step, so no steps were generated. "
+                "Handle this alarm manually."
+            )
+            if plan.get("sop_suggestions"):
+                st.markdown("**SOPs that may be related** (found by text similarity, not confirmed: check before using)")
+                for s in plan["sop_suggestions"]:
+                    st.markdown(f"- {s['sop_id']} {s['title']} (similarity {s['similarity']:.2f})")
+
         st.markdown("**Alarm summary**")
         st.table([{"field": k, "value": str(p["alarm_summary"][k])} for k in SUMMARY_FIELDS])
+
+        if plan["status"] == "sop_not_covered":
+            st.stop()
 
         st.markdown("**Likely causes**")
         for cause in p["likely_causes"]:

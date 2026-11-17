@@ -6,8 +6,24 @@ All data in `data/` is synthetic.
 Current stage: structured output + evaluation. One synchronous endpoint. The plan follows a Pydantic schema
 (`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
 with the error message, up to 2 times, then saves the plan as `generation_failed`.
-The prompt gets the alarm record, its spec limit from the alarm code table, and the whole SOP library
-(all 40 SOPs in the system prompt; no retrieval yet).
+The prompt gets the alarm record, its spec limit from the alarm code table, and SOPs: the whole library
+(prompt versions v2, v3) or only the SOPs retrieved for this alarm (v4).
+
+## Retrieval (`api/retrieval.py`)
+
+1. Exact match: SOPs whose `alarm_codes` contain the alarm code and whose `process_steps` contain the
+   process step. Only these go into the prompt.
+2. No match = rule S1 (no SOP covers this case). Code decides it: Claude is not called, the plan has no steps,
+   status `sop_not_covered`.
+3. For S1 only, the page lists the 3 SOPs whose text (title + steps) is closest to the alarm code's description,
+   marked "not confirmed". They help the engineer find an SOP whose tags are missing. They never go into a prompt,
+   because a similar SOP is not necessarily the right one.
+
+Embeddings: `BAAI/bge-small-en-v1.5` through fastembed, run inside the API container (no API key;
+the model is downloaded when the image is built). One vector per SOP, stored in Postgres with pgvector
+(table `sop_embeddings`), refreshed on API startup for new or changed SOPs.
+`handling_plans.retrieved_sop_ids` records which SOPs went into the prompt; `run_eval.py` checks them
+against the golden set separately from the plan.
 
 ## Prompt versions
 

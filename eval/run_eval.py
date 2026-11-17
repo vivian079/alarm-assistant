@@ -9,8 +9,9 @@ Run only some alarms, several times each (to see how much one alarm's result cha
 
 For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
-2. alarm_summary vs the data tables         -> compare.score_summary
-3. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
+2. retrieved_sop_ids vs the SOP IDs in expected_sop_refs -> check_retrieval (prompt versions with retrieval only)
+3. alarm_summary vs the data tables         -> compare.score_summary
+4. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
    or, when expected_sop_refs is []         -> compare.score_not_covered
 Then print the totals and save everything to results/run_<time>_<prompt version>_<judge version>.json.
 
@@ -61,12 +62,32 @@ def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
         "attempts": saved["attempts"],
         "latency_s": round(time.time() - start, 1),
         "expected_steps": len(g["expected_sop_refs"]),
+        # None: this prompt version sends the whole library, nothing was retrieved
+        "retrieved_sop_ids": saved.get("retrieved_sop_ids"),
     }
+    check_retrieval(row, g)
     if saved["status"] == "generation_failed":
         row["error"] = saved["error"]
         return row
     row["plan"] = saved["plan_json"]
     return score(row, g, records, codes, sops)
+
+
+def check_retrieval(row: dict, g: dict) -> None:
+    """Did retrieval put the right SOPs into the prompt? Checked apart from the plan:
+    if the right SOP is not in the prompt, Claude can't cite it, however good the prompt is.
+    expected = the SOP IDs in expected_sop_refs ([] for an alarm no SOP covers).
+    """
+    if row.get("retrieved_sop_ids") is None:
+        return
+    expected = {r["sop_id"] for r in g["expected_sop_refs"]}
+    retrieved = set(row["retrieved_sop_ids"])
+    row["retrieval"] = {
+        "expected": sorted(expected),
+        "retrieved": sorted(retrieved),
+        "found_all": expected <= retrieved,     # no expected SOP missing
+        "extra": len(retrieved - expected),     # SOPs in the prompt that the answer doesn't use
+    }
 
 
 def score(row: dict, g: dict, records: dict, codes: dict, sops: dict) -> dict:
@@ -120,6 +141,9 @@ def summarize(rows: list[dict]) -> dict:
         "not_covered_correct": nc_ok, "not_covered_total": nc_total,
         "summary_fields_correct": sum_ok, "summary_fields_total": sum_total,
         "failed": sum(r["status"] == "generation_failed" for r in rows),
+        "retrieval_checked": sum("retrieval" in r for r in rows),
+        "retrieval_found_all": sum(r["retrieval"]["found_all"] for r in rows if "retrieval" in r),
+        "retrieval_extra": sum(r["retrieval"]["extra"] for r in rows if "retrieval" in r),
         "judge_calls": len(judge.LOG),
         "judge_input_tokens": sum(e.get("input_tokens") or 0 for e in judge.LOG),
         "judge_output_tokens": sum(e.get("output_tokens") or 0 for e in judge.LOG),
@@ -138,11 +162,13 @@ def run_versions(rows: list[dict]) -> dict:
     # From the API's responses. Should be one value; more than one means the API was restarted
     # with another version in the middle of the run, and the scores mix two prompts.
     # "unknown": a re-score of a results file written before versions were recorded.
-    prompts = sorted({r.get("prompt_version") or "unknown" for r in rows})
-    models = sorted({r.get("model") or "unknown" for r in rows})
+    # sop_not_covered rows are left out: rule S1 is decided by code, no prompt or model made them.
+    made_by_llm = [r for r in rows if r["status"] != "sop_not_covered"]
+    prompts = sorted({r.get("prompt_version") or "unknown" for r in made_by_llm})
+    models = sorted({r.get("model") or "unknown" for r in made_by_llm})
     return {
-        "prompt_version": "+".join(prompts),
-        "model": "+".join(models),
+        "prompt_version": "+".join(prompts) or "none",
+        "model": "+".join(models) or "none",
         "judge_prompt_version": judge.PROMPT_VERSION,
         "judge_model": judge.MODEL,
         "golden_set_version": GOLDEN_SET_VERSION,
@@ -169,12 +195,19 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
             line += f"  actions right {a['correct']}/{a['generated']}  covered {a['covered']}/{a['expected']}"
         else:
             line += "  no steps: " + ("right" if r["not_covered_correct"] else f"wrong ({len(r['plan']['actions'])} steps)")
+            if r["status"] == "sop_not_covered":
+                line += " (S1 by code, no Claude call)"
+        if "retrieval" in r:
+            line += f"  SOPs in prompt {','.join(r['retrieval']['retrieved']) or '-'}"
         print(line)
 
     print()
     print(f"Precision {fmt(t['precision'])}   Recall {fmt(t['recall'])}   F1 {fmt(t['f1'])}")
     print(f"  (right {t['correct']} / generated {t['generated']}, covered {t['covered']} / expected {t['expected']})")
     print(f"SOP not covered: {t['not_covered_correct']}/{t['not_covered_total']} handled right")
+    if t["retrieval_checked"]:
+        print(f"Retrieval: expected SOPs all in the prompt for {t['retrieval_found_all']}/{t['retrieval_checked']} alarms, "
+              f"extra SOPs {t['retrieval_extra']}")
     print(f"alarm_summary fields: {t['summary_fields_correct']}/{t['summary_fields_total']} right")
     print(f"Failed generations: {t['failed']}   Judge calls: {t['judge_calls']}   Avg latency: {t['avg_latency_s']} s")
     print(f"Judge tokens: input {t['judge_input_tokens']}  output {t['judge_output_tokens']}")
@@ -249,9 +282,11 @@ def main() -> None:
         if old is not None:
             # The plan is reused, so its prompt_version and model come along with it.
             row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "request_id", "prompt_version", "model",
-                                       "status", "attempts", "latency_s", "expected_steps", "error", "plan")
+                                       "status", "attempts", "latency_s", "expected_steps", "error", "plan",
+                                       "retrieved_sop_ids")
                    if k in old}
             row["run"] = run
+            check_retrieval(row, g)
             rows.append(row if row["status"] == "generation_failed" else score(row, g, records, codes, sops))
         else:
             row = run_one(g, records, codes, sops)
