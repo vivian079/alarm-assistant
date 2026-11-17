@@ -1,4 +1,4 @@
-"""Scoring. run_eval.py calls these four functions.
+"""Scoring. run_eval.py calls these five functions.
 
 What the inputs look like (plain dicts and lists, read from JSON):
   summary        plan["alarm_summary"], written by the LLM:
@@ -103,3 +103,15 @@ def precision_recall_f1(correct: int, generated: int, covered: int, expected: in
     else:
         f1 = 2 * precision * recall / (precision + recall)
     return precision, recall, f1
+
+
+def score_flags(expected: list[str], actual: list[str]) -> dict:
+    """Flags as codes ("R1", "W2", ...). expected from the golden set, actual from the plan the API saved.
+    Return {"expected", "actual", "right", "missing", "extra"}: right only if the two sets are the same;
+    missing = expected but not raised, extra = raised but not expected.
+    """
+    exp, act = set(expected), set(actual)
+    return {
+        "expected": sorted(exp), "actual": sorted(act), "right": exp == act,
+        "missing": sorted(exp - act), "extra": sorted(act - exp),
+    }

@@ -1,0 +1,493 @@
+[
+  {
+    "alarm_id": "AL-017",
+    "case": "repeat",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 4
+      }
+    ],
+    "reason": "A-1023 in MAIN-ETCH -> SOP-012 (all 4 steps). History has A-1023 on 11-01, 2 days before, same tool: repeat alarm. The steps stay the same; the repeat is a flag, not a different set of steps.",
+    "expected_flags": [
+      "R1",
+      "WF1"
+    ],
+    "flag_reason": "R1: EV-001; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-032",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-013",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-013",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-013",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-013",
+        "step": 4
+      }
+    ],
+    "reason": "A-1023 in OVER-ETCH -> SOP-013, not SOP-012 (SOP-012 is only for MAIN-ETCH). History has A-1031, a different code: not a repeat.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 12"
+  },
+  {
+    "alarm_id": "AL-040",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 4
+      }
+    ],
+    "reason": "A-1023 in MAIN-ETCH -> SOP-012. History is empty (AL-017 on 11-03 is 8 days earlier): not a repeat.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-041",
+    "case": "same_event",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-012",
+        "step": 4
+      }
+    ],
+    "reason": "A-1023 in MAIN-ETCH -> SOP-012. Same tool, other chamber, 25 minutes after AL-040: same event (rule W1), not a repeat. Steps stay the same.",
+    "expected_flags": [
+      "W1",
+      "WF1"
+    ],
+    "flag_reason": "W1: AL-040; WF1: 24"
+  },
+  {
+    "alarm_id": "AL-050",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 4
+      }
+    ],
+    "reason": "A-1031 in MAIN-ETCH -> SOP-020. History has A-1023, a different code: not a repeat.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 18"
+  },
+  {
+    "alarm_id": "AL-061",
+    "case": "not_covered",
+    "expected_sop_refs": [],
+    "reason": "A-1023 in CHAMBER-CLEAN. SOP-012 covers only MAIN-ETCH and SOP-013 only OVER-ETCH; no SOP covers A-1023 in CHAMBER-CLEAN (rule S1): no steps.",
+    "expected_flags": [
+      "S1"
+    ],
+    "flag_reason": "S1"
+  },
+  {
+    "alarm_id": "AL-062",
+    "case": "in_spec",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 4
+      }
+    ],
+    "reason": "A-1031 in MAIN-ETCH -> SOP-020. Reading 52 is inside 40-60 (rule W2): still alarmed, so the SOP steps still apply; step 1 checks the sensor itself.",
+    "expected_flags": [
+      "W2",
+      "WF1"
+    ],
+    "flag_reason": "W2: 52 in 40-60; WF1: 22"
+  },
+  {
+    "alarm_id": "AL-063",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-016",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-016",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-016",
+        "step": 3
+      }
+    ],
+    "reason": "A-1052 in OVER-ETCH -> SOP-016 (3 steps), not SOP-015 (MAIN-ETCH only). History has A-1023, a different code: not a repeat.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-064",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-030",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-030",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-030",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-030",
+        "step": 4
+      }
+    ],
+    "reason": "D-2011 in DEPOSITION -> SOP-030. History is empty.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-065",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-031",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-031",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-031",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-031",
+        "step": 4
+      }
+    ],
+    "reason": "D-2011 in PURGE -> SOP-031, not SOP-030 (DEPOSITION only). History has D-2027, a different code.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-066",
+    "case": "repeat",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-032",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-032",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-032",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-032",
+        "step": 4
+      }
+    ],
+    "reason": "D-2014 in DEPOSITION -> SOP-032. History has D-2014 on 11-09, 3 days before, same tool: repeat alarm. Steps stay the same.",
+    "expected_flags": [
+      "R1",
+      "WF1"
+    ],
+    "flag_reason": "R1: EV-004; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-067",
+    "case": "not_covered",
+    "expected_sop_refs": [],
+    "reason": "D-2044: no SOP lists this alarm code at all (rule S1): no steps.",
+    "expected_flags": [
+      "S1",
+      "WF1"
+    ],
+    "flag_reason": "S1; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-068",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-036",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-036",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-036",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-036",
+        "step": 4
+      }
+    ],
+    "reason": "D-2027 in DEPOSITION -> SOP-036. History is empty.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-069",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-035",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-035",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-035",
+        "step": 3
+      }
+    ],
+    "reason": "D-2023 in PRE-CLEAN -> SOP-035 (3 steps), not SOP-034 (DEPOSITION only). History has D-2027 and D-2011, different codes.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-070",
+    "case": "in_spec",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-033",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-033",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-033",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-033",
+        "step": 4
+      }
+    ],
+    "reason": "D-2019 in DEPOSITION -> SOP-033, not SOP-041 (PURGE only). Reading 205 is inside 180-220 (rule W2): steps still apply. History has D-2011, a different code.",
+    "expected_flags": [
+      "W2",
+      "WF1"
+    ],
+    "flag_reason": "W2: 205 in 180-220; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-071",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-052",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-052",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-052",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-052",
+        "step": 4
+      }
+    ],
+    "reason": "C-3012 in POLISH -> SOP-052. History is empty.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-072",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-055",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-055",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-055",
+        "step": 3
+      }
+    ],
+    "reason": "C-3021 in PAD-CONDITIONING -> SOP-055 (3 steps), not SOP-054 (POLISH only). History has C-3012, a different code.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-073",
+    "case": "repeat",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-050",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 4
+      }
+    ],
+    "reason": "C-3005 in POLISH -> SOP-050. History has C-3005 on 11-08, 5 days before, same tool: repeat alarm. Steps stay the same.",
+    "expected_flags": [
+      "R1",
+      "WF1"
+    ],
+    "flag_reason": "R1: EV-006; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-074",
+    "case": "not_covered",
+    "expected_sop_refs": [],
+    "reason": "C-3016 in RINSE. SOP-053 covers only POLISH and SOP-062 only PAD-CONDITIONING; no SOP covers C-3016 in RINSE (rule S1): no steps.",
+    "expected_flags": [
+      "S1",
+      "WF1"
+    ],
+    "flag_reason": "S1; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-075",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-057",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-057",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-057",
+        "step": 3
+      }
+    ],
+    "reason": "C-3028 in RINSE -> SOP-057 (3 steps), not SOP-061 (POLISH only). History has C-3005 and C-3016, different codes: not a repeat.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-051",
+    "case": "duplicate",
+    "expected_sop_refs": [],
+    "expected_flags": [
+      "E1"
+    ],
+    "reason": "Same tool_id, chamber, alarm_code, timestamp and sensor_value as AL-050, which was entered first (rule E1): no plan.",
+    "flag_reason": "same tool, chamber, code, time and reading as AL-050"
+  }
+]

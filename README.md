@@ -3,11 +3,27 @@
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
-Current stage: structured output + evaluation. One synchronous endpoint. The plan follows a Pydantic schema
+Current stage: rules checked by code, retrieval, structured output, evaluation. One synchronous endpoint. The plan follows a Pydantic schema
 (`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
 with the error message, up to 2 times, then saves the plan as `generation_failed`.
 The prompt gets the alarm record, its spec limit from the alarm code table, and SOPs: the whole library
 (prompt versions v2, v3) or only the SOPs retrieved for this alarm (v4).
+
+## Rules checked by code (`api/rules.py`)
+
+The design doc's rules are fixed, so code checks them, not Claude. Each one that applies is a flag on the plan
+(`handling_plans.flags`), shown at the top of the page:
+
+- E1 duplicate entry (same tool, chamber, alarm code, time and reading as an earlier entry): no plan, status `rejected_duplicate`
+- W1 same event: same tool and alarm code in another chamber within the 30 minutes before
+- W2 reading inside the spec limit (the sensor may be wrong)
+- R1 repeat alarm: same tool and alarm code within the 7 days before (W1 events not counted): escalate
+- S1 no SOP covers this alarm code at this process step: no steps (see Retrieval)
+- WF1 wafers were in process: decide their disposition
+
+R1 and W1 read the table `tool_events`: one row per alarm or repair on a tool (every alarm record, plus the
+older alarms and repairs in `data/tool_events.json`). Code never parses the free-text `recent_history`;
+that text only goes into the prompt.
 
 ## Retrieval (`api/retrieval.py`)
 
@@ -51,18 +67,21 @@ FROM llm_calls ORDER BY call_id DESC LIMIT 10;
 - `alarm_codes.json`: 30 alarm codes, each with a spec limit
 - `sops.json`: 40 SOPs; each applies to some alarm codes and process steps and has numbered steps
 - `alarm_records.json`: 21 alarm records
+- `tool_events.json`: older alarms and repairs that have no alarm record (for rules R1 and W1)
 
 ## Evaluation (`eval/`)
 
 `golden_sets/golden_v1.json` holds 20 alarms with hand-written expected SOP steps, including the hard cases:
 the same alarm code needing a different SOP in a different process step, a reading inside the spec limit,
-an alarm no SOP covers (expected: no steps), and repeat alarms.
+an alarm no SOP covers (expected: no steps), and repeat alarms. `golden_v2.json` adds the expected flags
+for each alarm and a duplicate entry (AL-051).
 
 `run_eval.py` sends each golden alarm through the API and scores the plan:
 - actions: precision, recall, F1 against the expected SOP steps. Code checks the SOP references;
   an LLM judge (`judge.py`) checks that each action's text does what the cited SOP step says.
 - alarms no SOP covers: right only if the plan has no steps.
 - alarm_summary: each value compared with the data tables.
+- flags (golden_v2): the plan's flags compared with the expected ones, per alarm and per flag.
 
 Results are saved in `eval/results/`. Each file records the prompt version and model (from the API's
 response), the judge prompt version, judge model and golden set version, and has the versions in its name.

@@ -8,6 +8,7 @@ from psycopg.types.json import Jsonb
 DATABASE_URL = os.environ["DATABASE_URL"]
 ALARM_DATA_FILE = os.environ.get("ALARM_DATA_FILE", "/data/alarm_records.json")
 ALARM_CODE_FILE = os.environ.get("ALARM_CODE_FILE", "/data/alarm_codes.json")
+TOOL_EVENT_FILE = os.environ.get("TOOL_EVENT_FILE", "/data/tool_events.json")
 
 
 def get_conn():
@@ -71,6 +72,24 @@ def init_db():
         # in meaning, shown to the engineer and never sent to Claude.
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS retrieved_sop_ids TEXT[]")
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS sop_suggestions JSONB")
+        # Design doc section 7 rules, checked by code (rules.py): [{"code": "R1", "message": "...", "related": [...]}, ...]
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS flags JSONB")
+
+        # Every alarm and repair on each tool, one row per event. Rules R1 and W1 look here.
+        # Each alarm record is also an alarm event (event_id = alarm_id); tool_events.json adds the
+        # older alarms and the repairs that have no alarm record.
+        # recent_history (free text) stays in alarm_records for the prompt; code never parses it.
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS tool_events (
+                event_id    TEXT PRIMARY KEY,
+                tool_id     TEXT NOT NULL,
+                chamber     TEXT NOT NULL,
+                timestamp   TIMESTAMP NOT NULL,
+                event_type  TEXT NOT NULL,   -- alarm / repair
+                alarm_code  TEXT,            -- alarms only
+                note        TEXT NOT NULL DEFAULT ''   -- repairs: what was done
+            )
+        """)
 
         # Audit log: one row per Claude API call, failed calls included.
         # Only INSERT into this table, never UPDATE or DELETE: it has to show what was really sent and received.
@@ -124,6 +143,27 @@ def init_db():
                 r,
             )
 
+        for r in records:
+            conn.execute(
+                """
+                INSERT INTO tool_events (event_id, tool_id, chamber, timestamp, event_type, alarm_code)
+                VALUES (%(alarm_id)s, %(tool_id)s, %(chamber)s, %(timestamp)s, 'alarm', %(alarm_code)s)
+                ON CONFLICT (event_id) DO NOTHING
+                """,
+                r,
+            )
+        with open(TOOL_EVENT_FILE) as f:
+            events = json.load(f)
+        for e in events:
+            conn.execute(
+                """
+                INSERT INTO tool_events (event_id, tool_id, chamber, timestamp, event_type, alarm_code, note)
+                VALUES (%(event_id)s, %(tool_id)s, %(chamber)s, %(timestamp)s, %(event_type)s, %(alarm_code)s, %(note)s)
+                ON CONFLICT (event_id) DO NOTHING
+                """,
+                e,
+            )
+
         with open(ALARM_CODE_FILE) as f:
             codes = json.load(f)
         for c in codes:
@@ -161,34 +201,35 @@ def get_alarm_code(alarm_code: str) -> dict | None:
 
 
 def save_plan(alarm_id: str, plan_json: dict, attempts: int, request_id: str,
-              prompt_version: str, model: str, retrieved_sop_ids: list[str] | None) -> dict:
+              prompt_version: str, model: str, retrieved_sop_ids: list[str] | None, flags: list[dict]) -> dict:
     """A plan that passed validation. status starts as pending_review."""
     with get_conn() as conn:
         return conn.execute(
             """
             INSERT INTO handling_plans
-                (alarm_id, plan_json, attempts, request_id, prompt_version, model, retrieved_sop_ids)
-            VALUES (%s, %s, %s, %s, %s, %s, %s::text[]) RETURNING *
+                (alarm_id, plan_json, attempts, request_id, prompt_version, model, retrieved_sop_ids, flags)
+            VALUES (%s, %s, %s, %s, %s, %s, %s::text[], %s) RETURNING *
             """,
-            (alarm_id, Jsonb(plan_json), attempts, request_id, prompt_version, model, retrieved_sop_ids),
+            (alarm_id, Jsonb(plan_json), attempts, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags)),
         ).fetchone()
 
 
 def save_failed_plan(alarm_id: str, error: str, attempts: int, request_id: str,
-                     prompt_version: str, model: str, retrieved_sop_ids: list[str] | None) -> dict:
+                     prompt_version: str, model: str, retrieved_sop_ids: list[str] | None, flags: list[dict]) -> dict:
     """Every try failed: keep a row so the engineer sees it and handles the alarm manually."""
     with get_conn() as conn:
         return conn.execute(
             """
             INSERT INTO handling_plans
-                (alarm_id, error, attempts, status, request_id, prompt_version, model, retrieved_sop_ids)
-            VALUES (%s, %s, %s, 'generation_failed', %s, %s, %s, %s::text[]) RETURNING *
+                (alarm_id, error, attempts, status, request_id, prompt_version, model, retrieved_sop_ids, flags)
+            VALUES (%s, %s, %s, 'generation_failed', %s, %s, %s, %s::text[], %s) RETURNING *
             """,
-            (alarm_id, error, attempts, request_id, prompt_version, model, retrieved_sop_ids),
+            (alarm_id, error, attempts, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags)),
         ).fetchone()
 
 
-def save_not_covered_plan(alarm_id: str, plan_json: dict, request_id: str, suggestions: list[dict]) -> dict:
+def save_not_covered_plan(alarm_id: str, plan_json: dict, request_id: str,
+                          suggestions: list[dict], flags: list[dict]) -> dict:
     """Rule S1: no SOP covers this alarm. Decided by code, so no Claude call was made:
     attempts 0, prompt_version and model empty, no rows in llm_calls. The plan has no actions.
     status sop_not_covered: it can't be approved; the engineer handles the alarm manually.
@@ -197,11 +238,56 @@ def save_not_covered_plan(alarm_id: str, plan_json: dict, request_id: str, sugge
         return conn.execute(
             """
             INSERT INTO handling_plans
-                (alarm_id, plan_json, attempts, status, request_id, retrieved_sop_ids, sop_suggestions)
-            VALUES (%s, %s, 0, 'sop_not_covered', %s, '{}'::text[], %s) RETURNING *
+                (alarm_id, plan_json, attempts, status, request_id, retrieved_sop_ids, sop_suggestions, flags)
+            VALUES (%s, %s, 0, 'sop_not_covered', %s, '{}'::text[], %s, %s) RETURNING *
             """,
-            (alarm_id, Jsonb(plan_json), request_id, Jsonb(suggestions)),
+            (alarm_id, Jsonb(plan_json), request_id, Jsonb(suggestions), Jsonb(flags)),
         ).fetchone()
+
+
+def save_duplicate(alarm_id: str, request_id: str, flags: list[dict]) -> dict:
+    """Rule E1: a duplicate entry. No plan, no Claude call. The row is kept so the page can say which alarm it repeats."""
+    with get_conn() as conn:
+        return conn.execute(
+            """
+            INSERT INTO handling_plans (alarm_id, error, attempts, status, request_id, flags)
+            VALUES (%s, %s, 0, 'rejected_duplicate', %s, %s) RETURNING *
+            """,
+            (alarm_id, flags[0]["message"], request_id, Jsonb(flags)),
+        ).fetchone()
+
+
+def find_earlier_duplicate(alarm: dict) -> dict | None:
+    """Rule E1: an alarm entered before this one with the same tool_id, chamber, alarm_code, timestamp
+    and sensor_value. alarm_id order is entry order in this data; a real system would use the entry time.
+    The later entry is the duplicate, so the first one still gets its plan.
+    """
+    with get_conn() as conn:
+        return conn.execute(
+            """
+            SELECT alarm_id FROM alarm_records
+            WHERE tool_id = %(tool_id)s AND chamber = %(chamber)s AND alarm_code = %(alarm_code)s
+              AND timestamp = %(timestamp)s AND sensor_value = %(sensor_value)s
+              AND alarm_id < %(alarm_id)s
+            ORDER BY alarm_id LIMIT 1
+            """,
+            alarm,
+        ).fetchone()
+
+
+def get_tool_events(tool_id: str, start, end) -> list[dict]:
+    """Alarms and repairs on one tool with start <= timestamp < end, oldest first.
+    end is the current alarm's time and is excluded, so the alarm never finds itself or anything after it.
+    """
+    with get_conn() as conn:
+        return conn.execute(
+            """
+            SELECT * FROM tool_events
+            WHERE tool_id = %s AND timestamp >= %s AND timestamp < %s
+            ORDER BY timestamp
+            """,
+            (tool_id, start, end),
+        ).fetchall()
 
 
 def vector_literal(v: list[float]) -> str:

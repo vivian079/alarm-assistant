@@ -1,0 +1,9 @@
+[
+  {"event_id": "EV-001", "tool_id": "ETCH-03", "chamber": "B", "timestamp": "2026-11-01T09:30:00", "event_type": "alarm", "alarm_code": "A-1023", "note": ""},
+  {"event_id": "EV-002", "tool_id": "ETCH-03", "chamber": "B", "timestamp": "2026-11-01T11:00:00", "event_type": "repair", "alarm_code": null, "note": "pressure sensor replaced"},
+  {"event_id": "EV-003", "tool_id": "ETCH-05", "chamber": "A", "timestamp": "2026-11-02T13:20:00", "event_type": "alarm", "alarm_code": "A-1031", "note": ""},
+  {"event_id": "EV-004", "tool_id": "DEP-02", "chamber": "A", "timestamp": "2026-11-09T10:40:00", "event_type": "alarm", "alarm_code": "D-2014", "note": ""},
+  {"event_id": "EV-005", "tool_id": "DEP-02", "chamber": "A", "timestamp": "2026-11-09T14:00:00", "event_type": "repair", "alarm_code": null, "note": "heater thermocouple replaced"},
+  {"event_id": "EV-006", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-08T08:50:00", "event_type": "alarm", "alarm_code": "C-3005", "note": ""},
+  {"event_id": "EV-007", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-08T11:30:00", "event_type": "repair", "alarm_code": null, "note": "polish head membrane replaced"}
+]

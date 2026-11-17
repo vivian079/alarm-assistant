@@ -10,8 +10,10 @@ Run only some alarms, several times each (to see how much one alarm's result cha
 For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
 2. retrieved_sop_ids vs the SOP IDs in expected_sop_refs -> check_retrieval (prompt versions with retrieval only)
-3. alarm_summary vs the data tables         -> compare.score_summary
-4. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
+3. flags vs expected_flags                  -> compare.score_flags (golden sets that have expected_flags)
+   a "duplicate" alarm (rule E1) is only checked for being rejected; it has no plan to score
+4. alarm_summary vs the data tables         -> compare.score_summary
+5. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
    or, when expected_sop_refs is []         -> compare.score_not_covered
 Then print the totals and save everything to results/run_<time>_<prompt version>_<judge version>.json.
 
@@ -64,13 +66,33 @@ def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
         "expected_steps": len(g["expected_sop_refs"]),
         # None: this prompt version sends the whole library, nothing was retrieved
         "retrieved_sop_ids": saved.get("retrieved_sop_ids"),
+        # None: plans saved before flags existed
+        "actual_flags": [f["code"] for f in saved["flags"]] if saved.get("flags") is not None else None,
     }
-    check_retrieval(row, g)
-    if saved["status"] == "generation_failed":
+    if saved.get("error"):
         row["error"] = saved["error"]
+    if saved.get("plan_json") is not None:
+        row["plan"] = saved["plan_json"]
+    return finish_row(row, g, records, codes, sops)
+
+
+def finish_row(row: dict, g: dict, records: dict, codes: dict, sops: dict) -> dict:
+    """Every check that applies to a row that came back from the API (or from an old results file)."""
+    check_retrieval(row, g)
+    check_flags(row, g)
+    if g["case"] == "duplicate":
+        # Rule E1: right only if the API refused to make a plan. Nothing else to score.
+        row["duplicate_rejected"] = row["status"] == "rejected_duplicate"
         return row
-    row["plan"] = saved["plan_json"]
+    if "plan" not in row:
+        return row  # generation_failed (or wrongly rejected as a duplicate): no plan to score
     return score(row, g, records, codes, sops)
+
+
+def check_flags(row: dict, g: dict) -> None:
+    if "expected_flags" not in g or row.get("actual_flags") is None:
+        return
+    row["flags"] = compare.score_flags(g["expected_flags"], row["actual_flags"])
 
 
 def check_retrieval(row: dict, g: dict) -> None:
@@ -106,11 +128,16 @@ def summarize(rows: list[dict]) -> dict:
     gen = cor = cov = exp = 0
     sum_ok = sum_total = 0
     nc_ok = nc_total = 0
+    dup_ok = dup_total = 0
     by_case: dict[str, dict] = {}
     for r in rows:
+        if "duplicate_rejected" in r:
+            dup_total += 1
+            dup_ok += int(r["duplicate_rejected"])
+            continue
         c = by_case.setdefault(r["case"], {"correct": 0, "generated": 0, "covered": 0, "expected": 0})
-        if r["status"] == "generation_failed":
-            # Nothing came back: no steps were generated, and every expected step was missed.
+        if "summary" not in r:
+            # No plan came back: no steps were generated, and every expected step was missed.
             exp += r["expected_steps"]
             c["expected"] += r["expected_steps"]
             if r["expected_steps"] == 0:
@@ -135,6 +162,17 @@ def summarize(rows: list[dict]) -> dict:
         cp, cr, cf = compare.precision_recall_f1(c["correct"], c["generated"], c["covered"], c["expected"])
         case_scores[name] = {**c, "precision": cp, "recall": cr, "f1": cf}
 
+    # Flags: per alarm (all right or not) and per flag code.
+    flag_rows = [r["flags"] for r in rows if "flags" in r]
+    by_flag: dict[str, dict] = {}
+    for f in flag_rows:
+        for code in f["expected"]:
+            d = by_flag.setdefault(code, {"expected": 0, "raised": 0, "missing": 0, "extra": 0})
+            d["expected"] += 1
+            d["raised" if code in f["actual"] else "missing"] += 1
+        for code in f["extra"]:
+            by_flag.setdefault(code, {"expected": 0, "raised": 0, "missing": 0, "extra": 0})["extra"] += 1
+
     return {
         "precision": p, "recall": rcl, "f1": f1,
         "correct": cor, "generated": gen, "covered": cov, "expected": exp,
@@ -144,6 +182,10 @@ def summarize(rows: list[dict]) -> dict:
         "retrieval_checked": sum("retrieval" in r for r in rows),
         "retrieval_found_all": sum(r["retrieval"]["found_all"] for r in rows if "retrieval" in r),
         "retrieval_extra": sum(r["retrieval"]["extra"] for r in rows if "retrieval" in r),
+        "flags_checked": len(flag_rows),
+        "flags_all_right": sum(f["right"] for f in flag_rows),
+        "by_flag": dict(sorted(by_flag.items())),
+        "duplicates_rejected": dup_ok, "duplicates_total": dup_total,
         "judge_calls": len(judge.LOG),
         "judge_input_tokens": sum(e.get("input_tokens") or 0 for e in judge.LOG),
         "judge_output_tokens": sum(e.get("output_tokens") or 0 for e in judge.LOG),
@@ -162,8 +204,8 @@ def run_versions(rows: list[dict]) -> dict:
     # From the API's responses. Should be one value; more than one means the API was restarted
     # with another version in the middle of the run, and the scores mix two prompts.
     # "unknown": a re-score of a results file written before versions were recorded.
-    # sop_not_covered rows are left out: rule S1 is decided by code, no prompt or model made them.
-    made_by_llm = [r for r in rows if r["status"] != "sop_not_covered"]
+    # sop_not_covered and rejected_duplicate rows are left out: code decided them (rules S1, E1), no prompt or model made them.
+    made_by_llm = [r for r in rows if r["status"] not in ("sop_not_covered", "rejected_duplicate")]
     prompts = sorted({r.get("prompt_version") or "unknown" for r in made_by_llm})
     models = sorted({r.get("model") or "unknown" for r in made_by_llm})
     return {
@@ -185,8 +227,16 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
     for r in rows:
         run = f" #{r['run']}" if repeated else ""
         line = f"{r['alarm_id']}{run}  {r['case']:<14}"
-        if r["status"] == "generation_failed":
-            print(line + "  GENERATION FAILED")
+        flag_note = ""
+        if "flags" in r:
+            f = r["flags"]
+            flag_note = f"  flags {','.join(f['actual']) or '-'}" + ("" if f["right"] else
+                f" WRONG (missing {','.join(f['missing']) or '-'}, extra {','.join(f['extra']) or '-'})")
+        if "duplicate_rejected" in r:
+            print(line + "  duplicate: " + ("rejected, right" if r["duplicate_rejected"] else "NOT rejected, wrong") + flag_note)
+            continue
+        if "summary" not in r:
+            print(line + ("  REJECTED AS DUPLICATE" if r["status"] == "rejected_duplicate" else "  GENERATION FAILED") + flag_note)
             continue
         s = r["summary"]
         line += f"  summary {s['correct']}/{s['total']}"
@@ -199,7 +249,7 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
                 line += " (S1 by code, no Claude call)"
         if "retrieval" in r:
             line += f"  SOPs in prompt {','.join(r['retrieval']['retrieved']) or '-'}"
-        print(line)
+        print(line + flag_note)
 
     print()
     print(f"Precision {fmt(t['precision'])}   Recall {fmt(t['recall'])}   F1 {fmt(t['f1'])}")
@@ -208,6 +258,11 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
     if t["retrieval_checked"]:
         print(f"Retrieval: expected SOPs all in the prompt for {t['retrieval_found_all']}/{t['retrieval_checked']} alarms, "
               f"extra SOPs {t['retrieval_extra']}")
+    if t["flags_checked"]:
+        print(f"Flags: all right for {t['flags_all_right']}/{t['flags_checked']} alarms   " + "   ".join(
+            f"{code} {d['raised']}/{d['expected']} extra {d['extra']}" for code, d in t["by_flag"].items()))
+    if t["duplicates_total"]:
+        print(f"Duplicates (E1) rejected: {t['duplicates_rejected']}/{t['duplicates_total']}")
     print(f"alarm_summary fields: {t['summary_fields_correct']}/{t['summary_fields_total']} right")
     print(f"Failed generations: {t['failed']}   Judge calls: {t['judge_calls']}   Avg latency: {t['avg_latency_s']} s")
     print(f"Judge tokens: input {t['judge_input_tokens']}  output {t['judge_output_tokens']}")
@@ -220,7 +275,9 @@ def print_repeats(rows: list[dict]) -> None:
     """For an alarm run more than once: its covered count in each run, side by side."""
     by_alarm: dict[str, list[str]] = {}
     for r in rows:
-        if r["status"] == "generation_failed":
+        if "duplicate_rejected" in r:
+            by_alarm.setdefault(r["alarm_id"], []).append("rejected" if r["duplicate_rejected"] else "not rejected")
+        elif "summary" not in r:
             by_alarm.setdefault(r["alarm_id"], []).append("failed")
         elif "actions" in r:
             by_alarm.setdefault(r["alarm_id"], []).append(f"{r['actions']['covered']}/{r['actions']['expected']}")
@@ -283,11 +340,10 @@ def main() -> None:
             # The plan is reused, so its prompt_version and model come along with it.
             row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "request_id", "prompt_version", "model",
                                        "status", "attempts", "latency_s", "expected_steps", "error", "plan",
-                                       "retrieved_sop_ids")
+                                       "retrieved_sop_ids", "actual_flags")
                    if k in old}
             row["run"] = run
-            check_retrieval(row, g)
-            rows.append(row if row["status"] == "generation_failed" else score(row, g, records, codes, sops))
+            rows.append(finish_row(row, g, records, codes, sops))
         else:
             row = run_one(g, records, codes, sops)
             row["run"] = run

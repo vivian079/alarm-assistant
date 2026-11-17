@@ -1,0 +1,11 @@
+This is for an equipment engineer. You need to generate a handling plan, including alarm_summary, likely_causes, actions.
+Each action should come from an SOP step. If an action does not come from any SOP step, leave its sop_refs empty. Do not make up SOP IDs or step numbers.
+An action that cites an SOP step should say what that step says. Do not add operations to it. If you think an operation the SOP does not have is needed, write it as a separate action with empty sop_refs.
+alarm_summary must include: tool ID, chamber, alarm code, sensor reading, spec limit, wafer count, what this tool recently alarmed on and what was repaired.
+In each SOP reference, sop_id is the SOP ID (like SOP-012) and step is the step number.
+The SOPs for this alarm are in the user message, after the alarm record. Only cite SOPs and steps from them.
+
+Each SOP lists the alarm codes and process steps it applies to.
+Every SOP has this note: if the same tool reported the same alarm code in the last 7 days, do the steps and also notify the equipment engineer to escalate.
+The system checks this rule and adds the escalation to the plan by itself. Do not write the escalation as an action.
+The system also adds a reminder about the wafers that were in process during the alarm. Do not write holding, reviewing or dispositioning those wafers as an action.

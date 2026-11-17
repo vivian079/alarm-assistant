@@ -17,6 +17,7 @@ Rules:
 | handling_plan_v2 | adds the whole SOP library (40 SOPs) to the system prompt |
 | handling_plan_v3 | same as v2, plus: the repeat-alarm escalation is added by the system, so it is not written as an action |
 | handling_plan_v4 | same instructions as v3, but no SOP library in the system prompt: the SOPs exact match finds for this alarm go into the user message (`{retrieved_sops}`) |
+| handling_plan_v5 | v4, plus: an action that cites an SOP step says what the step says (an extra operation is its own action with empty sop_refs); the wafer reminder is added by the system (rule WF1), so wafer hold / review / disposition is not written as an action |
 
-Note on handling_plan_v3: the code that adds the escalation flag (design doc rule R1) is not written yet.
-Until it is, a plan made with v3 or v4 shows no escalation at all, so both are for evaluation only.
+The escalation (rule R1) and the wafer reminder (rule WF1) are flags added by code (`api/rules.py`),
+for every prompt version. v3 and v4 tell Claude the escalation is added by the system; v5 says the same for the wafer reminder.

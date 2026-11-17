@@ -6,6 +6,7 @@ from fastapi import FastAPI, HTTPException
 import db
 import llm
 import retrieval
+import rules
 from schemas import AlarmSummary, HandlingPlan
 
 
@@ -61,29 +62,36 @@ def create_plan(alarm_id: str):
     # One id for this generation: the plan row and every llm_calls row it made share it.
     request_id = uuid.uuid4().hex
 
+    # 3. Rules checked by code (design doc section 7). E1 stops here: a duplicate gets no plan.
+    duplicate = rules.duplicate_flag(alarm)
+    if duplicate is not None:
+        return db.save_duplicate(alarm_id, request_id, [duplicate])
+    flags = rules.check_flags(alarm, code)
+
     retrieved_sop_ids = None
     if llm.USES_RETRIEVAL:
-        # 3. Find the SOPs by exact match on alarm code + process step.
+        # 4. Find the SOPs by exact match on alarm code + process step.
         sops = retrieval.find_sops(alarm["alarm_code"], code["equipment_type"], alarm["process_step"])
         if not sops:
-            # 3a. Rule S1: no SOP covers this case. Code decides it, so Claude is not called and there are no steps.
+            # 4a. Rule S1: no SOP covers this case. Code decides it, so Claude is not called and there are no steps.
             # The SOPs closest in meaning are listed for the engineer to check; they are not sent to Claude.
             suggestions = retrieval.suggest_sops(code["description"], code["equipment_type"])
             return db.save_not_covered_plan(
-                alarm_id, not_covered_plan(prompt_input).model_dump(), request_id, suggestions)
-        # 3b. Only these SOPs go into the prompt.
+                alarm_id, not_covered_plan(prompt_input).model_dump(), request_id, suggestions,
+                [rules.not_covered_flag(alarm)] + flags)
+        # 4b. Only these SOPs go into the prompt.
         prompt_input["retrieved_sops"] = retrieval.format_sops(sops)
         retrieved_sop_ids = [s["sop_id"] for s in sops]
 
     try:
-        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 4. call Claude with the schema, retry on failure
+        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 5. call Claude with the schema, retry on failure
     except llm.PlanGenerationError as e:
-        return db.save_failed_plan(                                    # 5a. every try failed: status = generation_failed
-            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids)
-    # 5b. save (status = pending_review), return. The returned row has prompt_version, model and retrieved_sop_ids,
-    # so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
+        return db.save_failed_plan(                                    # 6a. every try failed: status = generation_failed
+            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags)
+    # 6b. save (status = pending_review), return. The returned row has prompt_version, model, retrieved_sop_ids
+    # and flags, so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
     return db.save_plan(alarm_id, plan.model_dump(), attempts, request_id,
-                        llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids)
+                        llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags)
 
 
 @app.post("/plans/{plan_id}/approve")

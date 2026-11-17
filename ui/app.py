@@ -38,7 +38,14 @@ if plan and plan["alarm_id"] == alarm_id:
         + f"{plan['created_at']}"
     )
 
-    if plan["status"] == "generation_failed":
+    # Flags come from rules checked by code (design doc section 7), not from Claude.
+    for flag in plan.get("flags") or []:
+        show = st.info if flag["code"] == "WF1" else st.warning
+        show(f"{flag['code']}: {flag['message']}")
+
+    if plan["status"] == "rejected_duplicate":
+        st.error("This alarm was entered twice. No plan was generated; use the plan of the first entry.")
+    elif plan["status"] == "generation_failed":
         st.error(
             f"Generation failed after {plan['attempts']} tries. "
             f"Handle this alarm manually with the SOP.\n\n{plan['error']}"
@@ -47,11 +54,7 @@ if plan and plan["alarm_id"] == alarm_id:
         p = plan["plan_json"]
 
         if plan["status"] == "sop_not_covered":
-            # Rule S1, decided by code: no Claude call, no steps.
-            st.warning(
-                "No SOP covers this alarm code at this process step, so no steps were generated. "
-                "Handle this alarm manually."
-            )
+            # Rule S1, decided by code: no Claude call, no steps (the S1 flag above says so).
             if plan.get("sop_suggestions"):
                 st.markdown("**SOPs that may be related** (found by text similarity, not confirmed: check before using)")
                 for s in plan["sop_suggestions"]:
