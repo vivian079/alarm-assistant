@@ -1,0 +1,18 @@
+alarm_id: {alarm_id}
+timestamp: {timestamp}
+tool_id: {tool_id}
+chamber: {chamber}
+alarm_code: {alarm_code}
+process_step: {process_step}
+sensor_value: {sensor_value}
+spec_lower: {spec_lower}
+spec_upper: {spec_upper}
+unit: {unit}
+wafer_count: {wafer_count}
+recent_history: {recent_history}
+
+System notes (already on the plan):
+{system_notes}
+
+SOPs for this alarm:
+{retrieved_sops}

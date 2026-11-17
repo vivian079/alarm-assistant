@@ -67,6 +67,8 @@ def create_plan(alarm_id: str):
     if duplicate is not None:
         return db.save_duplicate(alarm_id, request_id, [duplicate])
     flags = rules.check_flags(alarm, code)
+    # Prompt versions with {system_notes} (v6 on) show Claude what code already added, so it doesn't repeat it as a step.
+    prompt_input["system_notes"] = "\n".join(f"- {f['code']}: {f['message']}" for f in flags) or "none"
 
     retrieved_sop_ids = None
     if llm.USES_RETRIEVAL:

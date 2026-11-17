@@ -1,0 +1,2719 @@
+{
+  "run_at": "2026-11-17T02:57:15",
+  "versions": {
+    "prompt_version": "handling_plan_v5",
+    "model": "claude-sonnet-5-5",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "golden_set_version": "golden_v2"
+  },
+  "rescored_from": null,
+  "totals": {
+    "precision": 0.9393939393939394,
+    "recall": 0.96875,
+    "f1": 0.9538461538461539,
+    "correct": 62,
+    "generated": 66,
+    "covered": 62,
+    "expected": 64,
+    "not_covered_correct": 3,
+    "not_covered_total": 3,
+    "summary_fields_correct": 160,
+    "summary_fields_total": 160,
+    "failed": 0,
+    "retrieval_checked": 20,
+    "retrieval_found_all": 20,
+    "retrieval_extra": 0,
+    "flags_checked": 21,
+    "flags_all_right": 21,
+    "by_flag": {
+      "E1": {
+        "expected": 1,
+        "raised": 1,
+        "missing": 0,
+        "extra": 0
+      },
+      "R1": {
+        "expected": 3,
+        "raised": 3,
+        "missing": 0,
+        "extra": 0
+      },
+      "S1": {
+        "expected": 3,
+        "raised": 3,
+        "missing": 0,
+        "extra": 0
+      },
+      "W1": {
+        "expected": 1,
+        "raised": 1,
+        "missing": 0,
+        "extra": 0
+      },
+      "W2": {
+        "expected": 2,
+        "raised": 2,
+        "missing": 0,
+        "extra": 0
+      },
+      "WF1": {
+        "expected": 19,
+        "raised": 19,
+        "missing": 0,
+        "extra": 0
+      }
+    },
+    "duplicates_rejected": 1,
+    "duplicates_total": 1,
+    "judge_calls": 63,
+    "judge_input_tokens": 41007,
+    "judge_output_tokens": 3712,
+    "avg_latency_s": 4.1,
+    "by_case": {
+      "repeat": {
+        "correct": 12,
+        "generated": 12,
+        "covered": 12,
+        "expected": 12,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "step_specific": {
+        "correct": 16,
+        "generated": 16,
+        "covered": 16,
+        "expected": 17,
+        "precision": 1.0,
+        "recall": 0.9411764705882353,
+        "f1": 0.9696969696969697
+      },
+      "normal": {
+        "correct": 22,
+        "generated": 23,
+        "covered": 22,
+        "expected": 23,
+        "precision": 0.9565217391304348,
+        "recall": 0.9565217391304348,
+        "f1": 0.9565217391304348
+      },
+      "same_event": {
+        "correct": 4,
+        "generated": 5,
+        "covered": 4,
+        "expected": 4,
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.888888888888889
+      },
+      "in_spec": {
+        "correct": 8,
+        "generated": 10,
+        "covered": 8,
+        "expected": 8,
+        "precision": 0.8,
+        "recall": 1.0,
+        "f1": 0.888888888888889
+      }
+    }
+  },
+  "rows": [
+    {
+      "alarm_id": "AL-017",
+      "case": "repeat",
+      "plan_id": 114,
+      "request_id": "3de33415490943a888c8c6d30cf9588a",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 4.2,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-012"
+      ],
+      "actual_flags": [
+        "R1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the gas inlet flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the vacuum pump.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-012"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "B",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "Pressure sensor replaced",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-01: A-1023 reported",
+          "sensor_value": 58.0
+        },
+        "likely_causes": [
+          "Chamber pressure is truly high due to excess gas inlet flow",
+          "Vacuum pump degradation or insufficient pumping capacity",
+          "Pressure sensor error, possibly related to the recently replaced sensor (calibration or installation issue)"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-012"
+        ],
+        "retrieved": [
+          "SOP-012"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "R1",
+          "WF1"
+        ],
+        "actual": [
+          "R1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-032",
+      "case": "step_specific",
+      "plan_id": 115,
+      "request_id": "d4ed24dfba0346e18bf570e2dde9d230",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 5.1,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-013"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-013"
+              }
+            ]
+          },
+          {
+            "step": "Check that the throttle valve is fully open.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-013"
+              }
+            ]
+          },
+          {
+            "step": "Check the over-etch gas flow setting in the recipe.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-013"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-013"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-05",
+          "alarm_code": "A-1023",
+          "recent_fix": "No repair recorded in the provided history",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 12,
+          "recent_alarm": "2026-11-02: A-1031 reported",
+          "sensor_value": 53.0
+        },
+        "likely_causes": [
+          "Chamber pressure reading is inaccurate because of a primary pressure sensor fault or drift",
+          "Throttle valve is not fully open, which restricts pumping and raises chamber pressure",
+          "Over-etch gas flow setting in the recipe is too high or incorrect"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-013"
+        ],
+        "retrieved": [
+          "SOP-013"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-040",
+      "case": "normal",
+      "plan_id": 116,
+      "request_id": "eca67ad059a54f6d979e6c017ea490d1",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 4.9,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-012"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the gas inlet flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the vacuum pump.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-012"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "None recorded in the recent history",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "None recorded in the recent history",
+          "sensor_value": 56.0
+        },
+        "likely_causes": [
+          "Chamber pressure sensor reading is inaccurate (the reading would disagree with the backup sensor)",
+          "Gas inlet flow is abnormal and raising chamber pressure",
+          "Vacuum pump is degraded or not pumping effectively"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-012"
+        ],
+        "retrieved": [
+          "SOP-012"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-041",
+      "case": "same_event",
+      "plan_id": 117,
+      "request_id": "c3fb3c03fe924d0d80f77f9231c95116",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.9,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-012"
+      ],
+      "actual_flags": [
+        "W1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the gas inlet flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Check the vacuum pump.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-012"
+              }
+            ]
+          },
+          {
+            "step": "Review the chamber A A-1023 alarm from 10:05 for a possible cause shared with chamber B.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "B",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1023",
+          "recent_fix": "No repair recorded in the recent history",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 24,
+          "recent_alarm": "A-1023 reported on 2026-11-11 10:05 (chamber A)",
+          "sensor_value": 57.0
+        },
+        "likely_causes": [
+          "Chamber pressure is above the upper spec limit (57.0 mTorr vs 50.0 mTorr) during MAIN-ETCH, possibly from excess gas inlet flow",
+          "Vacuum pump degradation or reduced pumping capacity",
+          "Pressure sensor drift or fault, giving a false high reading",
+          "A cause shared between chambers A and B, since chamber A reported the same alarm code about 25 minutes earlier"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-012"
+        ],
+        "retrieved": [
+          "SOP-012"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "W1",
+          "WF1"
+        ],
+        "actual": [
+          "W1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 5,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-050",
+      "case": "normal",
+      "plan_id": 118,
+      "request_id": "bc12f8ba72ca469aa8f78caf62e59013",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.0,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-020"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup temperature sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "Check the chiller setpoint and coolant flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "Check the heater power output.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-020"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "ETCH-05",
+          "alarm_code": "A-1031",
+          "recent_fix": "No repair is recorded in the recent history for this tool",
+          "spec_lower": 40.0,
+          "spec_upper": 60.0,
+          "wafer_count": 18,
+          "recent_alarm": "2026-11-05: A-1023 reported on chamber A (a different alarm code from the current A-1031)",
+          "sensor_value": 64.2
+        },
+        "likely_causes": [
+          "Chamber temperature sensor reading error or drift (check against the backup sensor)",
+          "Chiller setpoint wrong or coolant flow reduced, so the chamber is not being cooled enough",
+          "Heater power output too high, so the chamber overheats"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-020"
+        ],
+        "retrieved": [
+          "SOP-020"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-061",
+      "case": "not_covered",
+      "plan_id": 119,
+      "request_id": "5a97f50cfcba49da94d726105b275d1f",
+      "prompt_version": null,
+      "model": null,
+      "status": "sop_not_covered",
+      "attempts": 0,
+      "latency_s": 0.4,
+      "expected_steps": 0,
+      "retrieved_sop_ids": [],
+      "actual_flags": [
+        "S1"
+      ],
+      "plan": {
+        "actions": [],
+        "alarm_summary": {
+          "unit": "mTorr",
+          "chamber": "A",
+          "tool_id": "ETCH-07",
+          "alarm_code": "A-1023",
+          "recent_fix": "",
+          "spec_lower": 20.0,
+          "spec_upper": 50.0,
+          "wafer_count": 0,
+          "recent_alarm": "none in the last 7 days",
+          "sensor_value": 55.0
+        },
+        "likely_causes": []
+      },
+      "retrieval": {
+        "expected": [],
+        "retrieved": [],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "S1"
+        ],
+        "actual": [
+          "S1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": true,
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-062",
+      "case": "in_spec",
+      "plan_id": 120,
+      "request_id": "40ac29ee061a432a881175e8df95a6ea",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.9,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-020"
+      ],
+      "actual_flags": [
+        "W2",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup temperature sensor.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "Check the chiller setpoint and coolant flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "Check the heater power output.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-020"
+              }
+            ]
+          },
+          {
+            "step": "Check the A-1031 alarm trigger configuration and the temperature trace for chamber B, because the reported value of 52.0 °C is within the 40-60 °C spec.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "ETCH-07",
+          "alarm_code": "A-1031",
+          "recent_fix": "No repair is recorded in the provided history",
+          "spec_lower": 40.0,
+          "spec_upper": 60.0,
+          "wafer_count": 22,
+          "recent_alarm": "2026-11-12 08:15: A-1023 reported on chamber A (different alarm code and chamber from this alarm)",
+          "sensor_value": 52.0
+        },
+        "likely_causes": [
+          "Chamber B temperature sensor fault or drift, since the reported 52.0 °C is inside the 40-60 °C spec",
+          "Chiller setpoint error or reduced coolant flow",
+          "Heater power output abnormal",
+          "Short temperature excursion during MAIN-ETCH that was not captured in the reported value"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-020"
+        ],
+        "retrieved": [
+          "SOP-020"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "W2",
+          "WF1"
+        ],
+        "actual": [
+          "W2",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 5,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-063",
+      "case": "step_specific",
+      "plan_id": 121,
+      "request_id": "7ea4efac54774d979f2c9063999cc678",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.9,
+      "expected_steps": 3,
+      "retrieved_sop_ids": [
+        "SOP-016"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the over-etch time setting in the recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-016"
+              }
+            ]
+          },
+          {
+            "step": "Stop the tool and notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-016"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "s",
+          "chamber": "A",
+          "tool_id": "ETCH-03",
+          "alarm_code": "A-1052",
+          "recent_fix": "No repair recorded in the recent history",
+          "spec_lower": 40.0,
+          "spec_upper": 90.0,
+          "wafer_count": 25,
+          "recent_alarm": "A-1023 reported on 2026-11-11 at 10:05 in chamber A and at 10:30 in chamber B",
+          "sensor_value": 104.0
+        },
+        "likely_causes": [
+          "Endpoint was not detected during over etch, so the over-etch ran to 104.0 s, above the 90.0 s upper limit",
+          "The over-etch time setting in the recipe may be incorrect"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-016"
+        ],
+        "retrieved": [
+          "SOP-016"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 2,
+        "correct": 2,
+        "covered": 2,
+        "expected": 3
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-064",
+      "case": "normal",
+      "plan_id": 122,
+      "request_id": "94c009abc10b40ee9287391efb54444b",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 3.2,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-030"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure gauge.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-030"
+              }
+            ]
+          },
+          {
+            "step": "Check the throttle valve position.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-030"
+              }
+            ]
+          },
+          {
+            "step": "Check the precursor and carrier gas flows.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-030"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-030"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "Torr",
+          "chamber": "A",
+          "tool_id": "DEP-01",
+          "alarm_code": "D-2011",
+          "recent_fix": "None: no recent repairs were recorded for this tool.",
+          "spec_lower": 2.0,
+          "spec_upper": 6.0,
+          "wafer_count": 25,
+          "recent_alarm": "None: no recent alarm history was provided for this tool.",
+          "sensor_value": 7.2
+        },
+        "likely_causes": [
+          "Throttle valve position drift or malfunction causing chamber pressure to read above the upper spec limit",
+          "Precursor or carrier gas flow higher than setpoint, raising chamber pressure",
+          "Primary pressure gauge error or drift, so the reading is not a true pressure excursion"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-030"
+        ],
+        "retrieved": [
+          "SOP-030"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-065",
+      "case": "step_specific",
+      "plan_id": 123,
+      "request_id": "7e3a6e112e844f6eb1268579ab0b5073",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 5.2,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-031"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure gauge.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-031"
+              }
+            ]
+          },
+          {
+            "step": "Check the purge gas flow.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-031"
+              }
+            ]
+          },
+          {
+            "step": "Check the exhaust line for blockage.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-031"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-031"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "Torr",
+          "chamber": "B",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2011",
+          "recent_fix": "No repair is recorded in the recent history",
+          "spec_lower": 2.0,
+          "spec_upper": 6.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-12 14:30: D-2027 reported on chamber A (different alarm code and chamber from this alarm)",
+          "sensor_value": 1.4
+        },
+        "likely_causes": [
+          "Chamber pressure gauge reading error or drift, so the reading does not match the actual pressure",
+          "Insufficient purge gas flow, giving low chamber pressure during purge",
+          "Exhaust line blockage or restriction affecting chamber pressure"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-031"
+        ],
+        "retrieved": [
+          "SOP-031"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-066",
+      "case": "repeat",
+      "plan_id": 124,
+      "request_id": "659fddb436174a9fa9353f4412e4fbb7",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 3.6,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-032"
+      ],
+      "actual_flags": [
+        "R1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup thermocouple.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-032"
+              }
+            ]
+          },
+          {
+            "step": "Check the heater power output.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-032"
+              }
+            ]
+          },
+          {
+            "step": "Check the heater cable connection.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-032"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-032"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "A",
+          "tool_id": "DEP-02",
+          "alarm_code": "D-2014",
+          "recent_fix": "Heater thermocouple replaced",
+          "spec_lower": 390.0,
+          "spec_upper": 410.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-09: D-2014 reported (chamber A)",
+          "sensor_value": 418.0
+        },
+        "likely_causes": [
+          "Heater temperature control drift or overshoot, with the reading 8 °C above the 410 °C upper limit",
+          "Replaced heater thermocouple (2026-11-09) reading incorrectly, for example from a calibration offset or poor seating",
+          "Heater power output higher than expected",
+          "Loose or damaged heater cable connection"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-032"
+        ],
+        "retrieved": [
+          "SOP-032"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "R1",
+          "WF1"
+        ],
+        "actual": [
+          "R1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-067",
+      "case": "not_covered",
+      "plan_id": 125,
+      "request_id": "5617771f589449b387d0ee7c34cdd190",
+      "prompt_version": null,
+      "model": null,
+      "status": "sop_not_covered",
+      "attempts": 0,
+      "latency_s": 0.1,
+      "expected_steps": 0,
+      "retrieved_sop_ids": [],
+      "actual_flags": [
+        "S1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "C",
+          "tool_id": "DEP-02",
+          "alarm_code": "D-2044",
+          "recent_fix": "",
+          "spec_lower": 60.0,
+          "spec_upper": 80.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-09: D-2014 reported (chamber A); heater thermocouple replaced; 2026-11-12 11:00: D-2014 reported (chamber A)",
+          "sensor_value": 86.0
+        },
+        "likely_causes": []
+      },
+      "retrieval": {
+        "expected": [],
+        "retrieved": [],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "S1",
+          "WF1"
+        ],
+        "actual": [
+          "S1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": true,
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-068",
+      "case": "normal",
+      "plan_id": 126,
+      "request_id": "3df056eff2c445399e904b1af7a3b9f9",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.3,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-036"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Measure the film thickness on one more wafer from the same lot.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-036"
+              }
+            ]
+          },
+          {
+            "step": "Compare the deposition time with the recipe setting.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-036"
+              }
+            ]
+          },
+          {
+            "step": "Check that the heater temperature is within spec.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-036"
+              }
+            ]
+          },
+          {
+            "step": "Notify process engineering.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-036"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "nm",
+          "chamber": "A",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2027",
+          "recent_fix": "No repairs recorded in recent history",
+          "spec_lower": 95.0,
+          "spec_upper": 105.0,
+          "wafer_count": 25,
+          "recent_alarm": "No alarms recorded for this tool in recent history",
+          "sensor_value": 108.0
+        },
+        "likely_causes": [
+          "Deposition time set or running longer than the recipe setting",
+          "Heater temperature out of spec, changing the deposition rate",
+          "Single-wafer measurement error, to be ruled out by measuring another wafer from the same lot"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-036"
+        ],
+        "retrieved": [
+          "SOP-036"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 3,
+        "covered": 3,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-069",
+      "case": "step_specific",
+      "plan_id": 127,
+      "request_id": "bc16f256ca324d178df4f308b594a75d",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 5.1,
+      "expected_steps": 3,
+      "retrieved_sop_ids": [
+        "SOP-035"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the RF power setting in the pre-clean recipe.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-035"
+              }
+            ]
+          },
+          {
+            "step": "Check the RF cable connections.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-035"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-035"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "W",
+          "chamber": "B",
+          "tool_id": "DEP-04",
+          "alarm_code": "D-2023",
+          "recent_fix": "No repair is recorded in the provided history.",
+          "spec_lower": 950.0,
+          "spec_upper": 1050.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-13 15:05: D-2011 reported (chamber B); 2026-11-12 14:30: D-2027 reported (chamber A)",
+          "sensor_value": 1080.0
+        },
+        "likely_causes": [
+          "RF power setpoint in the pre-clean recipe is incorrect or was changed, so the reading is above the 1050 W upper limit",
+          "Loose or faulty RF cable connection causing abnormal RF power delivery or reading",
+          "Possible RF power delivery or measurement fault if the recipe and cables are normal (not confirmed by the data provided)"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-035"
+        ],
+        "retrieved": [
+          "SOP-035"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-070",
+      "case": "in_spec",
+      "plan_id": 128,
+      "request_id": "2e3bd785b71a4c229b6f459ee9737f15",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 6.7,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-033"
+      ],
+      "actual_flags": [
+        "W2",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the flow reading with the mass flow controller setpoint.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-033"
+              }
+            ]
+          },
+          {
+            "step": "Check the precursor bottle level.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-033"
+              }
+            ]
+          },
+          {
+            "step": "Check the precursor line heater temperature.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-033"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-033"
+              }
+            ]
+          },
+          {
+            "step": "Note that the reported reading of 205.0 sccm is inside the 180.0-220.0 sccm spec. Confirm the D-2019 alarm trigger and its threshold settings against the sensor data.",
+            "sop_refs": []
+          }
+        ],
+        "alarm_summary": {
+          "unit": "sccm",
+          "chamber": "C",
+          "tool_id": "DEP-01",
+          "alarm_code": "D-2019",
+          "recent_fix": "No repair is recorded in the provided history for the D-2011 alarm",
+          "spec_lower": 180.0,
+          "spec_upper": 220.0,
+          "wafer_count": 25,
+          "recent_alarm": "D-2011 reported on 2026-11-12 10:20 (chamber A)",
+          "sensor_value": 205.0
+        },
+        "likely_causes": [
+          "Precursor flow differs from the mass flow controller setpoint",
+          "Low precursor bottle level",
+          "Precursor line heater temperature out of range"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-033"
+        ],
+        "retrieved": [
+          "SOP-033"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "W2",
+          "WF1"
+        ],
+        "actual": [
+          "W2",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 5,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-071",
+      "case": "normal",
+      "plan_id": 129,
+      "request_id": "3ba64309d4c4476c80e257d7ab0bdd46",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 4.7,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-052"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the slurry supply tank level.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-052"
+              }
+            ]
+          },
+          {
+            "step": "Check the slurry line for blockage.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-052"
+              }
+            ]
+          },
+          {
+            "step": "Check the slurry pump status.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-052"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-052"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "mL/min",
+          "chamber": "A",
+          "tool_id": "CMP-02",
+          "alarm_code": "C-3012",
+          "recent_fix": "No recent repairs in the history provided",
+          "spec_lower": 180.0,
+          "spec_upper": 220.0,
+          "wafer_count": 25,
+          "recent_alarm": "No recent alarms in the history provided",
+          "sensor_value": 150.0
+        },
+        "likely_causes": [
+          "Slurry supply tank level low",
+          "Blockage in the slurry line",
+          "Slurry pump fault or abnormal pump status"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-052"
+        ],
+        "retrieved": [
+          "SOP-052"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-072",
+      "case": "step_specific",
+      "plan_id": 130,
+      "request_id": "e045151250b745f7a7b150250d001192",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 4.2,
+      "expected_steps": 3,
+      "retrieved_sop_ids": [
+        "SOP-055"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Check the conditioner disk for wear.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-055"
+              }
+            ]
+          },
+          {
+            "step": "Check the conditioner arm for blocked movement.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-055"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-055"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "A",
+          "chamber": "B",
+          "tool_id": "CMP-02",
+          "alarm_code": "C-3021",
+          "recent_fix": "No repair recorded in the recent history",
+          "spec_lower": 0.0,
+          "spec_upper": 12.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-13 09:00: C-3012 reported (chamber A)",
+          "sensor_value": 13.5
+        },
+        "likely_causes": [
+          "Worn conditioner disk increasing load on the conditioning motor",
+          "Conditioner arm movement blocked, raising motor current"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-055"
+        ],
+        "retrieved": [
+          "SOP-055"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-073",
+      "case": "repeat",
+      "plan_id": 131,
+      "request_id": "b241e94e71354754b520ab2dfd8fda6d",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 2.9,
+      "expected_steps": 4,
+      "retrieved_sop_ids": [
+        "SOP-050"
+      ],
+      "actual_flags": [
+        "R1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Compare the reading with the backup pressure sensor on the polish head.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-050"
+              }
+            ]
+          },
+          {
+            "step": "Check the polish head membrane for damage.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-050"
+              }
+            ]
+          },
+          {
+            "step": "Check the head air supply pressure.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-050"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 4,
+                "sop_id": "SOP-050"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "psi",
+          "chamber": "A",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3005",
+          "recent_fix": "Polish head membrane replaced",
+          "spec_lower": 2.0,
+          "spec_upper": 4.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-08: C-3005 reported (chamber A)",
+          "sensor_value": 4.6
+        },
+        "likely_causes": [
+          "Polish head down force sensor reading is inaccurate or drifting",
+          "Newly replaced polish head membrane is damaged or incorrectly installed",
+          "Head air supply pressure is too high or unregulated",
+          "Recurrence of the 2026-11-08 C-3005 condition, suggesting the membrane replacement did not resolve the root cause"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-050"
+        ],
+        "retrieved": [
+          "SOP-050"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "R1",
+          "WF1"
+        ],
+        "actual": [
+          "R1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 4,
+        "correct": 4,
+        "covered": 4,
+        "expected": 4
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-074",
+      "case": "not_covered",
+      "plan_id": 132,
+      "request_id": "37e51effe30a406a8efc4f9680e33b2f",
+      "prompt_version": null,
+      "model": null,
+      "status": "sop_not_covered",
+      "attempts": 0,
+      "latency_s": 0.1,
+      "expected_steps": 0,
+      "retrieved_sop_ids": [],
+      "actual_flags": [
+        "S1",
+        "WF1"
+      ],
+      "plan": {
+        "actions": [],
+        "alarm_summary": {
+          "unit": "°C",
+          "chamber": "B",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3016",
+          "recent_fix": "",
+          "spec_lower": 30.0,
+          "spec_upper": 50.0,
+          "wafer_count": 25,
+          "recent_alarm": "2026-11-08: C-3005 reported (chamber A); polish head membrane replaced; 2026-11-13 13:15: C-3005 reported (chamber A)",
+          "sensor_value": 55.0
+        },
+        "likely_causes": []
+      },
+      "retrieval": {
+        "expected": [],
+        "retrieved": [],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "S1",
+          "WF1"
+        ],
+        "actual": [
+          "S1",
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "not_covered_correct": true,
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-075",
+      "case": "normal",
+      "plan_id": 133,
+      "request_id": "50475a650fb34d79ad614e0f33d10024",
+      "prompt_version": "handling_plan_v5",
+      "model": "claude-sonnet-5-5",
+      "status": "pending_review",
+      "attempts": 1,
+      "latency_s": 3.4,
+      "expected_steps": 3,
+      "retrieved_sop_ids": [
+        "SOP-057"
+      ],
+      "actual_flags": [
+        "WF1"
+      ],
+      "plan": {
+        "actions": [
+          {
+            "step": "Check that the DI water supply valve is open.",
+            "sop_refs": [
+              {
+                "step": 1,
+                "sop_id": "SOP-057"
+              }
+            ]
+          },
+          {
+            "step": "Check the rinse nozzle for blockage.",
+            "sop_refs": [
+              {
+                "step": 2,
+                "sop_id": "SOP-057"
+              }
+            ]
+          },
+          {
+            "step": "If all of the above are normal, stop the tool and notify maintenance.",
+            "sop_refs": [
+              {
+                "step": 3,
+                "sop_id": "SOP-057"
+              }
+            ]
+          }
+        ],
+        "alarm_summary": {
+          "unit": "L/min",
+          "chamber": "A",
+          "tool_id": "CMP-06",
+          "alarm_code": "C-3028",
+          "recent_fix": "Polish head membrane replaced on 2026-11-08 following the C-3005 alarm.",
+          "spec_lower": 1.5,
+          "spec_upper": 2.5,
+          "wafer_count": 25,
+          "recent_alarm": "CMP-06 chamber A reported C-3005 on 2026-11-08 and again on 2026-11-13 13:15; chamber B reported C-3016 on 2026-11-13 17:40. C-3028 has not been reported in the last 7 days.",
+          "sensor_value": 1.1
+        },
+        "likely_causes": [
+          "DI water supply valve not fully open, restricting rinse flow",
+          "Rinse nozzle partially or fully blocked",
+          "Upstream DI water supply issue if valve and nozzle are normal"
+        ]
+      },
+      "retrieval": {
+        "expected": [
+          "SOP-057"
+        ],
+        "retrieved": [
+          "SOP-057"
+        ],
+        "found_all": true,
+        "extra": 0
+      },
+      "flags": {
+        "expected": [
+          "WF1"
+        ],
+        "actual": [
+          "WF1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "summary": {
+        "correct": 8,
+        "total": 8,
+        "wrong": []
+      },
+      "actions": {
+        "generated": 3,
+        "correct": 3,
+        "covered": 3,
+        "expected": 3
+      },
+      "run": 1
+    },
+    {
+      "alarm_id": "AL-051",
+      "case": "duplicate",
+      "plan_id": 134,
+      "request_id": "47330afc0b7b42339b0a4c7f7dd2d0fb",
+      "prompt_version": null,
+      "model": null,
+      "status": "rejected_duplicate",
+      "attempts": 0,
+      "latency_s": 0.0,
+      "expected_steps": 0,
+      "retrieved_sop_ids": null,
+      "actual_flags": [
+        "E1"
+      ],
+      "error": "Duplicate of AL-050: same tool, chamber, alarm code, time and reading. No plan was generated.",
+      "flags": {
+        "expected": [
+          "E1"
+        ],
+        "actual": [
+          "E1"
+        ],
+        "right": true,
+        "missing": [],
+        "extra": []
+      },
+      "duplicate_rejected": true,
+      "run": 1
+    }
+  ],
+  "judge_log": [
+    {
+      "action": "Compare the reading with the backup pressure sensor.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.   <- CITED\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 653,
+      "output_tokens": 55,
+      "reason": "The action to compare the reading with the backup pressure sensor matches cited step 1 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2349
+    },
+    {
+      "action": "Check the gas inlet flow.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.   <- CITED\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 647,
+      "output_tokens": 52,
+      "reason": "The action 'Check the gas inlet flow' matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1443
+    },
+    {
+      "action": "Check the vacuum pump.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 646,
+      "output_tokens": 51,
+      "reason": "The action 'Check the vacuum pump' is the same operation as cited step 3, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1729
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 658,
+      "output_tokens": 71,
+      "reason": "The action restates step 4 exactly: if the prior checks (steps 1-3) are normal, stop the tool and notify maintenance. It neither adds nor omits any operation.",
+      "judgement": true,
+      "latency_ms": 1761
+    },
+    {
+      "action": "Compare the reading with the backup pressure sensor.",
+      "sop_steps": "SOP-013: Chamber pressure high during over etch\n  step 1: Compare the reading with the backup pressure sensor.   <- CITED\n  step 2: Check that the throttle valve is fully open.\n  step 3: Check the over-etch gas flow setting in the recipe.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 665,
+      "output_tokens": 57,
+      "reason": "The action compares the reading with the backup pressure sensor, which is exactly what cited step 1 says, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1886
+    },
+    {
+      "action": "Check that the throttle valve is fully open.",
+      "sop_steps": "SOP-013: Chamber pressure high during over etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check that the throttle valve is fully open.   <- CITED\n  step 3: Check the over-etch gas flow setting in the recipe.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 662,
+      "output_tokens": 52,
+      "reason": "The action to check that the throttle valve is fully open matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1569
+    },
+    {
+      "action": "Check the over-etch gas flow setting in the recipe.",
+      "sop_steps": "SOP-013: Chamber pressure high during over etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check that the throttle valve is fully open.\n  step 3: Check the over-etch gas flow setting in the recipe.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 667,
+      "output_tokens": 60,
+      "reason": "The action checks the over-etch gas flow setting in the recipe, which is exactly what cited step 3 says, with no added or omitted operation.",
+      "judgement": true,
+      "latency_ms": 1758
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-013: Chamber pressure high during over etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check that the throttle valve is fully open.\n  step 3: Check the over-etch gas flow setting in the recipe.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 670,
+      "output_tokens": 73,
+      "reason": "The action restates cited step 4: if the preceding checks (steps 1-3) are all normal, stop the tool and notify maintenance. It adds no extra operation and omits nothing.",
+      "judgement": true,
+      "latency_ms": 1640
+    },
+    {
+      "action": "Compare the reading with the backup pressure sensor.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.   <- CITED\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 653,
+      "output_tokens": 54,
+      "reason": "The action to compare the reading with the backup pressure sensor matches cited step 1 exactly, with no operations added or left out.",
+      "judgement": true,
+      "latency_ms": 2199
+    },
+    {
+      "action": "Check the gas inlet flow.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.   <- CITED\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 647,
+      "output_tokens": 52,
+      "reason": "The action 'Check the gas inlet flow' matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1728
+    },
+    {
+      "action": "Check the vacuum pump.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 646,
+      "output_tokens": 51,
+      "reason": "The action 'Check the vacuum pump' is the same operation as cited step 3, with nothing omitted or added.",
+      "judgement": true,
+      "latency_ms": 1773
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 658,
+      "output_tokens": 87,
+      "reason": "The action restates cited step 4 (stop the tool and notify maintenance if all prior checks are normal) without adding or omitting any operation; 'all of the above' refers to steps 1-3, which the action keeps as the condition.",
+      "judgement": true,
+      "latency_ms": 5250
+    },
+    {
+      "action": "Compare the reading with the backup pressure sensor.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.   <- CITED\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 653,
+      "output_tokens": 55,
+      "reason": "The action to compare the reading with the backup pressure sensor matches cited step 1 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2211
+    },
+    {
+      "action": "Check the gas inlet flow.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.   <- CITED\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 647,
+      "output_tokens": 52,
+      "reason": "The action 'Check the gas inlet flow' matches cited step 2 exactly, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 5431
+    },
+    {
+      "action": "Check the vacuum pump.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 646,
+      "output_tokens": 51,
+      "reason": "The action 'Check the vacuum pump' is the same operation as the cited step 3, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 1663
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-012: Chamber pressure high during main etch\n  step 1: Compare the reading with the backup pressure sensor.\n  step 2: Check the gas inlet flow.\n  step 3: Check the vacuum pump.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 658,
+      "output_tokens": 86,
+      "reason": "The action restates cited step 4: if all the preceding checks (backup sensor comparison, gas inlet flow, vacuum pump) are normal, stop the tool and notify maintenance. It adds no operation and omits none.",
+      "judgement": true,
+      "latency_ms": 4777
+    },
+    {
+      "action": "Compare the reading with the backup temperature sensor.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.   <- CITED\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 658,
+      "output_tokens": 59,
+      "reason": "The action is to compare the reading with the backup temperature sensor, which is exactly what cited step 1 says, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 2526
+    },
+    {
+      "action": "Check the chiller setpoint and coolant flow.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.   <- CITED\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 658,
+      "output_tokens": 55,
+      "reason": "The action to check the chiller setpoint and coolant flow matches cited step 2 exactly, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 5413
+    },
+    {
+      "action": "Check the heater power output.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 649,
+      "output_tokens": 49,
+      "reason": "The action 'Check the heater power output' matches cited step 3 exactly, with no added or omitted operation.",
+      "judgement": true,
+      "latency_ms": 2081
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 663,
+      "output_tokens": 69,
+      "reason": "The action restates step 4: if the checks in steps 1-3 are all normal, stop the tool and notify maintenance. It adds no new operation and leaves nothing out.",
+      "judgement": true,
+      "latency_ms": 1822
+    },
+    {
+      "action": "Compare the reading with the backup temperature sensor.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.   <- CITED\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 658,
+      "output_tokens": 56,
+      "reason": "The action matches cited step 1 exactly: it compares the reading with the backup temperature sensor, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 5758
+    },
+    {
+      "action": "Check the chiller setpoint and coolant flow.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.   <- CITED\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 658,
+      "output_tokens": 58,
+      "reason": "The action 'Check the chiller setpoint and coolant flow' matches cited step 2 exactly, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 5679
+    },
+    {
+      "action": "Check the heater power output.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 649,
+      "output_tokens": 49,
+      "reason": "The action 'Check the heater power output' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 5135
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-020: Chamber temperature out of range during etch\n  step 1: Compare the reading with the backup temperature sensor.\n  step 2: Check the chiller setpoint and coolant flow.\n  step 3: Check the heater power output.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 663,
+      "output_tokens": 66,
+      "reason": "The action restates step 4 exactly: if the prior checks are all normal, stop the tool and notify maintenance. It adds no operation and leaves nothing out.",
+      "judgement": true,
+      "latency_ms": 1926
+    },
+    {
+      "action": "Check the over-etch time setting in the recipe.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.   <- CITED\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.",
+      "input_tokens": 632,
+      "output_tokens": 56,
+      "reason": "The action checks the over-etch time setting in the recipe, which is exactly what cited step 1 says, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 2524
+    },
+    {
+      "action": "Stop the tool and notify process engineering.",
+      "sop_steps": "SOP-016: Endpoint not detected during over etch\n  step 1: Check the over-etch time setting in the recipe.\n  step 2: Hold the current wafer and send it for inspection.\n  step 3: Stop the tool and notify process engineering.   <- CITED",
+      "input_tokens": 630,
+      "output_tokens": 55,
+      "reason": "The action 'Stop the tool and notify process engineering' matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1328
+    },
+    {
+      "action": "Compare the reading with the backup pressure gauge.",
+      "sop_steps": "SOP-030: Chamber pressure out of range during deposition\n  step 1: Compare the reading with the backup pressure gauge.   <- CITED\n  step 2: Check the throttle valve position.\n  step 3: Check the precursor and carrier gas flows.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 659,
+      "output_tokens": 61,
+      "reason": "The action is identical to cited step 1: comparing the reading with the backup pressure gauge. It adds no extra operation and leaves nothing out.",
+      "judgement": true,
+      "latency_ms": 1608
+    },
+    {
+      "action": "Check the throttle valve position.",
+      "sop_steps": "SOP-030: Chamber pressure out of range during deposition\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the throttle valve position.   <- CITED\n  step 3: Check the precursor and carrier gas flows.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 652,
+      "output_tokens": 48,
+      "reason": "The action to check the throttle valve position is the same operation as cited step 2, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1944
+    },
+    {
+      "action": "Check the precursor and carrier gas flows.",
+      "sop_steps": "SOP-030: Chamber pressure out of range during deposition\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the throttle valve position.\n  step 3: Check the precursor and carrier gas flows.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 657,
+      "output_tokens": 53,
+      "reason": "The action to check the precursor and carrier gas flows matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1649
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-030: Chamber pressure out of range during deposition\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the throttle valve position.\n  step 3: Check the precursor and carrier gas flows.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 664,
+      "output_tokens": 63,
+      "reason": "The action restates the cited step 4 exactly: if the checks above are all normal, stop the tool and notify maintenance. It adds and omits nothing.",
+      "judgement": true,
+      "latency_ms": 1827
+    },
+    {
+      "action": "Compare the reading with the backup pressure gauge.",
+      "sop_steps": "SOP-031: Chamber pressure out of range during purge\n  step 1: Compare the reading with the backup pressure gauge.   <- CITED\n  step 2: Check the purge gas flow.\n  step 3: Check the exhaust line for blockage.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 656,
+      "output_tokens": 58,
+      "reason": "The action is to compare the reading with the backup pressure gauge, which is exactly what cited step 1 says, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 2425
+    },
+    {
+      "action": "Check the purge gas flow.",
+      "sop_steps": "SOP-031: Chamber pressure out of range during purge\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the purge gas flow.   <- CITED\n  step 3: Check the exhaust line for blockage.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 649,
+      "output_tokens": 52,
+      "reason": "The action 'Check the purge gas flow' is the same operation as cited step 2 and adds nothing beyond it.",
+      "judgement": true,
+      "latency_ms": 1841
+    },
+    {
+      "action": "Check the exhaust line for blockage.",
+      "sop_steps": "SOP-031: Chamber pressure out of range during purge\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the purge gas flow.\n  step 3: Check the exhaust line for blockage.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 652,
+      "output_tokens": 51,
+      "reason": "The action to check the exhaust line for blockage matches cited step 3 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 4209
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-031: Chamber pressure out of range during purge\n  step 1: Compare the reading with the backup pressure gauge.\n  step 2: Check the purge gas flow.\n  step 3: Check the exhaust line for blockage.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 661,
+      "output_tokens": 69,
+      "reason": "The action restates cited step 4 directly: if all prior checks are normal, stop the tool and notify maintenance. It adds no extra operation and omits nothing from the step.",
+      "judgement": true,
+      "latency_ms": 1401
+    },
+    {
+      "action": "Compare the reading with the backup thermocouple.",
+      "sop_steps": "SOP-032: Heater temperature out of range\n  step 1: Compare the reading with the backup thermocouple.   <- CITED\n  step 2: Check the heater power output.\n  step 3: Check the heater cable connection.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 645,
+      "output_tokens": 57,
+      "reason": "The action, comparing the reading with the backup thermocouple, is the same operation as cited step 1 and adds nothing beyond it.",
+      "judgement": true,
+      "latency_ms": 1834
+    },
+    {
+      "action": "Check the heater power output.",
+      "sop_steps": "SOP-032: Heater temperature out of range\n  step 1: Compare the reading with the backup thermocouple.\n  step 2: Check the heater power output.   <- CITED\n  step 3: Check the heater cable connection.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 637,
+      "output_tokens": 49,
+      "reason": "The action 'Check the heater power output' matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1848
+    },
+    {
+      "action": "Check the heater cable connection.",
+      "sop_steps": "SOP-032: Heater temperature out of range\n  step 1: Compare the reading with the backup thermocouple.\n  step 2: Check the heater power output.\n  step 3: Check the heater cable connection.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 639,
+      "output_tokens": 51,
+      "reason": "The action 'Check the heater cable connection' is the same operation as cited step 3, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 1740
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-032: Heater temperature out of range\n  step 1: Compare the reading with the backup thermocouple.\n  step 2: Check the heater power output.\n  step 3: Check the heater cable connection.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 651,
+      "output_tokens": 76,
+      "reason": "The action restates cited step 4 exactly: if the prior checks (steps 1-3) are all normal, stop the tool and notify maintenance. It adds no extra operation and omits nothing.",
+      "judgement": true,
+      "latency_ms": 4703
+    },
+    {
+      "action": "Measure the film thickness on one more wafer from the same lot.",
+      "sop_steps": "SOP-036: Film thickness out of range\n  step 1: Measure the film thickness on one more wafer from the same lot.   <- CITED\n  step 2: Compare the deposition time with the recipe setting.\n  step 3: Check that the heater temperature is within spec.\n  step 4: Hold the lot and notify process engineering.",
+      "input_tokens": 656,
+      "output_tokens": 59,
+      "reason": "The action measures film thickness on one more wafer from the same lot, which is exactly what cited step 1 says, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 3652
+    },
+    {
+      "action": "Compare the deposition time with the recipe setting.",
+      "sop_steps": "SOP-036: Film thickness out of range\n  step 1: Measure the film thickness on one more wafer from the same lot.\n  step 2: Compare the deposition time with the recipe setting.   <- CITED\n  step 3: Check that the heater temperature is within spec.\n  step 4: Hold the lot and notify process engineering.",
+      "input_tokens": 652,
+      "output_tokens": 55,
+      "reason": "The action compares the deposition time with the recipe setting, which is exactly what cited step 2 says, with nothing added or left out.",
+      "judgement": true,
+      "latency_ms": 1842
+    },
+    {
+      "action": "Check that the heater temperature is within spec.",
+      "sop_steps": "SOP-036: Film thickness out of range\n  step 1: Measure the film thickness on one more wafer from the same lot.\n  step 2: Compare the deposition time with the recipe setting.\n  step 3: Check that the heater temperature is within spec.   <- CITED\n  step 4: Hold the lot and notify process engineering.",
+      "input_tokens": 650,
+      "output_tokens": 55,
+      "reason": "The action checks that the heater temperature is within spec, which is exactly what cited step 3 says, with no extra or missing operations.",
+      "judgement": true,
+      "latency_ms": 1740
+    },
+    {
+      "action": "Notify process engineering.",
+      "sop_steps": "SOP-036: Film thickness out of range\n  step 1: Measure the film thickness on one more wafer from the same lot.\n  step 2: Compare the deposition time with the recipe setting.\n  step 3: Check that the heater temperature is within spec.\n  step 4: Hold the lot and notify process engineering.   <- CITED",
+      "input_tokens": 644,
+      "output_tokens": 62,
+      "reason": "The cited step 4 requires two operations: hold the lot and notify process engineering. The action only notifies process engineering and leaves out holding the lot.",
+      "judgement": false,
+      "latency_ms": 2968
+    },
+    {
+      "action": "Check the RF power setting in the pre-clean recipe.",
+      "sop_steps": "SOP-035: RF power out of range during pre-clean\n  step 1: Check the RF power setting in the pre-clean recipe.   <- CITED\n  step 2: Check the RF cable connections.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 640,
+      "output_tokens": 57,
+      "reason": "The action to check the RF power setting in the pre-clean recipe matches cited step 1 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 2637
+    },
+    {
+      "action": "Check the RF cable connections.",
+      "sop_steps": "SOP-035: RF power out of range during pre-clean\n  step 1: Check the RF power setting in the pre-clean recipe.\n  step 2: Check the RF cable connections.   <- CITED\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 631,
+      "output_tokens": 52,
+      "reason": "The action, checking the RF cable connections, is exactly the operation in cited step 2, with nothing added or omitted.",
+      "judgement": true,
+      "latency_ms": 1948
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-035: RF power out of range during pre-clean\n  step 1: Check the RF power setting in the pre-clean recipe.\n  step 2: Check the RF cable connections.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 643,
+      "output_tokens": 82,
+      "reason": "The action restates cited step 3 exactly: if the checks in steps 1 and 2 (RF power setting and cable connections) are normal, stop the tool and notify maintenance. It adds and omits nothing.",
+      "judgement": true,
+      "latency_ms": 1747
+    },
+    {
+      "action": "Compare the flow reading with the mass flow controller setpoint.",
+      "sop_steps": "SOP-033: Precursor flow out of range during deposition\n  step 1: Compare the flow reading with the mass flow controller setpoint.   <- CITED\n  step 2: Check the precursor bottle level.\n  step 3: Check the precursor line heater temperature.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 665,
+      "output_tokens": 58,
+      "reason": "The action restates cited step 1 exactly: comparing the flow reading with the mass flow controller setpoint. It adds no other operation.",
+      "judgement": true,
+      "latency_ms": 2153
+    },
+    {
+      "action": "Check the precursor bottle level.",
+      "sop_steps": "SOP-033: Precursor flow out of range during deposition\n  step 1: Compare the flow reading with the mass flow controller setpoint.\n  step 2: Check the precursor bottle level.   <- CITED\n  step 3: Check the precursor line heater temperature.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 655,
+      "output_tokens": 52,
+      "reason": "The action 'Check the precursor bottle level' is the same operation as cited step 2, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 2111
+    },
+    {
+      "action": "Check the precursor line heater temperature.",
+      "sop_steps": "SOP-033: Precursor flow out of range during deposition\n  step 1: Compare the flow reading with the mass flow controller setpoint.\n  step 2: Check the precursor bottle level.\n  step 3: Check the precursor line heater temperature.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 657,
+      "output_tokens": 51,
+      "reason": "The action to check the precursor line heater temperature matches cited step 3 exactly, with no added or omitted operation.",
+      "judgement": true,
+      "latency_ms": 3529
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-033: Precursor flow out of range during deposition\n  step 1: Compare the flow reading with the mass flow controller setpoint.\n  step 2: Check the precursor bottle level.\n  step 3: Check the precursor line heater temperature.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 666,
+      "output_tokens": 91,
+      "reason": "The cited step 4 says that if the checks in steps 1-3 are all normal, stop the tool and notify maintenance. The action states the same conditional and the same two operations (stop tool, notify maintenance) without adding or omitting anything.",
+      "judgement": true,
+      "latency_ms": 5645
+    },
+    {
+      "action": "Check the slurry supply tank level.",
+      "sop_steps": "SOP-052: Slurry flow out of range\n  step 1: Check the slurry supply tank level.   <- CITED\n  step 2: Check the slurry line for blockage.\n  step 3: Check the slurry pump status.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 641,
+      "output_tokens": 50,
+      "reason": "The action to check the slurry supply tank level matches cited step 1 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 3406
+    },
+    {
+      "action": "Check the slurry line for blockage.",
+      "sop_steps": "SOP-052: Slurry flow out of range\n  step 1: Check the slurry supply tank level.\n  step 2: Check the slurry line for blockage.   <- CITED\n  step 3: Check the slurry pump status.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 641,
+      "output_tokens": 53,
+      "reason": "The action 'Check the slurry line for blockage' is the same operation as cited step 2, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 2090
+    },
+    {
+      "action": "Check the slurry pump status.",
+      "sop_steps": "SOP-052: Slurry flow out of range\n  step 1: Check the slurry supply tank level.\n  step 2: Check the slurry line for blockage.\n  step 3: Check the slurry pump status.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 639,
+      "output_tokens": 48,
+      "reason": "The action to check the slurry pump status matches cited step 3 exactly, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 2623
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-052: Slurry flow out of range\n  step 1: Check the slurry supply tank level.\n  step 2: Check the slurry line for blockage.\n  step 3: Check the slurry pump status.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 651,
+      "output_tokens": 79,
+      "reason": "The action restates the cited step 4 exactly: if the prior checks (tank level, line blockage, pump status) are all normal, stop the tool and notify maintenance. It adds no operation and omits none.",
+      "judgement": true,
+      "latency_ms": 2093
+    },
+    {
+      "action": "Check the conditioner disk for wear.",
+      "sop_steps": "SOP-055: Motor current high during pad conditioning\n  step 1: Check the conditioner disk for wear.   <- CITED\n  step 2: Check the conditioner arm for blocked movement.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 634,
+      "output_tokens": 50,
+      "reason": "The action to check the conditioner disk for wear matches cited step 1 exactly, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 2805
+    },
+    {
+      "action": "Check the conditioner arm for blocked movement.",
+      "sop_steps": "SOP-055: Motor current high during pad conditioning\n  step 1: Check the conditioner disk for wear.\n  step 2: Check the conditioner arm for blocked movement.   <- CITED\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 637,
+      "output_tokens": 56,
+      "reason": "The action checks the conditioner arm for blocked movement, which is exactly what cited step 2 says, with no added or missing operations.",
+      "judgement": true,
+      "latency_ms": 4506
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-055: Motor current high during pad conditioning\n  step 1: Check the conditioner disk for wear.\n  step 2: Check the conditioner arm for blocked movement.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 643,
+      "output_tokens": 78,
+      "reason": "The action restates cited step 3 exactly: if the prior checks (disk wear, arm movement) are normal, stop the tool and notify maintenance. It adds no extra operation and omits nothing.",
+      "judgement": true,
+      "latency_ms": 3382
+    },
+    {
+      "action": "Compare the reading with the backup pressure sensor on the polish head.",
+      "sop_steps": "SOP-050: Polish head down force out of range\n  step 1: Compare the reading with the backup pressure sensor on the polish head.   <- CITED\n  step 2: Check the polish head membrane for damage.\n  step 3: Check the head air supply pressure.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 663,
+      "output_tokens": 61,
+      "reason": "The action restates cited step 1 exactly: it compares the reading with the backup pressure sensor on the polish head, with no omitted or added operation.",
+      "judgement": true,
+      "latency_ms": 1564
+    },
+    {
+      "action": "Check the polish head membrane for damage.",
+      "sop_steps": "SOP-050: Polish head down force out of range\n  step 1: Compare the reading with the backup pressure sensor on the polish head.\n  step 2: Check the polish head membrane for damage.   <- CITED\n  step 3: Check the head air supply pressure.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 654,
+      "output_tokens": 51,
+      "reason": "The action to check the polish head membrane for damage matches cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 5329
+    },
+    {
+      "action": "Check the head air supply pressure.",
+      "sop_steps": "SOP-050: Polish head down force out of range\n  step 1: Compare the reading with the backup pressure sensor on the polish head.\n  step 2: Check the polish head membrane for damage.\n  step 3: Check the head air supply pressure.   <- CITED\n  step 4: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 652,
+      "output_tokens": 49,
+      "reason": "The action to check the head air supply pressure matches cited step 3 exactly, with no omitted or added operations.",
+      "judgement": true,
+      "latency_ms": 5732
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-050: Polish head down force out of range\n  step 1: Compare the reading with the backup pressure sensor on the polish head.\n  step 2: Check the polish head membrane for damage.\n  step 3: Check the head air supply pressure.\n  step 4: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 663,
+      "output_tokens": 63,
+      "reason": "The action restates the cited step 4 exactly: if all prior checks are normal, stop the tool and notify maintenance. It adds and omits no operations.",
+      "judgement": true,
+      "latency_ms": 1639
+    },
+    {
+      "action": "Check that the DI water supply valve is open.",
+      "sop_steps": "SOP-057: DI water flow out of range during rinse\n  step 1: Check that the DI water supply valve is open.   <- CITED\n  step 2: Check the rinse nozzle for blockage.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 635,
+      "output_tokens": 52,
+      "reason": "The action to check that the DI water supply valve is open matches cited step 1 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 5155
+    },
+    {
+      "action": "Check the rinse nozzle for blockage.",
+      "sop_steps": "SOP-057: DI water flow out of range during rinse\n  step 1: Check that the DI water supply valve is open.\n  step 2: Check the rinse nozzle for blockage.   <- CITED\n  step 3: If all of the above are normal, stop the tool and notify maintenance.",
+      "input_tokens": 636,
+      "output_tokens": 54,
+      "reason": "The action to check the rinse nozzle for blockage matches the cited step 2 exactly, with no added or omitted operations.",
+      "judgement": true,
+      "latency_ms": 1945
+    },
+    {
+      "action": "If all of the above are normal, stop the tool and notify maintenance.",
+      "sop_steps": "SOP-057: DI water flow out of range during rinse\n  step 1: Check that the DI water supply valve is open.\n  step 2: Check the rinse nozzle for blockage.\n  step 3: If all of the above are normal, stop the tool and notify maintenance.   <- CITED",
+      "input_tokens": 643,
+      "output_tokens": 75,
+      "reason": "The action restates cited step 3 exactly: if the prior checks (valve open, nozzle clear) are normal, stop the tool and notify maintenance. It adds no operation and omits none.",
+      "judgement": true,
+      "latency_ms": 2049
+    }
+  ]
+}
