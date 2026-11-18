@@ -5,5 +5,8 @@
   {"event_id": "EV-004", "tool_id": "DEP-02", "chamber": "A", "timestamp": "2026-11-09T10:40:00", "event_type": "alarm", "alarm_code": "D-2014", "note": ""},
   {"event_id": "EV-005", "tool_id": "DEP-02", "chamber": "A", "timestamp": "2026-11-09T14:00:00", "event_type": "repair", "alarm_code": null, "note": "heater thermocouple replaced"},
   {"event_id": "EV-006", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-08T08:50:00", "event_type": "alarm", "alarm_code": "C-3005", "note": ""},
-  {"event_id": "EV-007", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-08T11:30:00", "event_type": "repair", "alarm_code": null, "note": "polish head membrane replaced"}
+  {"event_id": "EV-007", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-08T11:30:00", "event_type": "repair", "alarm_code": null, "note": "polish head membrane replaced"},
+  {"event_id": "EV-008", "tool_id": "ETCH-07", "chamber": "B", "timestamp": "2026-11-12T16:00:00", "event_type": "repair", "alarm_code": null, "note": "chiller setpoint reset"},
+  {"event_id": "EV-009", "tool_id": "ETCH-09", "chamber": "A", "timestamp": "2026-11-15T12:00:00", "event_type": "repair", "alarm_code": null, "note": "gas flow controller recalibrated"},
+  {"event_id": "EV-010", "tool_id": "CMP-06", "chamber": "A", "timestamp": "2026-11-16T10:30:00", "event_type": "alarm", "alarm_code": "C-3041", "note": ""}
 ]

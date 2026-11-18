@@ -1,0 +1,470 @@
+[
+  {
+    "alarm_id": "AL-076",
+    "case": "history_context",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-020",
+        "step": 4
+      }
+    ],
+    "reason": "A-1031 in MAIN-ETCH -> SOP-020 (all 4 steps). History has A-1023 (11-11, both chambers) and A-1052 (11-13) on this tool: other codes, no repair recorded. They do not change the steps.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-077",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-011",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 4
+      }
+    ],
+    "reason": "A-1042 in MAIN-ETCH -> SOP-011 (all 4 steps). New tool, no history.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-078",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-040",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 4
+      }
+    ],
+    "reason": "D-2048 in DEPOSITION -> SOP-040 (all 4 steps). New tool, no history.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-079",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-058",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-058",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-058",
+        "step": 3
+      }
+    ],
+    "reason": "C-3033 in PAD-CONDITIONING -> SOP-058 (all 3 steps). New tool, no history; no wafers in process.",
+    "expected_flags": [],
+    "flag_reason": "no wafers, reading out of spec, no earlier alarm"
+  },
+  {
+    "alarm_id": "AL-080",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-023",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-023",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-023",
+        "step": 3
+      }
+    ],
+    "reason": "A-1035 in CHAMBER-CLEAN -> SOP-023 (all 3 steps). A-1035 has SOP-010 for MAIN-ETCH / OVER-ETCH and SOP-023 for CHAMBER-CLEAN: CHAMBER-CLEAN -> SOP-023, not SOP-010.",
+    "expected_flags": [],
+    "flag_reason": "no wafers, reading out of spec, no earlier A-1035"
+  },
+  {
+    "alarm_id": "AL-081",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-041",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-041",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-041",
+        "step": 3
+      }
+    ],
+    "reason": "D-2019 in PURGE -> SOP-041 (all 3 steps). D-2019 has SOP-033 for DEPOSITION and SOP-041 for PURGE: PURGE -> SOP-041.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-082",
+    "case": "step_specific",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-063",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-063",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-063",
+        "step": 3
+      }
+    ],
+    "reason": "C-3009 in RINSE -> SOP-063 (all 3 steps). C-3009 has SOP-051 for POLISH / PAD-CONDITIONING and SOP-063 for RINSE: RINSE -> SOP-063.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-083",
+    "case": "repeat",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-011",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-011",
+        "step": 4
+      }
+    ],
+    "reason": "A-1042 in MAIN-ETCH -> SOP-011 (all 4 steps). Same tool, same code, same chamber as AL-077 (11-15 09:30), within 7 days: repeat (R1), even though the gas flow controller was recalibrated after it. Steps stay the same.",
+    "expected_flags": [
+      "R1",
+      "WF1"
+    ],
+    "flag_reason": "R1: AL-077; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-084",
+    "case": "repeat",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-040",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-040",
+        "step": 4
+      }
+    ],
+    "reason": "D-2048 in DEPOSITION -> SOP-040 (all 4 steps). Same tool, code and chamber as AL-078 (11-15 11:45), within 7 days: repeat (R1). Steps stay the same.",
+    "expected_flags": [
+      "R1",
+      "WF1"
+    ],
+    "flag_reason": "R1: AL-078; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-085",
+    "case": "not_covered",
+    "expected_sop_refs": [],
+    "reason": "A-1060 is only in SOP-018, which covers CHAMBER-CLEAN only; no SOP covers A-1060 in MAIN-ETCH (rule S1): no steps.",
+    "expected_flags": [
+      "S1",
+      "WF1"
+    ],
+    "flag_reason": "S1; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-086",
+    "case": "not_covered",
+    "expected_sop_refs": [],
+    "reason": "C-3037 is only in SOP-059, which covers POLISH only; no SOP covers C-3037 in RINSE (rule S1): no steps.",
+    "expected_flags": [
+      "S1",
+      "WF1"
+    ],
+    "flag_reason": "S1; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-087",
+    "case": "in_spec",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-037",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-037",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-037",
+        "step": 3
+      }
+    ],
+    "reason": "D-2031 in PURGE -> SOP-037 (all 3 steps). Reading 1040 is inside 900-1100 (rule W2): still alarmed, so the SOP steps still apply.",
+    "expected_flags": [
+      "W2",
+      "WF1"
+    ],
+    "flag_reason": "W2: 1040 in 900-1100; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-088",
+    "case": "in_spec",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-019",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-019",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-019",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-019",
+        "step": 4
+      }
+    ],
+    "reason": "A-1066 in OVER-ETCH -> SOP-019 (all 4 steps). Reading 2150 is inside 1800-2200 (rule W2): steps still apply.",
+    "expected_flags": [
+      "W2",
+      "WF1"
+    ],
+    "flag_reason": "W2: 2150 in 1800-2200; WF1: 25"
+  },
+  {
+    "alarm_id": "AL-089",
+    "case": "normal",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-050",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 4
+      }
+    ],
+    "reason": "C-3005 in POLISH -> SOP-050 (all 4 steps). History has other codes on this tool only.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-090",
+    "case": "same_event",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-050",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-050",
+        "step": 4
+      }
+    ],
+    "reason": "C-3005 in POLISH -> SOP-050 (all 4 steps). Same tool and code as AL-089 in chamber A, 20 minutes earlier: same event (rule W1), not a repeat. Steps stay the same.",
+    "expected_flags": [
+      "W1",
+      "WF1"
+    ],
+    "flag_reason": "W1: AL-089; WF1: 24"
+  },
+  {
+    "alarm_id": "AL-091",
+    "case": "history_context",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-014",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-014",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-014",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-014",
+        "step": 4
+      }
+    ],
+    "reason": "A-1048 in OVER-ETCH -> SOP-014 (all 4 steps). History has A-1023, A-1031 (chiller setpoint reset after it) and A-1060 on this tool: other codes. They do not change the steps.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 18"
+  },
+  {
+    "alarm_id": "AL-092",
+    "case": "history_context",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-038",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-038",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-038",
+        "step": 3
+      }
+    ],
+    "reason": "D-2036 in DEPOSITION -> SOP-038 (all 3 steps). History has D-2027 (film thickness, chamber A), D-2011 and D-2023 on this tool: other codes, no repair recorded. They do not change the steps.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-093",
+    "case": "history_context",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-056",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-056",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-056",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-056",
+        "step": 4
+      }
+    ],
+    "reason": "C-3025 in POLISH -> SOP-056 (all 4 steps). History has C-3005, C-3016, C-3028 and C-3041 on this tool (the polish head membrane was replaced on 11-08, more than 7 days before): other codes. They do not change the steps.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-094",
+    "case": "history_context",
+    "expected_sop_refs": [
+      {
+        "sop_id": "SOP-060",
+        "step": 1
+      },
+      {
+        "sop_id": "SOP-060",
+        "step": 2
+      },
+      {
+        "sop_id": "SOP-060",
+        "step": 3
+      },
+      {
+        "sop_id": "SOP-060",
+        "step": 4
+      }
+    ],
+    "reason": "C-3041 in POLISH -> SOP-060 (all 4 steps). History has C-3012 and C-3021 on this tool; C-3041 was also reported on CMP-06 on 11-16 (another tool, so not a repeat). They do not change the steps.",
+    "expected_flags": [
+      "WF1"
+    ],
+    "flag_reason": "WF1: 25"
+  },
+  {
+    "alarm_id": "AL-095",
+    "case": "duplicate",
+    "expected_sop_refs": [],
+    "reason": "Same tool, chamber, alarm code, time and reading as AL-094: duplicate entry (rule E1), no plan.",
+    "expected_flags": [
+      "E1"
+    ],
+    "flag_reason": "E1: AL-094"
+  }
+]

@@ -30,5 +30,17 @@
   {
     "tool_id": "CMP-06",
     "equipment_type": "cmp"
+  },
+  {
+    "tool_id": "ETCH-09",
+    "equipment_type": "etch"
+  },
+  {
+    "tool_id": "DEP-06",
+    "equipment_type": "deposition"
+  },
+  {
+    "tool_id": "CMP-08",
+    "equipment_type": "cmp"
   }
 ]
