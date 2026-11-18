@@ -41,7 +41,8 @@ DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
 EVAL_DIR = Path(__file__).parent
 REQUEST_TIMEOUT = 5 * 180  # same as the page: one request can make up to 5 Claude calls (agent versions)
 # $ per million tokens (input, output), to estimate the cost of the plans. Check the current price before quoting it.
-PRICES = {"claude-sonnet-5-5": (2.0, 10.0)}
+# Haiku 5.5's price is for prompts up to 100K tokens (ours are about 2K).
+PRICES = {"claude-sonnet-5-5": (2.0, 10.0), "claude-haiku-5-5": (0.10, 0.50)}
 GOLDEN_SET_VERSION = os.environ["GOLDEN_SET_VERSION"]
 
 
