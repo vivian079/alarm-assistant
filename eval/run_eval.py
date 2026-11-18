@@ -6,6 +6,8 @@ Re-score the plans of an earlier run without generating new ones (to test a chan
     docker compose run --rm eval python run_eval.py --rescore results/run_<time>.json
 Run only some alarms, several times each (to see how much one alarm's result changes from run to run):
     docker compose run --rm eval python run_eval.py --only AL-063 --repeat 5
+Run the held-out set instead of the golden set (GOLDEN_SET_VERSION picks the file):
+    docker compose run --rm -e GOLDEN_SET_VERSION=heldout_v1 eval
 
 For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 1. POST /alarms/{alarm_id}/plan  -> the same endpoint the page uses, so we test what the engineer gets
@@ -15,7 +17,7 @@ For each alarm in golden_sets/<GOLDEN_SET_VERSION>.json:
 4. alarm_summary vs the data tables         -> compare.score_summary
 5. actions vs expected_sop_refs             -> compare.score_actions (needs the judge)
    or, when expected_sop_refs is []         -> compare.score_not_covered
-Then print the totals and save everything to results/run_<time>_<prompt version>_<judge version>.json.
+Then print the totals and save everything to results/run_<time>_<prompt version>_<judge version>_<set>.json.
 
 Every results file records the four things that change the scores:
   prompt_version, model   from the API's response (the API made the plan, so it knows what it used)
@@ -37,7 +39,9 @@ import judge
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
 EVAL_DIR = Path(__file__).parent
-REQUEST_TIMEOUT = 3 * 180  # same as the page: one request can make up to 3 Claude calls
+REQUEST_TIMEOUT = 5 * 180  # same as the page: one request can make up to 5 Claude calls (agent versions)
+# $ per million tokens (input, output), to estimate the cost of the plans. Check the current price before quoting it.
+PRICES = {"claude-sonnet-5-5": (2.0, 10.0)}
 GOLDEN_SET_VERSION = os.environ["GOLDEN_SET_VERSION"]
 
 
@@ -68,6 +72,10 @@ def run_one(g: dict, records: dict, codes: dict, sops: dict) -> dict:
         "retrieved_sop_ids": saved.get("retrieved_sop_ids"),
         # None: plans saved before flags existed
         "actual_flags": [f["code"] for f in saved["flags"]] if saved.get("flags") is not None else None,
+        # What making the plan cost, over all its calls. None: no Claude call (S1, E1) or saved before these existed.
+        "input_tokens": saved.get("input_tokens"),
+        "output_tokens": saved.get("output_tokens"),
+        "tool_calls": saved.get("tool_calls"),  # agent versions: [{"name", "input"}]; None for others
     }
     if saved.get("error"):
         row["error"] = saved["error"]
@@ -173,6 +181,19 @@ def summarize(rows: list[dict]) -> dict:
         for code in f["extra"]:
             by_flag.setdefault(code, {"expected": 0, "raised": 0, "missing": 0, "extra": 0})["extra"] += 1
 
+    # Cost: only rows where Claude was called (S1 and E1 rows made no call). Failed ones count: their calls are billed.
+    llm_rows = [r for r in rows if r["status"] not in ("sop_not_covered", "rejected_duplicate")]
+    in_tok = sum(r.get("input_tokens") or 0 for r in llm_rows)
+    out_tok = sum(r.get("output_tokens") or 0 for r in llm_rows)
+    models = {r.get("model") for r in llm_rows}
+    price = PRICES.get(models.pop()) if len(models) == 1 else None
+    cost = round((in_tok * price[0] + out_tok * price[1]) / 1e6, 4) if price and llm_rows else None
+    tool_counts: dict[str, int] = {}
+    for r in llm_rows:
+        for t in r.get("tool_calls") or []:
+            tool_counts[t["name"]] = tool_counts.get(t["name"], 0) + 1
+    n = len(llm_rows) or 1
+
     return {
         "precision": p, "recall": rcl, "f1": f1,
         "correct": cor, "generated": gen, "covered": cov, "expected": exp,
@@ -190,6 +211,13 @@ def summarize(rows: list[dict]) -> dict:
         "judge_input_tokens": sum(e.get("input_tokens") or 0 for e in judge.LOG),
         "judge_output_tokens": sum(e.get("output_tokens") or 0 for e in judge.LOG),
         "avg_latency_s": round(sum(r["latency_s"] for r in rows) / len(rows), 1),
+        "llm_plans": len(llm_rows),
+        "api_calls": sum(r.get("attempts") or 0 for r in llm_rows),
+        "avg_latency_s_llm": round(sum(r["latency_s"] for r in llm_rows) / n, 1),
+        "input_tokens": in_tok, "output_tokens": out_tok,
+        "avg_input_tokens": round(in_tok / n), "avg_output_tokens": round(out_tok / n),
+        "cost_usd": cost, "avg_cost_usd": round(cost / n, 4) if cost is not None else None,
+        "tool_calls": sum(tool_counts.values()), "tool_calls_by_name": dict(sorted(tool_counts.items())),
         "by_case": case_scores,
     }
 
@@ -249,6 +277,9 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
                 line += " (S1 by code, no Claude call)"
         if "retrieval" in r:
             line += f"  SOPs in prompt {','.join(r['retrieval']['retrieved']) or '-'}"
+        if r.get("tool_calls"):
+            line += "  tools " + ",".join(f"{t['name']}({','.join(str(v) for v in t['input'].values())})"
+                                          for t in r["tool_calls"])
         print(line + flag_note)
 
     print()
@@ -266,6 +297,12 @@ def print_report(rows: list[dict], t: dict, v: dict) -> None:
     print(f"alarm_summary fields: {t['summary_fields_correct']}/{t['summary_fields_total']} right")
     print(f"Failed generations: {t['failed']}   Judge calls: {t['judge_calls']}   Avg latency: {t['avg_latency_s']} s")
     print(f"Judge tokens: input {t['judge_input_tokens']}  output {t['judge_output_tokens']}")
+    cost = f"${t['avg_cost_usd']:.4f} per plan, ${t['cost_usd']:.2f} in all" if t["cost_usd"] is not None else "n/a"
+    print(f"Plans made by Claude: {t['llm_plans']}   API calls: {t['api_calls']}   "
+          f"Avg latency {t['avg_latency_s_llm']} s   Avg tokens: input {t['avg_input_tokens']}  output {t['avg_output_tokens']}")
+    print(f"Est. cost (plans, judge not included): {cost}")
+    if t["tool_calls"]:
+        print(f"Tool calls: {t['tool_calls']}  " + "  ".join(f"{k} {v}" for k, v in t["tool_calls_by_name"].items()))
     print()
     for name, c in t["by_case"].items():
         print(f"  {name:<14} P {fmt(c['precision'])}  R {fmt(c['recall'])}  F1 {fmt(c['f1'])}")
@@ -294,7 +331,8 @@ def save(rows: list[dict], totals: dict, versions: dict, rescored_from: str | No
     out_dir.mkdir(exist_ok=True)
     # The versions are in the file name too, so the list of files shows what each run was.
     # tag marks a partial run (e.g. "_AL-063x5"), so it is not mistaken for a full golden set run.
-    name = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{versions['prompt_version']}_{versions['judge_prompt_version']}{tag}"
+    name = (f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{versions['prompt_version']}_"
+            f"{versions['judge_prompt_version']}_{versions['golden_set_version']}{tag}")
     path = out_dir / f"{name}.json"
     path.write_text(json.dumps(
         {"run_at": datetime.now().isoformat(timespec="seconds"), "versions": versions,
@@ -340,7 +378,8 @@ def main() -> None:
             # The plan is reused, so its prompt_version and model come along with it.
             row = {k: old[k] for k in ("alarm_id", "case", "plan_id", "request_id", "prompt_version", "model",
                                        "status", "attempts", "latency_s", "expected_steps", "error", "plan",
-                                       "retrieved_sop_ids", "actual_flags")
+                                       "retrieved_sop_ids", "actual_flags", "input_tokens", "output_tokens",
+                                       "tool_calls")
                    if k in old}
             row["run"] = run
             rows.append(finish_row(row, g, records, codes, sops))

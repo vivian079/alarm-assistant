@@ -1,0 +1,43 @@
+[
+  {
+    "name": "get_tool_history",
+    "description": "Alarms and repairs on one tool in the given number of days before the current alarm, oldest first. The alarm record's recent_history already lists this tool's last 7 days; use this to look further back or at another tool.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "tool_id": {"type": "string", "description": "Tool ID, like ETCH-03"},
+        "days": {"type": "integer", "description": "How many days back to look, 1 to 90"}
+      },
+      "required": ["tool_id", "days"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "get_alarm_code_history",
+    "description": "Every tool that reported this alarm code in the given number of days before the current alarm, oldest first. Use it to see whether the same problem shows up on other tools.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "alarm_code": {"type": "string", "description": "Alarm code, like A-1023"},
+        "days": {"type": "integer", "description": "How many days back to look, 1 to 90"}
+      },
+      "required": ["alarm_code", "days"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "name": "search_sops",
+    "description": "Every SOP that lists this alarm code, with its steps. For background only: the plan cites only the SOPs given in the user message.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "alarm_code": {"type": "string", "description": "Alarm code, like A-1023"}
+      },
+      "required": ["alarm_code"],
+      "additionalProperties": false
+    }
+  }
+]

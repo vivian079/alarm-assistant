@@ -74,6 +74,11 @@ def init_db():
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS sop_suggestions JSONB")
         # Design doc section 7 rules, checked by code (rules.py): [{"code": "R1", "message": "...", "related": [...]}, ...]
         conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS flags JSONB")
+        # What making the plan cost, over all its API calls (attempts = how many calls).
+        # tool_calls: agent prompt versions only, [{"name": ..., "input": {...}}] in order; [] if no tool was called.
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS input_tokens INTEGER")
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS output_tokens INTEGER")
+        conn.execute("ALTER TABLE handling_plans ADD COLUMN IF NOT EXISTS tool_calls JSONB")
 
         # Every alarm and repair on each tool, one row per event. Rules R1 and W1 look here.
         # Each alarm record is also an alarm event (event_id = alarm_id); tool_events.json adds the
@@ -99,20 +104,23 @@ def init_db():
                 called_at       TIMESTAMP NOT NULL DEFAULT now(),
                 request_id      TEXT NOT NULL,   -- same value as handling_plans.request_id
                 alarm_id        TEXT NOT NULL REFERENCES alarm_records(alarm_id),
-                attempt         INTEGER NOT NULL, -- 1, 2, 3 within one plan generation
+                attempt         INTEGER NOT NULL, -- 1, 2, 3... within one plan generation (agent: one per turn)
                 prompt_version  TEXT NOT NULL,
                 model           TEXT NOT NULL,
                 system_prompt   TEXT NOT NULL,   -- the full text sent, SOP library included
                 messages        JSONB NOT NULL,  -- the full messages sent (a retry includes the earlier output and error)
                 max_tokens      INTEGER NOT NULL,
                 response_text   TEXT,            -- the raw output; empty if the call itself failed
-                stop_reason     TEXT,            -- end_turn / max_tokens / refusal
+                stop_reason     TEXT,            -- end_turn / tool_use / max_tokens / refusal
                 input_tokens    INTEGER,
                 output_tokens   INTEGER,
                 latency_ms      INTEGER,
                 error           TEXT             -- why this call did not give a plan; empty if it did
             )
         """)
+        # The whole output as content blocks. response_text only has the text blocks, so a turn where
+        # Claude asked for a tool (a tool_use block, no text) would otherwise show nothing.
+        conn.execute("ALTER TABLE llm_calls ADD COLUMN IF NOT EXISTS response_content JSONB")
 
         # One vector per SOP (title + steps). content_hash finds SOPs whose text changed since they were embedded.
         # 40 rows: Postgres compares the query with every row. With many thousands, add an index:
@@ -200,31 +208,36 @@ def get_alarm_code(alarm_code: str) -> dict | None:
         ).fetchone()
 
 
-def save_plan(alarm_id: str, plan_json: dict, attempts: int, request_id: str,
-              prompt_version: str, model: str, retrieved_sop_ids: list[str] | None, flags: list[dict]) -> dict:
-    """A plan that passed validation. status starts as pending_review."""
+def save_plan(alarm_id: str, plan_json: dict, request_id: str, prompt_version: str, model: str,
+              retrieved_sop_ids: list[str] | None, flags: list[dict], usage) -> dict:
+    """A plan that passed validation. status starts as pending_review. usage = llm.Usage."""
     with get_conn() as conn:
         return conn.execute(
             """
             INSERT INTO handling_plans
-                (alarm_id, plan_json, attempts, request_id, prompt_version, model, retrieved_sop_ids, flags)
-            VALUES (%s, %s, %s, %s, %s, %s, %s::text[], %s) RETURNING *
+                (alarm_id, plan_json, attempts, request_id, prompt_version, model, retrieved_sop_ids, flags,
+                 input_tokens, output_tokens, tool_calls)
+            VALUES (%s, %s, %s, %s, %s, %s, %s::text[], %s, %s, %s, %s) RETURNING *
             """,
-            (alarm_id, Jsonb(plan_json), attempts, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags)),
+            (alarm_id, Jsonb(plan_json), usage.calls, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags),
+             usage.input_tokens, usage.output_tokens, Jsonb(usage.tool_calls)),
         ).fetchone()
 
 
-def save_failed_plan(alarm_id: str, error: str, attempts: int, request_id: str,
-                     prompt_version: str, model: str, retrieved_sop_ids: list[str] | None, flags: list[dict]) -> dict:
-    """Every try failed: keep a row so the engineer sees it and handles the alarm manually."""
+def save_failed_plan(alarm_id: str, error: str, request_id: str, prompt_version: str, model: str,
+                     retrieved_sop_ids: list[str] | None, flags: list[dict], usage) -> dict:
+    """Every try failed (or the agent ran out of turns): keep a row so the engineer sees it and handles
+    the alarm manually. The tokens spent on the way are kept too: failed calls are billed."""
     with get_conn() as conn:
         return conn.execute(
             """
             INSERT INTO handling_plans
-                (alarm_id, error, attempts, status, request_id, prompt_version, model, retrieved_sop_ids, flags)
-            VALUES (%s, %s, %s, 'generation_failed', %s, %s, %s, %s::text[], %s) RETURNING *
+                (alarm_id, error, attempts, status, request_id, prompt_version, model, retrieved_sop_ids, flags,
+                 input_tokens, output_tokens, tool_calls)
+            VALUES (%s, %s, %s, 'generation_failed', %s, %s, %s, %s::text[], %s, %s, %s, %s) RETURNING *
             """,
-            (alarm_id, error, attempts, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags)),
+            (alarm_id, error, usage.calls, request_id, prompt_version, model, retrieved_sop_ids, Jsonb(flags),
+             usage.input_tokens, usage.output_tokens, Jsonb(usage.tool_calls)),
         ).fetchone()
 
 
@@ -290,6 +303,19 @@ def get_tool_events(tool_id: str, start, end) -> list[dict]:
         ).fetchall()
 
 
+def get_alarm_code_events(alarm_code: str, start, end) -> list[dict]:
+    """Alarms with this code on any tool with start <= timestamp < end, oldest first (for the agent's tool)."""
+    with get_conn() as conn:
+        return conn.execute(
+            """
+            SELECT * FROM tool_events
+            WHERE alarm_code = %s AND timestamp >= %s AND timestamp < %s
+            ORDER BY timestamp
+            """,
+            (alarm_code, start, end),
+        ).fetchall()
+
+
 def vector_literal(v: list[float]) -> str:
     """pgvector's text form: '[0.1,0.2,...]'. Passed as a string and cast with ::vector in SQL."""
     return "[" + ",".join(f"{x:.7g}" for x in v) + "]"
@@ -345,20 +371,23 @@ def log_llm_call(call: dict) -> None:
     """One row in llm_calls. Keys that are missing (e.g. response_text when the call failed) are stored as NULL."""
     row = {
         "response_text": None, "stop_reason": None, "input_tokens": None,
-        "output_tokens": None, "latency_ms": None, "error": None,
+        "output_tokens": None, "latency_ms": None, "error": None, "response_content": None,
         **call,
         "messages": Jsonb(call["messages"]),
     }
+    if row["response_content"] is not None:
+        row["response_content"] = Jsonb(row["response_content"])
     with get_conn() as conn:
         conn.execute(
             """
             INSERT INTO llm_calls
                 (request_id, alarm_id, attempt, prompt_version, model, system_prompt, messages,
-                 max_tokens, response_text, stop_reason, input_tokens, output_tokens, latency_ms, error)
+                 max_tokens, response_text, response_content, stop_reason, input_tokens, output_tokens,
+                 latency_ms, error)
             VALUES
                 (%(request_id)s, %(alarm_id)s, %(attempt)s, %(prompt_version)s, %(model)s, %(system_prompt)s,
-                 %(messages)s, %(max_tokens)s, %(response_text)s, %(stop_reason)s, %(input_tokens)s,
-                 %(output_tokens)s, %(latency_ms)s, %(error)s)
+                 %(messages)s, %(max_tokens)s, %(response_text)s, %(response_content)s, %(stop_reason)s,
+                 %(input_tokens)s, %(output_tokens)s, %(latency_ms)s, %(error)s)
             """,
             row,
         )

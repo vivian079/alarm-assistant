@@ -4,8 +4,8 @@ import requests
 import streamlit as st
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
-# The API can call Claude up to 3 times (first try + 2 retries), each up to ~180 s.
-PLAN_TIMEOUT = 3 * 180
+# The API can call Claude up to 5 times for one plan (agent versions: tool turns + retries), each up to ~180 s.
+PLAN_TIMEOUT = 5 * 180
 # Postgres JSONB does not keep key order, so show the summary in the schema's order.
 SUMMARY_FIELDS = [
     "tool_id", "chamber", "alarm_code", "sensor_value", "spec_lower", "spec_upper",
@@ -35,8 +35,13 @@ if plan and plan["alarm_id"] == alarm_id:
         f"plan_id {plan['plan_id']} · status {plan['status']} · "
         f"attempts {plan['attempts']} · prompt {plan.get('prompt_version')} · "
         + (f"SOPs in prompt {', '.join(sop_ids) or 'none'} · " if sop_ids is not None else "")
+        + (f"tokens {plan['input_tokens']} in / {plan['output_tokens']} out · " if plan.get("input_tokens") else "")
         + f"{plan['created_at']}"
     )
+    # Agent versions: what Claude looked up before writing the plan.
+    if plan.get("tool_calls"):
+        st.caption("Tools called: " + "; ".join(
+            f"{t['name']}({', '.join(f'{k}={v}' for k, v in t['input'].items())})" for t in plan["tool_calls"]))
 
     # Flags come from rules checked by code (design doc section 7), not from Claude.
     for flag in plan.get("flags") or []:

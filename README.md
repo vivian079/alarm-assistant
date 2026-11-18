@@ -3,7 +3,8 @@
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
-Current stage: rules checked by code, retrieval, structured output, evaluation. One synchronous endpoint. The plan follows a Pydantic schema
+Current stage: rules checked by code, retrieval, structured output, evaluation, and an agent prompt version
+that can call tools. One synchronous endpoint. The plan follows a Pydantic schema
 (`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
 with the error message, up to 2 times, then saves the plan as `generation_failed`.
 The prompt gets the alarm record, its spec limit from the alarm code table, and SOPs: the whole library
@@ -41,6 +42,22 @@ the model is downloaded when the image is built). One vector per SOP, stored in 
 `handling_plans.retrieved_sop_ids` records which SOPs went into the prompt; `run_eval.py` checks them
 against the golden set separately from the plan.
 
+## Agent version (`handling_plan_v7`, `api/tools.py`)
+
+The other versions put everything into the prompt before calling Claude. v7 sends the same prompt (alarm record,
+retrieved SOPs, flags as system notes) plus three tools Claude can call when it wants more:
+
+- `get_tool_history(tool_id, days)`: alarms and repairs on a tool, further back than `recent_history`'s 7 days
+- `get_alarm_code_history(alarm_code, days)`: the same alarm code on other tools
+- `search_sops(alarm_code)`: the SOPs of another alarm code (background only; the plan cites only the retrieved SOPs)
+
+The loop (`llm.generate_plan_with_tools`) is a plain while loop: call Claude; if it stops with `tool_use`, run the
+tools it asked for, send its turn and the results back, call again; stop when it returns the plan. At most 5 API calls
+per plan (`MAX_TURNS`); after that the plan is saved as `generation_failed` for the engineer to handle.
+Lookups always end at the alarm's own timestamp. What stays in code: the rules (flags), S1, and which SOPs are cited.
+Each turn is one row in `llm_calls`, with the whole output in `response_content` (a turn that only asks for a tool
+has no text). `handling_plans` keeps the plan's tokens and the tools it called.
+
 ## Prompt versions
 
 Prompts are plain text files, one folder per version (`api/prompts/`, `eval/judge_prompts/`);
@@ -63,10 +80,10 @@ FROM llm_calls ORDER BY call_id DESC LIMIT 10;
 
 ## Data (`data/`, synthetic)
 
-- `equipment.json`: 8 tools (etch, deposition, CMP)
+- `equipment.json`: 11 tools (etch, deposition, CMP)
 - `alarm_codes.json`: 30 alarm codes, each with a spec limit
 - `sops.json`: 40 SOPs; each applies to some alarm codes and process steps and has numbered steps
-- `alarm_records.json`: 21 alarm records
+- `alarm_records.json`: 41 alarm records (AL-017 to AL-075 for the golden set, AL-076 to AL-095 for the held-out set)
 - `tool_events.json`: older alarms and repairs that have no alarm record (for rules R1 and W1)
 
 ## Evaluation (`eval/`)
@@ -82,6 +99,11 @@ for each alarm and a duplicate entry (AL-051).
 - alarms no SOP covers: right only if the plan has no steps.
 - alarm_summary: each value compared with the data tables.
 - flags (golden_v2): the plan's flags compared with the expected ones, per alarm and per flag.
+- cost: API calls, tokens and estimated cost of the plans, and which tools were called.
+
+`golden_sets/heldout_v1.json` is a held-out set: 20 alarms (AL-076 to AL-095) whose results are never used to
+change a prompt, so its numbers show how a prompt does on alarms it was not tuned on. The golden set stopped being
+that once v3 to v6 were each written from its mistakes.
 
 Results are saved in `eval/results/`. Each file records the prompt version and model (from the API's
 response), the judge prompt version, judge model and golden set version, and has the versions in its name.
@@ -103,6 +125,12 @@ Run the evaluation (with the services up):
 
 ```
 docker compose run --rm eval
+```
+
+Run the held-out set:
+
+```
+docker compose run --rm -e GOLDEN_SET_VERSION=heldout_v1 eval
 ```
 
 Run one alarm several times, to see how much its result changes from run to run (each run makes a new plan):

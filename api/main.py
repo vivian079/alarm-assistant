@@ -85,15 +85,16 @@ def create_plan(alarm_id: str):
         prompt_input["retrieved_sops"] = retrieval.format_sops(sops)
         retrieved_sop_ids = [s["sop_id"] for s in sops]
 
+    # 5. Call Claude with the schema, retry on failure. Agent versions (tools.json) loop over tool calls here.
     try:
-        plan, attempts = llm.generate_plan(prompt_input, request_id)   # 5. call Claude with the schema, retry on failure
+        plan, usage = llm.generate_plan(prompt_input, request_id)
     except llm.PlanGenerationError as e:
         return db.save_failed_plan(                                    # 6a. every try failed: status = generation_failed
-            alarm_id, str(e), e.attempts, request_id, llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags)
-    # 6b. save (status = pending_review), return. The returned row has prompt_version, model, retrieved_sop_ids
-    # and flags, so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
-    return db.save_plan(alarm_id, plan.model_dump(), attempts, request_id,
-                        llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags)
+            alarm_id, str(e), request_id, llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags, e.usage)
+    # 6b. save (status = pending_review), return. The returned row has prompt_version, model, retrieved_sop_ids,
+    # flags, tokens and tool calls, so whoever called this endpoint (the page, run_eval.py) knows what made the plan.
+    return db.save_plan(alarm_id, plan.model_dump(), request_id,
+                        llm.PROMPT_VERSION, llm.MODEL, retrieved_sop_ids, flags, usage)
 
 
 @app.post("/plans/{plan_id}/approve")
