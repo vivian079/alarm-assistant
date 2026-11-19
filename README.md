@@ -1,5 +1,7 @@
 # Alarm Handling Assistant
 
+[![CI](https://github.com/vivian079/alarm-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/vivian079/alarm-assistant/actions/workflows/ci.yml)
+
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
@@ -257,6 +259,18 @@ wrongly rejects right, reworded steps is not measured yet.
   is enough.
 - Claude Agent SDK. No part of the system needs an agent that reads and writes files or runs commands.
 
+## Tests and CI
+
+`tests/` runs without Postgres, Docker or an API key, and makes no Claude calls:
+- rules: the flags `api/rules.py` computes for every golden and held-out alarm match the hand-written expected
+  flags, plus the repeat, same-event and duplicate rules on their own;
+- retrieval: exact match finds exactly the expected SOPs for every alarm, and none for the S1 cases;
+- scoring: the judge is called only after the code checks pass, 0/0 has no value instead of 0, and flags report
+  what is missing and what is extra;
+- judge check: the two label groups are counted apart, and a failed judge call is not counted as a catch.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs these tests and builds the api, ui and eval images on every push.
+
 ## Run
 
 ```
@@ -285,6 +299,13 @@ Run one alarm several times, to see how much its result changes from run to run 
 
 ```
 docker compose run --rm eval python run_eval.py --only AL-063 --repeat 5
+```
+
+Run the tests (no services and no API key needed):
+
+```
+pip install -r api/requirements.txt -r eval/requirements.txt pytest
+pytest
 ```
 
 Check the judge against the labelled steps (needs the API key, not the other services):

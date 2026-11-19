@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    # Offline tests: rules, retrieval, scoring and the judge check, against the data in the repo.
+    # No database, no API key, no Claude calls.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            api/requirements.txt
+            eval/requirements.txt
+      - run: pip install -r api/requirements.txt -r eval/requirements.txt pytest
+      - run: pytest -v
+
+  build:
+    # The images docker compose runs. The API image downloads the embedding model while it builds.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: cp .env.example .env   # compose needs the file; building uses no key
+      - run: docker compose --profile eval build api ui eval
