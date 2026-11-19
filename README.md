@@ -76,6 +76,11 @@ so each client doesn't need its own copy of the tool definitions and calling cod
 - No approve tool: whether a tool is called is the model's decision, and approval is the engineer's, on the page.
 - Transport: stdio. The client starts the server with `docker compose run --rm -T mcp`; nothing listens on the network.
   A team-wide deployment would use Streamable HTTP with sign-in (OAuth) instead.
+- Known duplication: the agent version's tool definitions (`api/prompts/handling_plan_v7/tools.json`) are a second,
+  hand-written copy of the same lookups (no `alarm_id`: there the window always ends at the alarm being handled).
+  The function code is shared (`tools.py`), but a new parameter has to be added in both places. Left as is because
+  the version in use (v6) calls no tools; if the agent version is used, its loop should get the tools from this
+  server (tools/list, tools/call) instead.
 
 Build it once, then add it to the client.
 
