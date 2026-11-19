@@ -4,3 +4,4 @@ psycopg[binary]
 anthropic>=2.8
 pydantic>=2
 fastembed>=0.4
+mcp>=2.3,<3

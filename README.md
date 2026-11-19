@@ -3,8 +3,8 @@
 Input one semiconductor equipment alarm record, get a handling plan that an equipment engineer reviews.
 All data in `data/` is synthetic.
 
-Current stage: rules checked by code, retrieval, structured output, evaluation, and an agent prompt version
-that can call tools. One synchronous endpoint. The plan follows a Pydantic schema
+Current stage: rules checked by code, retrieval, structured output, evaluation, an agent prompt version
+that can call tools, and an MCP server so Claude Desktop or Claude Code can use the same lookups. One synchronous endpoint. The plan follows a Pydantic schema
 (`api/schemas.py`) through the API's Structured Outputs; if the output fails validation, the API retries
 with the error message, up to 2 times, then saves the plan as `generation_failed`.
 The prompt gets the alarm record, its spec limit from the alarm code table, and SOPs: the whole library
@@ -57,6 +57,48 @@ per plan (`MAX_TURNS`); after that the plan is saved as `generation_failed` for 
 Lookups always end at the alarm's own timestamp. What stays in code: the rules (flags), S1, and which SOPs are cited.
 Each turn is one row in `llm_calls`, with the whole output in `response_content` (a turn that only asks for a tool
 has no text). `handling_plans` keeps the plan's tokens and the tools it called.
+
+
+## MCP server (`api/mcp_server.py`)
+
+The same lookups, plus plan generation, for any MCP client (Claude Desktop, Claude Code, another team's agent),
+so each client doesn't need its own copy of the tool definitions and calling code.
+
+| Tool | What it does |
+|---|---|
+| `get_tool_history(tool_id, days, alarm_id?)` | alarms and repairs on a tool |
+| `get_alarm_code_history(alarm_code, days, alarm_id?)` | the same alarm code on any tool |
+| `search_sops(alarm_code)` | the SOPs that list an alarm code |
+| `generate_handling_plan(alarm_id)` | calls `POST /alarms/{id}/plan`; the plan is saved as `pending_review` |
+
+- The lookups are the functions in `api/tools.py` that the agent version uses. The window ends at the alarm given
+  as `alarm_id` (code reads its timestamp; the model never writes a date) or, without one, now.
+- No approve tool: whether a tool is called is the model's decision, and approval is the engineer's, on the page.
+- Transport: stdio. The client starts the server with `docker compose run --rm -T mcp`; nothing listens on the network.
+  A team-wide deployment would use Streamable HTTP with sign-in (OAuth) instead.
+
+Build it once, then add it to the client.
+
+```
+docker compose --profile mcp build mcp
+```
+
+Claude Desktop: add this to `~/Library/Application Support/Claude/claude_desktop_config.json` (create it if missing),
+with the full path of `docker` (`which docker`) and of this repo's `docker-compose.yml`. Docker Desktop must be running.
+Then quit and reopen Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "alarm-assistant": {
+      "command": "/usr/local/bin/docker",
+      "args": ["compose", "-f", "/Users/<you>/Documents/alarm-assistant/docker-compose.yml", "run", "--rm", "-T", "mcp"]
+    }
+  }
+}
+```
+
+Claude Code: `claude mcp add alarm-assistant -- docker compose -f <repo>/docker-compose.yml run --rm -T mcp`
 
 ## Prompt versions
 

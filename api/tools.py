@@ -6,6 +6,9 @@ llm.py then calls run() below, and sends the returned text back to Claude as a t
 
 Every lookup is about the past of the alarm being handled: the time window always ends at that
 alarm's timestamp (taken from the alarm, not from Claude), so Claude can't see later events.
+
+mcp_server.py offers the same functions to MCP clients (Claude Desktop, Claude Code). There the window
+ends at the alarm the user names (alarm_id) or, if none, now.
 """
 
 from datetime import timedelta

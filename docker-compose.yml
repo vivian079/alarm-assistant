@@ -49,5 +49,23 @@ services:
     depends_on:
       - api
 
+  # MCP server for Claude Desktop / Claude Code (api/mcp_server.py). Not started by `docker compose up`:
+  # the MCP client starts it with `docker compose run --rm -T mcp` and talks to it over stdin/stdout (stdio).
+  # Same image as the API. No API key: plan generation goes through the api service.
+  mcp:
+    build: ./api
+    profiles: ["mcp"]
+    command: ["python", "mcp_server.py"]
+    environment:
+      DATABASE_URL: postgresql://alarm:alarm@db:5432/alarm
+      API_URL: http://api:8000
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      api:
+        condition: service_started
+
 volumes:
   pgdata:
