@@ -218,6 +218,19 @@ Judge check (`judge_check.py`, judge_v3, file `judge_check_20261119_210129`): th
 known-wrong steps (added operation 7/7, different operation 7/7, part of the step left out 6/6). Whether it
 wrongly rejects right, reworded steps is not measured yet.
 
+## Not used, and why
+
+- Fine-tuning. A fine-tuned small model pays off only when all four hold: the task is fixed, the output is one of
+  a few labels, there are thousands of examples labelled by people, and the answer is needed in milliseconds.
+  The one model call here writes a plan of several free-text steps with their sources, not one of a few labels;
+  there are 40 labelled alarms (golden and held-out), made up for this project, not thousands; and an engineer
+  reviews every plan, so a few seconds is fine. The parts that really are classification (which SOP applies,
+  the flags) are rules in code and need no model at all.
+- LangGraph. The agent loop has two paths (call a tool, or finish), and the engineer's review is the plan's status
+  in the database. Nothing has to pause in the middle of a run or resume after a crash, so a hand-written loop
+  is enough.
+- Claude Agent SDK. No part of the system needs an agent that reads and writes files or runs commands.
+
 ## Run
 
 ```
