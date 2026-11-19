@@ -156,6 +156,25 @@ Results are saved in `eval/results/`. Each file records the prompt version and m
 response), the judge prompt version, judge model and golden set version, and has the versions in its name.
 `eval/results/old_runs.md` lists what the first four runs used.
 
+### Checking the judge (`eval/judge_check.py`)
+
+P depends on the judge: an action counts as right only when the judge says its text does what the cited SOP step
+says. Checking only the steps the judge rejected finds a judge that is too strict, never one that is too lenient,
+and from handling_plan_v6 on the judge rejects nothing. `eval/judge_sets/judge_check_v1.json` has labelled steps
+of both kinds:
+- 20 wrong steps: a real expected SOP step is cited, but the text was changed (7 with an added operation,
+  7 with a different operation, 6 with part of the step left out). The reference is right, so the code check
+  passes and only the judge can catch them.
+- 20 right-step candidates: real actions from earlier prompt versions whose text was reworded from the SOP, picked
+  at random from the ones the judge accepted. They need a person's label and are not counted until they have one
+  (not labelled yet).
+
+The two groups are reported separately. One agreement rate over both would stay high for a judge that always
+says true, because most steps are right.
+
+Every action handling_plan_v6 wrote on the held-out set copies the SOP step's text word for word (62 of 62),
+so the judge's "true" there is easy; the reworded actions come from v2 to v5.
+
 ## Run
 
 ```
@@ -184,4 +203,10 @@ Run one alarm several times, to see how much its result changes from run to run 
 
 ```
 docker compose run --rm eval python run_eval.py --only AL-063 --repeat 5
+```
+
+Check the judge against the labelled steps (needs the API key, not the other services):
+
+```
+docker compose run --rm --no-deps eval python judge_check.py
 ```

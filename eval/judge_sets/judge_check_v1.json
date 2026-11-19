@@ -1,0 +1,822 @@
+[
+  {
+    "id": "R-01",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      }
+    ],
+    "action": "Compare the 56.0 mTorr chamber pressure reading with the backup pressure sensor to confirm whether the high reading is real or a sensor fault.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure sensor, which is exactly what cited step 1 says. The added mention of the 56.0 mTorr value and the purpose (real vs. sensor fault) are context and do not add a separate operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-040"
+    }
+  },
+  {
+    "id": "R-02",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-032",
+        "step": 3
+      }
+    ],
+    "action": "Check the heater cable connection for looseness or damage.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The cited step 3 says to check the heater cable connection. The action does that, and the added 'for looseness or damage' only describes what to look for, so it adds no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-066"
+    }
+  },
+  {
+    "id": "R-03",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-035",
+        "step": 3
+      }
+    ],
+    "action": "If the recipe setting and cable connections are both normal, stop the tool and notify maintenance.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "Step 3 says that if all of the above (the recipe RF power setting check and the RF cable connection check) are normal, stop the tool and notify maintenance. The action states the same condition and the same two operations, so it matches.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_203401_handling_plan_v2_judge_v3.json",
+      "alarm_id": "AL-069"
+    }
+  },
+  {
+    "id": "R-04",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      }
+    ],
+    "action": "Compare the 58.0 mTorr reading with the backup pressure sensor. This shows whether the newly replaced sensor is reading correctly.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the 58.0 mTorr reading with the backup pressure sensor, which is exactly what cited step 1 says. The remark about the replaced sensor is only a rationale and adds no operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_203401_handling_plan_v2_judge_v3.json",
+      "alarm_id": "AL-017"
+    }
+  },
+  {
+    "id": "R-05",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-050",
+        "step": 1
+      }
+    ],
+    "action": "Compare the 4.6 psi reading with the backup pressure sensor on the polish head to confirm whether the over-pressure is real or a sensor error.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the reading (4.6 psi) with the backup pressure sensor on the polish head, which is exactly what step 1 says. The added purpose (real vs sensor error) is just a reason and adds no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261115_183226.json",
+      "alarm_id": "AL-073"
+    }
+  },
+  {
+    "id": "R-06",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber pressure reading (57.0 mTorr) with the backup pressure sensor.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure sensor, which is the operation in cited step 1. The 57.0 mTorr value is just the reading from the alarm and adds no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_202752_handling_plan_v3_judge_v3.json",
+      "alarm_id": "AL-041"
+    }
+  },
+  {
+    "id": "R-07",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-055",
+        "step": 3
+      }
+    ],
+    "action": "If the conditioner disk and arm checks are both normal, stop the tool and notify maintenance.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "Step 3 says that if all of the above (the disk wear check and the arm movement check) are normal, stop the tool and notify maintenance. The action states the same condition and the same two operations, with no additions or omissions.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-072"
+    }
+  },
+  {
+    "id": "R-08",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber pressure reading (58.0 mTorr) with the backup pressure sensor to confirm the reading is real and the newly replaced sensor is not at fault.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure sensor, which is exactly what step 1 says. The added purpose (confirming the reading is real and the newly replaced sensor is not at fault) and the 58.0 mTorr value are explanatory context, not an extra operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261115_183226.json",
+      "alarm_id": "AL-017"
+    }
+  },
+  {
+    "id": "R-09",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-030",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber pressure reading with the backup pressure gauge to confirm the 7.2 Torr reading is real.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure gauge, which is exactly what cited step 1 says. The note about confirming the 7.2 Torr reading is real only gives a reason and the alarm value, and adds no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_203401_handling_plan_v2_judge_v3.json",
+      "alarm_id": "AL-064"
+    }
+  },
+  {
+    "id": "R-10",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 2
+      }
+    ],
+    "action": "Check the gas inlet flow to chamber B.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The cited step 2 says to check the gas inlet flow. The action checks the gas inlet flow, and naming chamber B only says where the check applies without adding another operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-041"
+    }
+  },
+  {
+    "id": "R-11",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-032",
+        "step": 2
+      }
+    ],
+    "action": "Check the heater power output for abnormally high or unstable power.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The cited step 2 says to check the heater power output, and the action does that. The added \"abnormally high or unstable power\" only describes what to look for and adds no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-066"
+    }
+  },
+  {
+    "id": "R-12",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-031",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber B pressure reading (1.4 Torr) with the backup pressure gauge to rule out a sensor fault.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber B pressure reading with the backup pressure gauge, which is exactly what cited step 1 says. The reading value (1.4 Torr) and the sensor-fault reason are allowed extra context and add no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261115_183226.json",
+      "alarm_id": "AL-065"
+    }
+  },
+  {
+    "id": "R-13",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 4
+      }
+    ],
+    "action": "If steps 1-3 are all normal, stop the tool and notify maintenance.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "Cited step 4 says that if all of the above (steps 1-3) are normal, stop the tool and notify maintenance. The action states the same condition and the same two operations, so it matches.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_203401_handling_plan_v2_judge_v3.json",
+      "alarm_id": "AL-062"
+    }
+  },
+  {
+    "id": "R-14",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-030",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber pressure reading (7.2 Torr) with the backup pressure gauge to confirm the excursion is real and not a sensor fault.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure gauge, which is exactly cited step 1. The 7.2 Torr value and the stated purpose (confirming the excursion is real and not a sensor fault) are extra context and add no new operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-064"
+    }
+  },
+  {
+    "id": "R-15",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-050",
+        "step": 4
+      }
+    ],
+    "action": "If the backup sensor, membrane, and air supply checks are all normal, stop the tool and notify maintenance.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action matches cited step 4: if all prior checks (backup sensor comparison, membrane check, air supply pressure) are normal, stop the tool and notify maintenance. It names the same conditions and the same two operations without adding anything.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-073"
+    }
+  },
+  {
+    "id": "R-16",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber B temperature reading with the backup temperature sensor. Since 52.0 °C is within spec, this will show whether the primary sensor is faulty.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber B temperature reading with the backup temperature sensor, which is exactly what cited step 1 says. The remark about 52.0 °C being within spec and the sensor-fault purpose is only context and adds no operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261115_183226.json",
+      "alarm_id": "AL-062"
+    }
+  },
+  {
+    "id": "R-17",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-033",
+        "step": 1
+      }
+    ],
+    "action": "Compare the precursor flow reading with the mass flow controller setpoint.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the precursor flow reading with the mass flow controller setpoint, which matches cited step 1; 'precursor' is just context from the SOP title and adds no operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_203401_handling_plan_v2_judge_v3.json",
+      "alarm_id": "AL-070"
+    }
+  },
+  {
+    "id": "R-18",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-013",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber pressure reading with the backup pressure sensor.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber pressure reading with the backup pressure sensor, which is the same operation as cited step 1. Naming the reading as the chamber pressure only adds context and no extra operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261116_202752_handling_plan_v3_judge_v3.json",
+      "alarm_id": "AL-032"
+    }
+  },
+  {
+    "id": "R-19",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-057",
+        "step": 1
+      }
+    ],
+    "action": "Check that the DI water supply valve to CMP-06 chamber A is fully open.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The cited step says to check that the DI water supply valve is open. The action checks the same valve, and the added tool/chamber identification does not add an operation. However, it says 'fully open', which is slightly stricter than 'open', though it is a reasonable reading of checking that the valve is open and not an extra operation.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-075"
+    }
+  },
+  {
+    "id": "R-20",
+    "kind": "real",
+    "mutation": null,
+    "sop_refs": [
+      {
+        "sop_id": "SOP-013",
+        "step": 1
+      }
+    ],
+    "action": "Compare the chamber A pressure reading (53.0 mTorr) with the backup pressure sensor to confirm the pressure is really high.",
+    "label": null,
+    "judgement": true,
+    "judge_reason": "The action compares the chamber A pressure reading with the backup pressure sensor, which is exactly what cited step 1 says; the reading value and the 'confirm pressure is really high' purpose are just context, not extra operations.",
+    "judge_prompt_version": "judge_v3",
+    "judge_model": "claude-sonnet-5-5",
+    "source": {
+      "run": "run_20261117_014058_handling_plan_v4_judge_v3.json",
+      "alarm_id": "AL-032"
+    }
+  },
+  {
+    "id": "M-01",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 2
+      }
+    ],
+    "action": "Check the gas inlet flow and lower the flow setpoint if it is high.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the gas inlet flow."
+    }
+  },
+  {
+    "id": "M-02",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 3
+      }
+    ],
+    "action": "Check the heater power output and replace the heater if the output is unstable.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the heater power output."
+    }
+  },
+  {
+    "id": "M-03",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-031",
+        "step": 3
+      }
+    ],
+    "action": "Check the exhaust line for blockage and clear any blockage you find.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the exhaust line for blockage."
+    }
+  },
+  {
+    "id": "M-04",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-052",
+        "step": 3
+      }
+    ],
+    "action": "Check the slurry pump status and restart the pump.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the slurry pump status."
+    }
+  },
+  {
+    "id": "M-05",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-014",
+        "step": 1
+      }
+    ],
+    "action": "Check that the wafer is seated flat on the chuck, then run the chuck self-test.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check that the wafer is seated flat on the chuck."
+    }
+  },
+  {
+    "id": "M-06",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-036",
+        "step": 1
+      }
+    ],
+    "action": "Measure the film thickness on one more wafer from the same lot and hold the lot.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Measure the film thickness on one more wafer from the same lot."
+    }
+  },
+  {
+    "id": "M-07",
+    "kind": "mutated",
+    "mutation": "added_operation",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-017",
+        "step": 1
+      }
+    ],
+    "action": "Check the coolant level in the chiller and top it up to the full mark.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the coolant level in the chiller."
+    }
+  },
+  {
+    "id": "M-08",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 1
+      }
+    ],
+    "action": "Check the vacuum pump.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Compare the reading with the backup pressure sensor."
+    }
+  },
+  {
+    "id": "M-09",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-013",
+        "step": 3
+      }
+    ],
+    "action": "Check the main-etch gas flow setting in the recipe.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the over-etch gas flow setting in the recipe."
+    }
+  },
+  {
+    "id": "M-10",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-016",
+        "step": 3
+      }
+    ],
+    "action": "Stop the tool and notify maintenance.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Stop the tool and notify process engineering."
+    }
+  },
+  {
+    "id": "M-11",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-040",
+        "step": 2
+      }
+    ],
+    "action": "Check the showerhead cooling water flow.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the showerhead for clogged holes."
+    }
+  },
+  {
+    "id": "M-12",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-057",
+        "step": 1
+      }
+    ],
+    "action": "Check that the DI water supply valve is closed.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check that the DI water supply valve is open."
+    }
+  },
+  {
+    "id": "M-13",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-055",
+        "step": 1
+      }
+    ],
+    "action": "Check the pad for wear.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the conditioner disk for wear."
+    }
+  },
+  {
+    "id": "M-14",
+    "kind": "mutated",
+    "mutation": "different_content",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-018",
+        "step": 4
+      }
+    ],
+    "action": "If the leak rate is still high, return the tool to production and notify maintenance.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "If the leak rate is still high, keep the tool down and notify maintenance."
+    }
+  },
+  {
+    "id": "M-15",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-020",
+        "step": 2
+      }
+    ],
+    "action": "Check the chiller setpoint.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the chiller setpoint and coolant flow."
+    }
+  },
+  {
+    "id": "M-16",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-030",
+        "step": 3
+      }
+    ],
+    "action": "Check the precursor gas flow.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Check the precursor and carrier gas flows."
+    }
+  },
+  {
+    "id": "M-17",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-021",
+        "step": 1
+      }
+    ],
+    "action": "Send one wafer for particle inspection.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Hold the current lot and send one wafer for particle inspection."
+    }
+  },
+  {
+    "id": "M-18",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-059",
+        "step": 3
+      }
+    ],
+    "action": "Hold the lot.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "Hold the lot and notify process engineering."
+    }
+  },
+  {
+    "id": "M-19",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-023",
+        "step": 3
+      }
+    ],
+    "action": "If the reflected power is still high, notify maintenance.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "If the reflected power is still high, keep the tool down and notify maintenance."
+    }
+  },
+  {
+    "id": "M-20",
+    "kind": "mutated",
+    "mutation": "left_out_part",
+    "sop_refs": [
+      {
+        "sop_id": "SOP-012",
+        "step": 4
+      }
+    ],
+    "action": "If all of the above are normal, notify maintenance.",
+    "label": false,
+    "judgement": null,
+    "judge_reason": null,
+    "judge_prompt_version": null,
+    "judge_model": null,
+    "source": {
+      "sop_text": "If all of the above are normal, stop the tool and notify maintenance."
+    }
+  }
+]
