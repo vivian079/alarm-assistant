@@ -175,6 +175,49 @@ says true, because most steps are right.
 Every action handling_plan_v6 wrote on the held-out set copies the SOP step's text word for word (62 of 62),
 so the judge's "true" there is easy; the reworded actions come from v2 to v5.
 
+## Results
+
+All plans and all judge calls used claude-sonnet-5-5. The data is synthetic. Each row is one results file in
+`eval/results/` (last column: the time in its name).
+
+- P, R, F1: precision and recall of the actions against the expected SOP steps.
+- S1: alarms that no SOP covers; right only if the plan has no steps. They have no expected steps, so P and R
+  do not count them.
+- flags: alarms whose flags (E1, W1, W2, R1, WF1, S1) were all right; only the sets that have expected flags.
+- $ / plan and s / plan: per plan Claude wrote (S1 and duplicate alarms make no Claude call).
+
+| prompt version: what changed | set | judge | P | R | F1 | S1 | flags | $ / plan | s / plan | file |
+|---|---|---|---|---|---|---|---|---|---|---|
+| v1: no SOPs in the prompt (baseline) | golden_v1 | v1 | 0.00 (0/125) | 0.00 | 0.00 | 0/3 | | | 9.3 | 061723 |
+| v2: all 40 SOPs in the system prompt | golden_v1 | v1 | 0.78 (59/76) | 0.92 | 0.84 | 0/3 | | 0.024* | 6.8 | 062641 |
+| the same v2 plans, scored again | golden_v1 | v2 | 0.82 (62/76) | 0.97 | 0.89 | 0/3 | | | | 182511 |
+| the same v2 plans, scored again | golden_v1 | v3 | 0.83 (63/76) | 0.98 | 0.90 | 0/3 | | | | 183226 |
+| v2, a new run | golden_v1 | v3 | 0.83 (64/77) | 1.00 | 0.91 | 0/3 | | | 7.5 | 203401 |
+| v3: "the system adds escalation, don't write it as an action" | golden_v1 | v3 | 0.91 (62/68) | 0.97 | 0.94 | 0/3 | | 0.023* | 6.6 | 202752 |
+| v4: retrieval, only the exact-match SOPs in the prompt; S1 decided by code | golden_v1 | v3 | 0.91 (63/69) | 0.98 | 0.95 | 3/3 | | 0.011* | 5.8 | 014058 |
+| v5: flags by code, plus two prompt sentences about them | golden_v2 | v3 | 0.94 (62/66) | 0.97 | 0.95 | 3/3 | 21/21 | 0.010* | 5.1 | 025715 |
+| v6: the flags go into the prompt as system notes | golden_v2 | v3 | 1.00 (64/64) | 1.00 | 1.00 | 3/3 | 21/21 | 0.0098* | 4.3 | 031035 |
+| v6, 3 runs | heldout_v1 | v3 | 1.00 (62/62) each | 1.00 | 1.00 | 2/2 | 20/20 | 0.0106-0.0108 | 4.9-5.1 | 171401, 214832, 215241 |
+| v7: agent with 3 lookup tools | heldout_v1 | v3 | 1.00 (62/62) | 1.00 | 1.00 | 2/2 | 20/20 | 0.0199 | 8.1 | 214233 |
+
+\* From the `llm_calls` audit log (tokens at $2 / $10 per million input / output); these runs were made before
+`run_eval.py` recorded tokens. The held-out rows are from the results files.
+
+What the rows show:
+- Putting the SOPs in the prompt took P from 0 to 0.78. After that, most wrong steps were things code should own
+  (escalation, flags); moving them to code and telling the model about them took P to 1.00.
+- The judge prompt alone moved P from 0.78 to 0.83 on the same plans, so rows are only compared with the same judge.
+- Retrieval (v4) kept P and R, cut the cost per plan by about half (0.023 to 0.011), and fixed S1 (0/3 to 3/3),
+  which P and R do not show.
+- v6's 1.00 on golden_v2 is on the set its prompt was written from. The held-out set, never used to change a
+  prompt, also gave 1.00 in 3 runs out of 3.
+- The agent (v7) matched v6 on the held-out set but cost 88% more and took 59% longer per plan, so every alarm
+  uses v6.
+
+Judge check (`judge_check.py`, judge_v3, file `judge_check_20261119_210129`): the judge said false on 20 of 20
+known-wrong steps (added operation 7/7, different operation 7/7, part of the step left out 6/6). Whether it
+wrongly rejects right, reworded steps is not measured yet.
+
 ## Run
 
 ```
