@@ -10,6 +10,32 @@ with the error message, up to 2 times, then saves the plan as `generation_failed
 The prompt gets the alarm record, its spec limit from the alarm code table, and SOPs: the whole library
 (prompt versions v2, v3) or only the SOPs retrieved for this alarm (v4).
 
+## Architecture
+
+```mermaid
+flowchart TD
+    UI["Streamlit page: the engineer picks an alarm"] -->|"POST /alarms/ID/plan"| A
+    MCP["MCP server: Claude Desktop, Claude Code"] -->|"same endpoint"| A
+    EV["run_eval.py"] -->|"same endpoint"| A
+    subgraph API["FastAPI: create_plan"]
+        A["Read the alarm record and its spec limit (Postgres)"] --> B{"E1: duplicate entry?"}
+        B -->|yes| R["Save as rejected_duplicate, no Claude call"]
+        B -->|no| C["Flags by code: W1, W2, R1, WF1 (R1 reads the tool_events table)"]
+        C --> D{"SOPs by exact match on alarm code and process step"}
+        D -->|none| S["S1: save as sop_not_covered, no Claude call; the 3 closest SOPs by embedding are listed for the engineer"]
+        D -->|found| E["Prompt: alarm, spec limit, matched SOPs, flags as system notes"]
+        E --> F["Claude with Structured Outputs; Pydantic check, retry up to 2 times"]
+        F --> L[("llm_calls: one row per Claude call")]
+        F --> H["Save to handling_plans as pending_review"]
+    end
+    H --> UI2["The engineer reviews the plan on the page and approves it"]
+```
+
+Code does every step that has a rule (duplicates, flags, which SOP applies, no SOP at all); Claude only writes
+the plan from what code put in the prompt. The page, the MCP server and the evaluation all call the same endpoint,
+so they get the same checks. The agent version (`handling_plan_v7`) adds a tool-calling loop inside the Claude
+step; it is not the default.
+
 ## Rules checked by code (`api/rules.py`)
 
 The design doc's rules are fixed, so code checks them, not Claude. Each one that applies is a flag on the plan
